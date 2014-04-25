@@ -1,0 +1,33 @@
+********************************************************************************
+INSTRUCTIONS
+********************************************************************************
+Just drop into your modules folder or use the box-cli to install
+
+box install javaloader
+
+The module has a default folder called 'lib' where any jars you drop there will be class loaded.
+The module also registers the following mapping in WireBox: loader@javaloader
+
+You can then use this mapping to create the java files, append more paths and more.
+Below is a simple example:
+
+/**
+* My Event Handler Hint
+*/
+component{
+	// Inject JavaLoader
+	property name="javaloader" inject="loader@javaloader";
+
+	// Index
+	any function index( event,rc, prc ){
+		// creat a java class
+		prc.hello = javaloader.create( "HelloWorld" ).init().hello();
+	}
+
+	// Run on first init
+	any function onAppInit( event, rc, prc ){
+		// on application start, load up more jars
+		javaloader.appendPaths( getSetting( "ApplicationPath" ) & "jars" );
+	}
+
+}
