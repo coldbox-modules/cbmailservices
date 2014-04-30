@@ -1,5 +1,5 @@
 {
-	"name" 		: "Mail Services",
+	"name" 		: "ColdBox Mail Services",
 	"author" 	: "Luis Majano <lmajano@ortussolutions.com",
 	"version"	: "1.0.0",
 	"slug"		: "mailservices",
@@ -12,11 +12,11 @@
 	],
 	"testbox" 	: {
 		"runner" : {
-			"cf10" 	: "http://cf10cboxdev.jfetmac/codedepot/cbox-javaloader/test/runner.cfm",
-			"railo" : "http://railocboxdev.jfetmac/codedepot/cbox-javaloader/test/runner.cfm" 
+			"cf10" 	: "http://cf10cboxdev.jfetmac/codedepot/cbox-mailservices/test/runner.cfm",
+			"railo" : "http://railocboxdev.jfetmac/codedepot/cbox-mailservices/test/runner.cfm" 
 		}
 	},
 	"devdependencies" : {
-		"testbox" : ">1.1"		
+		"testbox" : ">2.0		
 	}
 }

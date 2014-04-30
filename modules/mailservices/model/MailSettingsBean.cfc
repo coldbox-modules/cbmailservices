@@ -9,8 +9,6 @@ Description :
 	I model mail server settings. You can send this bean to model or EJB's
 	and when sending email. It will use its settings.
 
-By 3.5 remove all direct get/set and leave get/setValue() instead
-
 ----------------------------------------------------------------------->
 <cfcomponent hint="I model mail server settings to be used with our Mail Service" output="false">
 
@@ -104,7 +102,7 @@ By 3.5 remove all direct get/set and leave get/setValue() instead
 		<cfargument name="class" 		required="false" default="mailservices.model.protocols.CFMailProtocol" hint="The instantiation path of the mail protocol object"/>
 		<cfargument name="properties"	required="false" default="#structNew()#" hint="The properties to construct the protocol object with" />
 		<cftry>
-			<cfset variables._protocol = createObject("component", arguments.class).init(arguments.properties)>
+			<cfset variables._protocol = createObject( "component", arguments.class).init( arguments.properties )>
 			<cfcatch type="any">
 				<cfthrow type="MailSettingsBean.FailLoadProtocolException"
 					     message="Unable to successfully load the supplied mail protocol: #arguments.toString()#"

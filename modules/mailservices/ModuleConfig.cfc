@@ -60,20 +60,29 @@ component {
 	this.cfmapping			= "mailservices";
 
 	function configure(){
-
-		// These are all the mail settings your mail services will use
-		// Each key matches the cfmail tag
+		// Module settings
 		settings = {
+			// All the default settings the module should use for sending mail, usually are all the attributes of the cfmail tag
+			// You can also define the protocol to use in side of the mail settings, the default protocol is the CFMail tag.
+			// Protocols are defined like so: protocol = { class="", properties={} }, default protocol is CFMAIL
+			mailSettings = {
 
+			},
+			// The default token Marker Symbol
+			tokenMarker = "@"
 		};
-
 	}
 
 	/**
 	* Fired when the module is registered and activated.
 	*/
 	function onLoad(){
-
+		// Map the mail service with correct arguments
+		binder.map( "MailService@mailservices" )
+			.to( "mailservices.model.MailService" )
+			.initArg( name="settings", 		value=settings.mailSettings )
+			.initArg( name="tokenMarker", 	value=settings.tokenMarker );
+					
 	}
 
 	/**

@@ -14,10 +14,17 @@ And hope maketh not ashamed; because the love of God is shed abroad in our heart
 Holy Ghost which is given unto us. ." Romans 5:5
 
 ********************************************************************************
-WELCOME TO THE MAILSERVICES MODULE
+WELCOME TO THE COLDBOX MAILSERVICES MODULE
 ********************************************************************************
 Created & copyright by Luis Majano (Ortus Solutions, Corp)
-JavaLoader created & copyright by Mark Mandel
+The ColdBox Mail services module will allow you to send email the OO way in 
+multiple protocols.  The supported protocols are:
+
+* CFMail
+* Files
+* Postmark API
+
+You can easily add your own mail protocols by building upon our standards.
 
 ********************************************************************************
 LICENSE
@@ -36,7 +43,7 @@ SYSTEM REQUIREMENTS
 ********************************************************************************
 - Railo 3.2 and above
 - ColdFusion MX 9 and above
-- ColdBox 3.5 and above
+- ColdBox 4.0+
 
 ----
 

@@ -20,11 +20,13 @@ Modification History:
 		ms = getMockBox().createMock("mailservices.model.MailService").init();
 	}
 	function testNewMail(){
-		mail = ms.newMail();
+		var mail = ms.newMail();
+		expect(	mail ).toBeComponent();
 	}
 	function testparseTokens(){
-		mail = ms.newMail();
-		tokens = {name="Luis Majano",time=dateformat(now(),"full")};
+		var mail = ms.newMail();
+		var tokens = {name="Luis Majano",time=dateformat(now(),"full")};
+		
 		mail.setBodyTokens(tokens);
 		mail.setBody("Hello @name@, how are you today? Today is the @time@");
 
@@ -51,7 +53,7 @@ Modification History:
 	function testSend(){
 		// mockings
 		mockProtocol = getMockBox().createStub().$("send", {error=false,errorArray=[]} );
-		getMockBox().prepareMock( ms.getMailSettingsBean() ).$("getTransit", mockProtocol);
+		getMockBox().prepareMock( ms.getMailSettings() ).$("getTransit", mockProtocol);
 
 		// 1:Mail with No Params
 		mail = ms.newMail().config(from="info@coldboxframework.com",to="automation@coldbox.org",type="html");
@@ -92,11 +94,13 @@ Modification History:
 
 	function testMailWithSettings(){
 		// Mocks
-		mockProtocol = getMockBox().createStub().$("send", {error=false,errorArray=[]} );
+		mockProtocol = getMockBox().createStub().$( "send", {error=false,errorArray=[]} );
 		mockSettings = getMockBox().createMock("mailservices.model.MailSettingsBean")
 			.init("0.0.0.0","test","test",25)
 			.$("getTransit", mockProtocol);
-		ms = ms.init(mockSettings);
+		
+		ms.init().setMailSettings( mockSettings );
+
 		ms.$("parseTokens").$("mailIt");
 
 		mail = ms.newMail(from="info@coldboxframework.com",to="automation@coldbox.org",type="html",body="TestMailWithSettings",subject="TestMailWithSettings");
@@ -104,9 +108,9 @@ Modification History:
 		assertTrue( mockProtocol.$once("send") );
 
 		// Test with No settings
-		ms = ms.init();
+		ms.init();
 		mockProtocol = getMockBox().createStub().$("send", {error=false,errorArray=[]} );
-		getMockBox().prepareMock( ms.getMailSettingsBean() ).$("getTransit", mockProtocol);
+		getMockBox().prepareMock( ms.getMailSettings() ).$("getTransit", mockProtocol);
 		mail = ms.newMail(from="info@coldboxframework.com",to="automation@coldbox.org",type="html",body="TestMailWithSettings",subject="TestMailWithSettings");
 		ms.send( mail );
 		assertTrue( mockProtocol.$once("send") );

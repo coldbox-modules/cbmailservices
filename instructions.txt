@@ -3,31 +3,42 @@ INSTRUCTIONS
 ********************************************************************************
 Just drop into your modules folder or use the box-cli to install
 
-box install javaloader
+box install mailservices
 
-The module has a default folder called 'lib' where any jars you drop there will be class loaded.
-The module also registers the following mapping in WireBox: loader@javaloader
+The mail services registers all mail components so you can use them in your application.
+You will need to update the ModuleConfig.cfc with your preferred mail settings and 
+mail protocol to use.
 
-You can then use this mapping to create the java files, append more paths and more.
-Below is a simple example:
+<pre>
+// Module settings
+settings = {
+	// All the default settings the module should use for sending mail, usually are all the attributes of the cfmail tag
+	// You can also define the protocol to use in side of the mail settings, the default protocol is the CFMail tag.
+	// Protocols are defined like so: protocol = { class="", properties={} }, default protocol is CFMAIL
+	mailSettings = {
 
-/**
-* My Event Handler Hint
-*/
-component{
-	// Inject JavaLoader
-	property name="javaloader" inject="loader@javaloader";
+	},
+	// The default token Marker Symbol
+	tokenMarker = "@"
+};
+</pre>
 
-	// Index
-	any function index( event,rc, prc ){
-		// creat a java class
-		prc.hello = javaloader.create( "HelloWorld" ).init().hello();
-	}
+This will register a 'mailService@mailservices' in WireBox that you can leverage for usage.
 
-	// Run on first init
-	any function onAppInit( event, rc, prc ){
-		// on application start, load up more jars
-		javaloader.appendPaths( getSetting( "ApplicationPath" ) & "jars" );
-	}
+<pre>
+// build mail and send
+var oMail = getInstance( "mailService@mailservices" )
+	.newMail( to="email@email.com",
+			  subject="Mail Services Rock",
+			  bodyTokens={ user="Luis", product="ColdBox", link=event.buildLink( 'home' )} );
 
-}
+// Set a Body
+oMail.setBody("
+	<p>Dear @user@,</p>
+	<p>Thank you for downloading @product@, have a great day!</p>
+	<p><a href='@link@'>@link@</a></p> 
+");
+
+//send it
+var results = mailService.send( oMail );
+</pre>
