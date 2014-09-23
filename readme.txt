@@ -17,6 +17,7 @@ Holy Ghost which is given unto us. ." Romans 5:5
 WELCOME TO THE COLDBOX MAILSERVICES MODULE
 ********************************************************************************
 Created & copyright by Luis Majano (Ortus Solutions, Corp)
+
 The ColdBox Mail services module will allow you to send email the OO way in 
 multiple protocols.  The supported protocols are:
 
@@ -41,9 +42,8 @@ Source
 ********************************************************************************
 SYSTEM REQUIREMENTS
 ********************************************************************************
-- Railo 3.2 and above
-- ColdFusion MX 9 and above
-- ColdBox 4.0+
+- Railo 4+
+- ColdFusion 9+
 
 ----
 

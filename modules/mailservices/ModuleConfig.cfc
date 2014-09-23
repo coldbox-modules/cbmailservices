@@ -1,44 +1,5 @@
 /**
-Module Directives as public properties
-this.title 				= "Title of the module";
-this.author 			= "Author of the module";
-this.webURL 			= "Web URL for docs purposes";
-this.description 		= "Module description";
-this.version 			= "Module Version";
-this.viewParentLookup   = (true) [boolean] (Optional) // If true, checks for views in the parent first, then it the module.If false, then modules first, then parent.
-this.layoutParentLookup = (true) [boolean] (Optional) // If true, checks for layouts in the parent first, then it the module.If false, then modules first, then parent.
-this.entryPoint  		= "" (Optional) // If set, this is the default event (ex:forgebox:manager.index) or default route (/forgebox) the framework
-									       will use to create an entry link to the module. Similar to a default event.
-this.cfmapping			= "The CF mapping to create";
-this.modelNamespace		= "The namespace to use for registered models, if blank it uses the name of the module."
-
-structures to create for configuration
-- parentSettings : struct (will append and override parent)
-- settings : struct
-- datasources : struct (will append and override parent)
-- interceptorSettings : struct of the following keys ATM
-	- customInterceptionPoints : string list of custom interception points
-- interceptors : array
-- layoutSettings : struct (will allow to define a defaultLayout for the module)
-- routes : array Allowed keys are same as the addRoute() method of the SES interceptor.
-- wirebox : The wirebox DSL to load and use
-
-Available objects in variable scope
-- controller
-- appMapping (application mapping)
-- moduleMapping (include,cf path)
-- modulePath (absolute path)
-- log (A pre-configured logBox logger object for this object)
-- binder (The wirebox configuration binder)
-- wirebox (The wirebox injector)
-
-Required Methods
-- configure() : The method ColdBox calls to configure the module.
-
-Optional Methods
-- onLoad() 		: If found, it is fired once the module is fully loaded
-- onUnload() 	: If found, it is fired once the module is unloaded
-
+* Module Config
 */
 component {
 
@@ -47,7 +8,7 @@ component {
 	this.author 			= "Luis Majano";
 	this.webURL 			= "http://www.ortussolutions.com";
 	this.description 		= "A module that allows you to leverage many mail service protocols in a nice abstracted API";
-	this.version			= "1.0.0";
+	this.version			= "1.0.0.@build.number@";
 	// If true, looks for views in the parent first, if not found, then in the module. Else vice-versa
 	this.viewParentLookup 	= true;
 	// If true, looks for layouts in the parent first, if not found, then in module. Else vice-versa
@@ -55,34 +16,27 @@ component {
 	// Module Entry Point
 	this.entryPoint			= "mailservices";
 	// Model Namespace
-	this.modelNamespace		= "";
+	this.modelNamespace		= "mailservices";
 	// CF Mapping
 	this.cfmapping			= "mailservices";
 
 	function configure(){
-		// Module settings
-		settings = {
-			// All the default settings the module should use for sending mail, usually are all the attributes of the cfmail tag
-			// You can also define the protocol to use in side of the mail settings, the default protocol is the CFMail tag.
-			// Protocols are defined like so: protocol = { class="", properties={} }, default protocol is CFMAIL
-			mailSettings = {
 
-			},
-			// The default token Marker Symbol
-			tokenMarker = "@"
-		};
 	}
 
 	/**
 	* Fired when the module is registered and activated.
 	*/
 	function onLoad(){
+		var configSettings = controller.getConfigSettings();
+		// Parse parent settings
+		parseParentSettings();
 		// Map the mail service with correct arguments
 		binder.map( "MailService@mailservices" )
-			.to( "mailservices.model.MailService" )
-			.initArg( name="settings", 		value=settings.mailSettings )
-			.initArg( name="tokenMarker", 	value=settings.tokenMarker );
-					
+			.to( "mailservices.models.MailService" )
+			.initArg( name="settings", 		value=configSettings.mailSettings )
+			.initArg( name="tokenMarker", 	value=configSettings.mailSettings.tokenMarker );
+
 	}
 
 	/**
@@ -90,6 +44,23 @@ component {
 	*/
 	function onUnload(){
 
+	}
+
+	/**
+	* Prepare settings and returns true if using i18n else false.
+	*/
+	private function parseParentSettings(){
+		var oConfig 		= controller.getSetting( "ColdBoxConfig" );
+		var configStruct 	= controller.getConfigSettings();
+		var mailsettings	= oConfig.getPropertyMixin( "mailsettings", "variables", structnew() );
+
+		//defaults
+		configStruct.mailsettings = {
+			tokenMarker = "@"
+		};
+
+		// Incorporate settings
+		structAppend( configStruct.mailsettings, mailsettings, true );
 	}
 
 }
