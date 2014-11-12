@@ -34,7 +34,7 @@ component {
 		// Map the mail service with correct arguments
 		binder.map( "MailService@mailservices" )
 			.to( "mailservices.models.MailService" )
-			.initArg( name="settings", 		value=configSettings.mailSettings )
+			.initArg( name="mailSettings", 		value=configSettings.mailSettings )
 			.initArg( name="tokenMarker", 	value=configSettings.mailSettings.tokenMarker );
 
 	}
