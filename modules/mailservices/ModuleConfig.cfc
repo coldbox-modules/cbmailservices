@@ -8,7 +8,7 @@ component {
 	this.author 			= "Luis Majano";
 	this.webURL 			= "http://www.ortussolutions.com";
 	this.description 		= "A module that allows you to leverage many mail service protocols in a nice abstracted API";
-	this.version			= "1.0.0.@build.number@";
+	this.version			= "1.0.0+@build.number@";
 	// If true, looks for views in the parent first, if not found, then in the module. Else vice-versa
 	this.viewParentLookup 	= true;
 	// If true, looks for layouts in the parent first, if not found, then in module. Else vice-versa
@@ -34,7 +34,7 @@ component {
 		// Map the mail service with correct arguments
 		binder.map( "MailService@mailservices" )
 			.to( "mailservices.models.MailService" )
-			.initArg( name="settings", 		value=configSettings.mailSettings )
+			.initArg( name="mailSettings", 	value=configSettings.mailSettings )
 			.initArg( name="tokenMarker", 	value=configSettings.mailSettings.tokenMarker );
 
 	}
