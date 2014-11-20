@@ -17,7 +17,7 @@ Modification History:
 	this.loadColdBox = false;
 
 	function setup(){
-		ms = getMockBox().createMock("mailservices.models.MailService").init();
+		ms = getMockBox().createMock("cbmailservices.models.MailService").init();
 	}
 	function testNewMail(){
 		var mail = ms.newMail();
@@ -95,7 +95,7 @@ Modification History:
 	function testMailWithSettings(){
 		// Mocks
 		mockProtocol = getMockBox().createStub().$( "send", {error=false,errorArray=[]} );
-		mockSettings = getMockBox().createMock("mailservices.models.MailSettingsBean")
+		mockSettings = getMockBox().createMock("cbmailservices.models.MailSettingsBean")
 			.init("0.0.0.0","test","test",25)
 			.$("getTransit", mockProtocol);
 		

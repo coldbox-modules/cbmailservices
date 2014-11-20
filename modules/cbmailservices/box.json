@@ -1,8 +1,8 @@
 {
 	"name" 		: "ColdBox Mail Services",
 	"author" 	: "Luis Majano <lmajano@ortussolutions.com",
-	"version"	: "1.0.0+@build.number@",
-	"slug"		: "mailservices",
+	"version"	: "1.0.0",
+	"slug"		: "cbmailservices",
 	"type"		: "modules",
 	"homepage"	: "http://www.coldbox.org",
 	"documentation"		: "http://wiki.coldbox.org",

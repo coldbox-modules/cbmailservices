@@ -4,7 +4,7 @@
 
 	<cffunction name="setUp" returntype="void" access="public">
 		<cfscript>
-			mail = createObject("component","mailservices.models.Mail").init();
+			mail = createObject("component","cbmailservices.models.Mail").init();
 		</cfscript>
 	</cffunction>
 

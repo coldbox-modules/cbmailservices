@@ -99,7 +99,7 @@ Description :
 
 	<!--- registerProtocol --->
 	<cffunction name="registerProtocol" access="public" returntype="void" hint="I register a protocol with the settings.">
-		<cfargument name="class" 		required="false" default="mailservices.models.protocols.CFMailProtocol" hint="The instantiation path of the mail protocol object"/>
+		<cfargument name="class" 		required="false" default="cbmailservices.models.protocols.CFMailProtocol" hint="The instantiation path of the mail protocol object"/>
 		<cfargument name="properties"	required="false" default="#structNew()#" hint="The properties to construct the protocol object with" />
 		<cftry>
 			<cfset variables._protocol = createObject( "component", arguments.class).init( arguments.properties )>

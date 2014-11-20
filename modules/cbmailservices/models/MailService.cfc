@@ -30,7 +30,7 @@ component accessors="true" singleton{
 	* Get a new Mail payload object, just use config() on it to prepare it or pass in all the arguments via this method
 	*/
 	Mail function newMail(){
-		var mail = new mailservices.models.Mail( argumentCollection=arguments );
+		var mail = new cbmailservices.models.Mail( argumentCollection=arguments );
 		
 		// If mail payload does not have a server and one is defined in the mail settings, use that
 		if( NOT mail.propertyExists( "server" ) AND len( variables.mailSettings.getServer() ) ){

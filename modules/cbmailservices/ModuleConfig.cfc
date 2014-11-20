@@ -4,7 +4,7 @@
 component {
 
 	// Module Properties
-	this.title 				= "mailservices";
+	this.title 				= "ColdBox Mail Services";
 	this.author 			= "Luis Majano";
 	this.webURL 			= "http://www.ortussolutions.com";
 	this.description 		= "A module that allows you to leverage many mail service protocols in a nice abstracted API";
@@ -14,11 +14,11 @@ component {
 	// If true, looks for layouts in the parent first, if not found, then in module. Else vice-versa
 	this.layoutParentLookup = true;
 	// Module Entry Point
-	this.entryPoint			= "mailservices";
+	this.entryPoint			= "cbmailservices";
 	// Model Namespace
-	this.modelNamespace		= "mailservices";
+	this.modelNamespace		= "cbmailservices";
 	// CF Mapping
-	this.cfmapping			= "mailservices";
+	this.cfmapping			= "cbmailservices";
 
 	function configure(){
 
@@ -32,8 +32,8 @@ component {
 		// Parse parent settings
 		parseParentSettings();
 		// Map the mail service with correct arguments
-		binder.map( "MailService@mailservices" )
-			.to( "mailservices.models.MailService" )
+		binder.map( "MailService@cbmailservices" )
+			.to( "cbmailservices.models.MailService" )
 			.initArg( name="mailSettings", 	value=configSettings.mailSettings )
 			.initArg( name="tokenMarker", 	value=configSettings.mailSettings.tokenMarker );
 

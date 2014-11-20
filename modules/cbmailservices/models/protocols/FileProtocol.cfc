@@ -12,7 +12,7 @@ Description :
 	- autoExpand(true) : auto expand path or not 
 
 ----------------------------------------------------------------------->
-<cfcomponent extends="mailservices.models.AbstractProtocol" output="false" hint="A mail protocol that sends via cffile">
+<cfcomponent extends="cbmailservices.models.AbstractProtocol" output="false" hint="A mail protocol that sends via cffile">
 
 	<!--- init --->
 	<cffunction name="init" access="public" returntype="FileProtocol" hint="Constructor" output="false">
@@ -42,7 +42,7 @@ Description :
 <!------------------------------------------- PUBLIC ------------------------------------------>
 	
 	<cffunction name="send" access="public" returntype="struct" hint="I send a payload via the cfmail protocol.">
-		<cfargument name="payload" required="true" type="any" hint="I'm the payload to delivery" colddoc:generic="mailservices.models.mail"/>
+		<cfargument name="payload" required="true" type="any" hint="I'm the payload to delivery" colddoc:generic="cbmailservices.models.mail"/>
 		<cfscript>
 			// The return structure
 			var rtnStruct 	= {error=true, errorArray=[]};
@@ -70,7 +70,7 @@ Description :
 	
 	<!--- getMailContent --->
 	<cffunction name="getMailContent" output="false" access="private" returntype="any" hint="Generate Mail content">
-		<cfargument name="mail" required="true" type="any" hint="The mail payload" colddoc:generic="mailservices.models.Mail"/>
+		<cfargument name="mail" required="true" type="any" hint="The mail payload" colddoc:generic="cbmailservices.models.Mail"/>
 		<cfset var thisMail = "">
 		
 		<cfsavecontent variable="thisMail">

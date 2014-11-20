@@ -8,7 +8,7 @@ Description :
 	A mail protocol that sends via http://postmarkapp.com/
 
 ----------------------------------------------------------------------->
-<cfcomponent extends="mailservices.models.AbstractProtocol" output="false" hint="A mail protocol that sends via http://postmarkapp.com/">
+<cfcomponent extends="cbmailservices.models.AbstractProtocol" output="false" hint="A mail protocol that sends via http://postmarkapp.com/">
 
 	<!--- init --->
 	<cffunction name="init" access="public" returntype="PostmarkProtocol" hint="Constructor" output="false">
@@ -31,7 +31,7 @@ Description :
 <!------------------------------------------- PUBLIC ------------------------------------------>
 	
 	<cffunction name="send" access="public" returntype="struct" output="true" hint="Send an email payload. Returns a struct: [error:boolean,errorArray:array,messageid:string]">
-		<cfargument name="mail" required="true" type="mailservices.models.Mail" hint="The mail payload to send." />
+		<cfargument name="mail" required="true" type="cbmailservices.models.Mail" hint="The mail payload to send." />
 
 			<!--- Create a temporary local structure. --->
 			<cfset var local = structNew() />

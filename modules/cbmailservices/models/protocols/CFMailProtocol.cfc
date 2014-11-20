@@ -8,7 +8,7 @@ Description :
 	A mail protocol that sends via email
 
 ----------------------------------------------------------------------->
-<cfcomponent extends="mailservices.models.AbstractProtocol" output="false" hint="A mail protocol that sends via email">
+<cfcomponent extends="cbmailservices.models.AbstractProtocol" output="false" hint="A mail protocol that sends via email">
 
 	<!--- init --->
 	<cffunction name="init" access="public" returntype="CFMailProtocol" hint="Constructor" output="false">
@@ -23,7 +23,7 @@ Description :
 <!------------------------------------------- PUBLIC ------------------------------------------>
 	
 	<cffunction name="send" access="public" returntype="struct" hint="I send a payload via the cfmail protocol.">
-		<cfargument name="payload" required="true" type="any" hint="I'm the payload to delivery" colddoc:generic="mailservices.models.mail"/>
+		<cfargument name="payload" required="true" type="any" hint="I'm the payload to delivery" colddoc:generic="cbmailservices.models.mail"/>
 		<cfscript>
 			// The return structure
 			var rtnStruct 	 		= structnew();
@@ -56,7 +56,7 @@ Description :
 	
 	<!--- mailNormal --->
 	<cffunction name="mailNormal" output="false" access="private" returntype="void" hint="Mail a payload">
-		<cfargument name="mail" required="true" type="any" hint="The mail payload" colddoc:generic="mailservices.models.Mail"/>
+		<cfargument name="mail" required="true" type="any" hint="The mail payload" colddoc:generic="cbmailservices.models.Mail"/>
 		<cfset var payload = arguments.mail>
 		<cfset var mailParam = 0>
 		
@@ -76,7 +76,7 @@ Description :
 	</cffunction>
 
 	<cffunction name="mailMultiPart" output="false" access="private" returntype="any" hint="Mail a payload using multi part objects">
-		<cfargument name="mail" required="true" type="any" hint="The mail payload" colddoc:generic="mailservices.models.Mail"/>
+		<cfargument name="mail" required="true" type="any" hint="The mail payload" colddoc:generic="cbmailservices.models.Mail"/>
 		<cfset var payload = arguments.mail>
 		<cfset var mailParam = 0>
 		<cfset var mailPart = 0>

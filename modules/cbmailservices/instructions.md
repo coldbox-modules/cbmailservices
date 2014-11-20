@@ -2,7 +2,7 @@ INSTRUCTIONS
 ============
 Just drop into your modules folder or use the box-cli to install
 
-`box install mailservices`
+`box install cbmailservices`
 
 The mail services registers all mail components so you can use them in your application.
 
@@ -22,11 +22,11 @@ mailsettings = {
 ```
 
 ## Models
-This will register a `mailService@mailservices` in WireBox that you can leverage for usage.
+This will register a `mailService@cbmailservices` in WireBox that you can leverage for usage.
 
 ```
 // build mail and send
-var oMail = getInstance( "mailService@mailservices" )
+var oMail = getInstance( "mailService@cbmailservices" )
 	.newMail( to="email@email.com",
 			  subject="Mail Services Rock",
 			  bodyTokens={ user="Luis", product="ColdBox", link=event.buildLink( 'home' )} );
@@ -55,7 +55,7 @@ You register the protocols in the `mailsettings` via the `protocol` structure:
 ```
 // FileProtocol
 protocol = {
-	class = "mailservices.models.protocols.FileProtocol",
+	class = "cbcbmailservices.models.protocols.FileProtocol",
 	properties = {
 		filePath = "logs",
 		autoExpand = true
@@ -64,7 +64,7 @@ protocol = {
 
 // PostMark
 protocol = {
-	class = "mailservices.models.protocols.PostmarkProtocol",
+	class = "cbcbmailservices.models.protocols.PostmarkProtocol",
 	properties = {
 		APIKey = ""
 	}

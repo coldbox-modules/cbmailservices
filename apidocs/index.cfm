@@ -1,14 +1,14 @@
 <cfparam name="url.version" default="0">
-<cfparam name="url.path" 	default="#expandPath( "./MailServices-APIDocs" )#">
+<cfparam name="url.path" 	default="#expandPath( "./CBMailServices-APIDocs" )#">
 <cfscript>
-	docName = "MailServices-APIDocs";
-	base = expandPath( "/mailservices" );
+	docName = "CBMailServices-APIDocs";
+	base = expandPath( "/cbmailservices" );
 
 	colddoc 	= new ColdDoc();
-	strategy 	= new colddoc.strategy.api.HTMLAPIStrategy( url.path, "MailServices v#url.version#" );
+	strategy 	= new colddoc.strategy.api.HTMLAPIStrategy( url.path, "CBMailServices v#url.version#" );
 	colddoc.setStrategy( strategy );
 
-	colddoc.generate( inputSource=base, outputDir=url.path, inputMapping="mailservices" );
+	colddoc.generate( inputSource=base, outputDir=url.path, inputMapping="cbmailservices" );
 </cfscript>
 
 <!---

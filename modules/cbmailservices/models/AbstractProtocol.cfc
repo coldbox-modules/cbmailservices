@@ -30,7 +30,7 @@ Description :
 
 	<!--- send --->
 	<cffunction name="send" access="public" returntype="struct" hint="I send a payload via the this protocol.">
-		<cfargument name="payload" required="true" type="any" hint="I'm the payload to delivery" colddoc:generic="mailservices.models.Mail"/>
+		<cfargument name="payload" required="true" type="any" hint="I'm the payload to delivery" colddoc:generic="cbmailservices.models.Mail"/>
 		<cfthrow message="" type="AbstractProtocol.AbstractMethodException">
 	</cffunction>
 

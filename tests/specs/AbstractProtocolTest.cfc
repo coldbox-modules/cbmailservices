@@ -13,14 +13,14 @@
 			debug(props);
 
 			// Create a mock instance of the protocol.
-			protocol =  getMockBox().createMock(className="mailservices.models.AbstractProtocol").init(props);
+			protocol =  getMockBox().createMock(className="cbmailservices.models.AbstractProtocol").init(props);
 		</cfscript>
 	</cffunction>
 
 	<cffunction name="testSend" access="public" output="false" returntype="void" mxunit:expectedException="AbstractProtocol.AbstractMethodException">
 		<cfscript>
 			// create a mock payload to pass in.
-			payload = getMockBox().createMock(className="mailservices.models.Mail").init();
+			payload = getMockBox().createMock(className="cbmailservices.models.Mail").init();
 
 			// As this is an abstract method that should be overwritten.
 			// We we're hoping it'll throw us a nice exception to chew on.

@@ -4,7 +4,7 @@
 
 	<cffunction name="setUp" returntype="void" access="public">
 		<cfscript>
-			this.mail = createObject("component","mailservices.models.MailSettingsBean");
+			this.mail = createObject("component","cbmailservices.models.MailSettingsBean");
 
 			this.instance.server = "mail.mail.com";
 			this.instance.username = "mail";
@@ -30,7 +30,7 @@
 		<cfscript>
 			// Establish the custom protocol we're going to use.
 			this.instance.protocol = {
-				class="mailservices.models.protocols.cfmailProtocol",
+				class="cbmailservices.models.protocols.cfmailProtocol",
 				properties = {}
 			};
 
@@ -43,7 +43,7 @@
 		<cfscript>
 			// Establish the custom protocol we're going to use.
 			this.instance.protocol = {
-				class="mailservices.models.protocols.someUnknownProtocol",
+				class="cbmailservices.models.protocols.someUnknownProtocol",
 				properties = {}
 			};
 
@@ -56,7 +56,7 @@
 		<cfscript>
 			// Establish the custom protocol we're going to use.
 			this.instance.protocol = {
-				class="mailservices.models.protocols.cfmailProtocol"
+				class="cbmailservices.models.protocols.cfmailProtocol"
 			};
 
 			// Init the settings with this protocol.
