@@ -55,12 +55,12 @@ component {
 		var mailsettings	= oConfig.getPropertyMixin( "mailsettings", "variables", structnew() );
 
 		//defaults
-		configStruct.mailsettings = {
+		mailsettings = {
 			tokenMarker = "@"
 		};
 
 		// Incorporate settings
-		structAppend( configStruct.mailsettings, mailsettings, true );
+		structAppend( configStruct.mailsettings, mailsettings, false );
 	}
 
 }
