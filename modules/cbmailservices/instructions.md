@@ -55,7 +55,7 @@ You register the protocols in the `mailsettings` via the `protocol` structure:
 ```
 // FileProtocol
 protocol = {
-	class = "cbcbmailservices.models.protocols.FileProtocol",
+	class = "cbmailservices.models.protocols.FileProtocol",
 	properties = {
 		filePath = "logs",
 		autoExpand = true
@@ -64,7 +64,7 @@ protocol = {
 
 // PostMark
 protocol = {
-	class = "cbcbmailservices.models.protocols.PostmarkProtocol",
+	class = "cbmailservices.models.protocols.PostmarkProtocol",
 	properties = {
 		APIKey = ""
 	}
