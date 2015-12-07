@@ -1,14 +1,13 @@
 <cfparam name="url.version" default="0">
-<cfparam name="url.path" 	default="#expandPath( "./CBMailServices-APIDocs" )#">
+<cfparam name="url.path" 	default="#expandPath( "./cbmailservices-APIDocs" )#">
 <cfscript>
-	docName = "CBMailServices-APIDocs";
-	base = expandPath( "/cbmailservices" );
-
-	colddoc 	= new ColdDoc();
-	strategy 	= new colddoc.strategy.api.HTMLAPIStrategy( url.path, "CBMailServices v#url.version#" );
-	colddoc.setStrategy( strategy );
-
-	colddoc.generate( inputSource=base, outputDir=url.path, inputMapping="cbmailservices" );
+	docName = "cbmailservices-APIDocs";
+	base 	= expandPath( "/cbmailservices" );
+	docbox 	= new docbox.DocBox( properties = {
+		projectTitle 	= "cbmailservices v#url.version#",
+		outputDir 		= url.path
+	} );
+	docbox.generate( source=base, mapping="cbmailservices" );
 </cfscript>
 
 <!---

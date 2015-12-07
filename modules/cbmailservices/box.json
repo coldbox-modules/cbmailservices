@@ -1,11 +1,11 @@
 {
 	"name" 		: "ColdBox Mail Services",
 	"author" 	: "Luis Majano <lmajano@ortussolutions.com",
-	"version"	: "1.0.0",
+	"version"	: "1.1.0",
 	"slug"		: "cbmailservices",
 	"type"		: "modules",
-	"homepage"	: "http://www.coldbox.org",
-	"documentation"		: "http://wiki.coldbox.org",
+	"homepage"	: "https://github.com/ColdBox/cbox-mailservices",
+	"documentation"		: "https://github.com/ColdBox/cbox-mailservices/wiki",
 	"repository"		: { "type" : "git", "url" : "https://github.com/ColdBox/cbox-mailservices" },
 	"shortDescription"	: "The ColdBox Mail services module will allow you to send email the OO way in multiple protocols",
 	"license"			: [ 
@@ -15,7 +15,7 @@
 		"Brad Wood <bdw429s@gmail.com>", "Curt Gratz <gratz@computerknowhow.com>"
 	],
 	"engines"	: [
-		{ "type" : "railo", "version" : ">4.1" },
+		{ "type" : "lucee", "version" : ">4.5" },
 		{ "type" : "adobe", "version" : ">9.02" }
 	]
 }
