@@ -30,20 +30,20 @@ Description :
 
 	<!--- send --->
 	<cffunction name="send" access="public" returntype="struct" hint="I send a payload via the this protocol.">
-		<cfargument name="payload" required="true" type="any" hint="I'm the payload to delivery" colddoc:generic="cbmailservices.models.Mail"/>
+		<cfargument name="payload" required="true" type="any" hint="I'm the payload to delivery" doc_generic="cbmailservices.models.Mail"/>
 		<cfthrow message="" type="AbstractProtocol.AbstractMethodException">
 	</cffunction>
 
 <!------------------------------------------- PROPERTY METHODS ------------------------------------------>
 
 	<!--- getter for the properties structure --->
-	<cffunction name="getProperties" access="public" output="false" returntype="any" hint="Get properties structure map" colddoc:generic="struct">
+	<cffunction name="getProperties" access="public" output="false" returntype="any" hint="Get properties structure map" doc_generic="struct">
 		<cfreturn instance.properties/>
 	</cffunction>
 
 	<!--- setter for the properties structure --->
 	<cffunction name="setProperties" access="public" output="false" returntype="void" hint="Set the entire properties structure map">
-		<cfargument name="properties" required="true" colddoc:generic="struct"/>
+		<cfargument name="properties" required="true" doc_generic="struct"/>
 		<cfset instance.properties = arguments.properties/>
 	</cffunction>
 
@@ -61,7 +61,7 @@ Description :
 	</cffunction>
 
 	<!--- check for a property --->
-	<cffunction name="propertyExists" access="public" returntype="any" hint="Checks wether a given property exists or not." output="false" colddoc:generic="Boolean">
+	<cffunction name="propertyExists" access="public" returntype="any" hint="Checks wether a given property exists or not." output="false" doc_generic="Boolean">
 		<cfargument name="property" required="true" hint="The property name">
 		<cfreturn structKeyExists(instance.properties,arguments.property)>
 	</cffunction>

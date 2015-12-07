@@ -42,7 +42,7 @@ Description :
 <!------------------------------------------- PUBLIC ------------------------------------------>
 	
 	<cffunction name="send" access="public" returntype="struct" hint="I send a payload via the cfmail protocol.">
-		<cfargument name="payload" required="true" type="any" hint="I'm the payload to delivery" colddoc:generic="cbmailservices.models.mail"/>
+		<cfargument name="payload" required="true" type="any" hint="I'm the payload to delivery" doc_generic="cbmailservices.models.Mail"/>
 		<cfscript>
 			// The return structure
 			var rtnStruct 	= {error=true, errorArray=[]};
@@ -70,7 +70,7 @@ Description :
 	
 	<!--- getMailContent --->
 	<cffunction name="getMailContent" output="false" access="private" returntype="any" hint="Generate Mail content">
-		<cfargument name="mail" required="true" type="any" hint="The mail payload" colddoc:generic="cbmailservices.models.Mail"/>
+		<cfargument name="mail" required="true" type="any" hint="The mail payload" doc_generic="cbmailservices.models.Mail"/>
 		<cfset var thisMail = "">
 		
 		<cfsavecontent variable="thisMail">
