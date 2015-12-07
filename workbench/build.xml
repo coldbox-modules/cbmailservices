@@ -78,10 +78,6 @@
 		<!-- Api Docs -->
 		<antcall target="build.apidocs" />
 		
-		<!-- Execute APIDocs -->
-        <get dest="${dir.build}/colddoc.html" src="${url.api}${project.version}&amp;path=${dir.api}" verbose="true"/>
-        <delete file="${dir.build}/colddoc.html" />
-        
         <!-- Zip it -->
 		<zip destfile="${dir.exports}/${project.name}-${project.version}.zip" basedir="${dir.build}"></zip>
 		
