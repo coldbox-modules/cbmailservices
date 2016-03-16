@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ColdBox/cbox-mailservices.svg?branch=development)](https://travis-ci.org/ColdBox/cbox-mailservices)
+
 #WELCOME TO THE COLDBOX MAILSERVICES MODULE
 
 The ColdBox Mail services module will allow you to send email the OO way in 
