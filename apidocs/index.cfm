@@ -1,13 +1,13 @@
 <cfparam name="url.version" default="0">
-<cfparam name="url.path" 	default="#expandPath( "./cbmailservices-APIDocs" )#">
+<cfparam name="url.path" 	default="#expandPath( "./#request.moduleName#-APIDocs" )#">
 <cfscript>
-	docName = "cbmailservices-APIDocs";
-	base 	= expandPath( "/cbmailservices" );
+	docName = "#request.moduleName#-APIDocs";
+	base 	= expandPath( "/#request.moduleName#" );
 	docbox 	= new docbox.DocBox( properties = {
-		projectTitle 	= "cbmailservices v#url.version#",
+		projectTitle 	= "#request.moduleName# v#url.version#",
 		outputDir 		= url.path
 	} );
-	docbox.generate( source=base, mapping="cbmailservices" );
+	docbox.generate( source=base, mapping=request.moduleName );
 </cfscript>
 
 <!---
