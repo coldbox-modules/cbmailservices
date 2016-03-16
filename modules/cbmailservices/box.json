@@ -1,7 +1,7 @@
 {
 	"name" 		: "ColdBox Mail Services",
-	"author" 	: "Luis Majano <lmajano@ortussolutions.com",
-	"version"	: "1.1.0",
+	"version"	: "@version.number@+@build.number@",
+	"author" 	: "Ortus Solutions.com <info@ortussolutions.com",
 	"slug"		: "cbmailservices",
 	"type"		: "modules",
 	"homepage"	: "https://github.com/ColdBox/cbox-mailservices",
@@ -17,5 +17,10 @@
 	"engines"	: [
 		{ "type" : "lucee", "version" : ">4.5" },
 		{ "type" : "adobe", "version" : ">9.02" }
-	]
+	],
+	"ignore":[
+        "**/.*",
+        "tests",
+        "*/.md"
+    ]
 }
