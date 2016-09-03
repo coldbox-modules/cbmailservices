@@ -75,7 +75,7 @@ Description :
 		
 		<cfsavecontent variable="thisMail">
 		<cfoutput>
-			Sent at: #now()#<br/>
+			Sent at: #dateTimeFormat( now(), "full" )#<br/>
 			<hr/>
 			Mail Attributes
 			<hr/>
