@@ -75,4 +75,27 @@
 
 	</cffunction>
 
+	<cffunction name="testDoesNotFailIfNoTypeWasProvided" access="public" output="false" returntype="void">
+		<cfscript>
+			payload = getMockBox().createMock(className="cbmailservices.models.Mail").init().config(from="info@coldbox.org",to="automation@coldbox.org",subject="Mail With Params - Hello Luis");
+			payload.setBody("Hello This is my great unit test");
+			payload.addMailParam(name="Disposition-Notification-To",value="info@coldbox.org");
+			payload.addMailParam(name="Importance",value="High");
+			rtn = protocol.send(payload);
+			debug(rtn);
+
+			// Check if files exist
+
+		</cfscript>
+
+		<cfdirectory action="list" directory="#expandPath('/tests/specs/protocols/tmp')#" filter="*.html" listinfo="name" name="qTesting" >
+
+		<cfset debug(qTesting)>
+		<cfset AssertTrue( qTesting.recordcount )>
+
+		<cfloop query="qTesting">
+			<cfset fileDelete( expandPath('/tests/specs/protocols/tmp/#qTesting.name#') )>
+		</cfloop>
+	</cffunction>
+
 </cfcomponent>
