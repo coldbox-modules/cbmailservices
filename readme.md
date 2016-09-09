@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/ColdBox/cbox-mailservices.svg?branch=development)](https://travis-ci.org/ColdBox/cbox-mailservices)
+[![Build Status](https://travis-ci.org/coldbox-modules/cbox-mailservices.svg?branch=development)](https://travis-ci.org/coldbox-modules/cbox-mailservices)
 
 #WELCOME TO THE COLDBOX MAILSERVICES MODULE
 
@@ -15,7 +15,7 @@ You can easily add your own mail protocols by building upon our standards.
 Apache License, Version 2.0.
 
 ##IMPORTANT LINKS
-- https://github.com/ColdBox/cbox-mailservices
+- https://github.com/coldbox-modules/cbox-mailservices
 - http://forgebox.io/view/cbmailservices
 - [Changelog](changelog.md)
 
