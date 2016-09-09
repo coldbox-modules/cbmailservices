@@ -17,6 +17,7 @@ Apache License, Version 2.0.
 ##IMPORTANT LINKS
 - https://github.com/ColdBox/cbox-mailservices
 - http://forgebox.io/view/cbmailservices
+- [Changelog](changelog.md)
 
 ##SYSTEM REQUIREMENTS
 - Lucee 4.5+
