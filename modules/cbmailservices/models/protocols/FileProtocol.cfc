@@ -75,7 +75,7 @@ Description :
 		
 		<cfsavecontent variable="thisMail">
 		<cfoutput>
-			Sent at: #now()#<br/>
+			Sent at: #dateTimeFormat( now(), "full" )#<br/>
 			<hr/>
 			Mail Attributes
 			<hr/>
@@ -91,7 +91,8 @@ Description :
 			<hr/>
 			Mail Body
 			<hr/>
-			<cfif arguments.mail.getMemento().type eq "text">
+			<cfif structKeyExists( arguments.mail.getMemento(), "type" ) AND
+				  arguments.mail.getMemento().type eq "text">
 		    <pre>#htmlcodeformat( arguments.mail.getBody() )#</pre>
 		    <cfelse>
 		    #arguments.mail.getBody()#
