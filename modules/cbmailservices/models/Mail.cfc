@@ -66,7 +66,7 @@ Description :
 		<cfargument name="useSSL" 			required="false" type="boolean" 	hint="Initial value for the useSSL property." />
 		<cfargument name="useTLS" 			required="false" type="boolean" 	hint="Initial value for the useTLS property." />
 		<cfargument name="wraptext" 		required="false" type="numeric" 	hint="Initial value for the wraptext property." />
-		<cfargument name="additionalInfo" 	required="false" type="numeric" 	hint="Initial value for the additional info property." />
+		<cfargument name="additionalInfo" 	required="false" type="struct" 	hint="Initial value for the additional info property." />
 		<cfscript>
 			var key = 0;
 
