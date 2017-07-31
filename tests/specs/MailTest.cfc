@@ -120,5 +120,38 @@
 		</cfscript>
 	</cffunction>
 
+	<cffunction name="testAdditionalInfoConfig" access="public" returnType="void">
+		<cfscript>
+			mail.config(additionalInfo= { "categories":"Spam" } );
+
+			assertEquals( { "categories":"Spam" }, mail.getAdditionalInfo( ) );
+		</cfscript>
+	</cffunction>
+
+	<cffunction name="testAdditionalInfoSetter" access="public" returnType="void">
+		<cfscript>
+			mail.setAdditionalInfo( { "categories":"Spam2" } );
+
+			assertEquals( { "categories":"Spam2" }, mail.getAdditionalInfo( ) );
+		</cfscript>
+	</cffunction>
+
+	<cffunction name="testAdditionalInfoItemSetter" access="public" returnType="void">
+		<cfscript>
+			mail.setAdditionalInfoItem( "categories", "Spam3" );
+
+			assertEquals( { "categories":"Spam3" }, mail.getAdditionalInfo( ) );
+		</cfscript>
+	</cffunction>
+
+	<cffunction name="testAdditionalInfoItemGetter" access="public" returnType="void">
+		<cfscript>
+			mail.setAdditionalInfoItem( "categories", "Spam4" );
+
+			assertEquals( { "categories":"Spam4" }, mail.getAdditionalInfo( ) );
+			assertEquals( "Spam4", mail.getAdditionalInfoItem( "categories" ) );
+		</cfscript>
+	</cffunction>
+
 </cfcomponent>
 
