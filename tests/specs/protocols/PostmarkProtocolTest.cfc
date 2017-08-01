@@ -13,7 +13,7 @@
 			debug(props);
 
 			// Create a mock instance of the protocol.
-			protocol =  getMockBox().createMock(className="cbmailservices.models.protocols.postmarkProtocol").init(props);
+			protocol =  getMockBox().createMock(className="cbmailservices.models.protocols.PostmarkProtocol").init(props);
 		</cfscript>
 	</cffunction>
 
