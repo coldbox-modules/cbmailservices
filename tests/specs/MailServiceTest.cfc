@@ -1,4 +1,7 @@
 ﻿component extends="coldbox.system.testing.BaseTestCase"{
+
+	// Making sure ColdBox is unloaded, so mocks don't collide.
+	this.unloadColdBox = true;
 	
 	function setup(){
 		super.setup();
@@ -11,33 +14,36 @@
 	}
 
 	function testparseTokens(){
-		var mail = ms.newMail();
-		var tokens = {name="Luis Majano",time=dateformat(now(),"full")};
+		ms.setTokenMarker( "@" );
+		var mail 	= ms.newMail();
+		var tokens 	= { "name"="Luis Majano", "time"=dateformat(now(),"full" ) };
 		
-		mail.setBodyTokens(tokens);
-		mail.setBody("Hello @name@, how are you today? Today is the @time@");
+		mail.setBodyTokens( tokens );
+		mail.setBody( "Hello @name@, how are you today? Today is the @time@" );
 
 		ms.parseTokens( mail );
-
-		assertEquals( mail.getBody(), "Hello #tokens.name#, how are you today? Today is the #tokens.time#");
+		
+		//debug( mail.getBody() );
+		expect(	mail.getBody() ).toBe( "Hello #tokens.name#, how are you today? Today is the #tokens.time#" );
 	}
 
 	function testparseTokensCustom(){
-		ms.setTokenMarker("$");
-		mail = ms.newMail();
-		tokens = {name="Luis Majano",time=dateformat(now(),"full")};
+		ms.setTokenMarker( "$" );
+		var mail = ms.newMail();
+		var tokens = {name="Luis Majano",time=dateformat(now(),"full")};
+		
 		mail.setBodyTokens(tokens);
 		mail.setBody("Hello $name$, how are you today? Today is the $time$");
 
 		ms.parseTokens(mail);
 
-		assertEquals( mail.getBody(), "Hello #tokens.name#, how are you today? Today is the #tokens.time#");
+		expect(	mail.getBody() ).toBe( "Hello #tokens.name#, how are you today? Today is the #tokens.time#" );
 	}
 
 	function testSend(){
 		// mockings
 		mockProtocol = createStub().$("send", {error=false,errorArray=[]} );
-		prepareMock( ms.getMailSettings() ).$("getTransit", mockProtocol);
+		prepareMock( ms.getMailSettings() ).$( "getTransit", mockProtocol );
 
 		// 1:Mail with No Params
 		mail = ms.newMail().config(from="info@coldbox.org",to="automation@coldbox.org",type="html");
@@ -91,8 +97,6 @@
 		
 		ms.setMailSettings( mockSettings );
 
-		ms.$( "mailIt" );
-
 		mail = ms.newMail(from="info@coldbox.org",to="automation@coldbox.org",type="html",body="TestMailWithSettings",subject="TestMailWithSettings");
 		ms.send( mail );
 		assertTrue( mockProtocol.$once("send") );
@@ -104,7 +108,6 @@
 		mail = ms.newMail(from="info@coldbox.org",to="automation@coldbox.org",type="html",body="TestMailWithSettings",subject="TestMailWithSettings");
 		ms.send( mail );
 		assertTrue( mockProtocol.$once("send") );
-
 		//debug( mail.getMemento() );
 	}
 

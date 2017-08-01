@@ -126,14 +126,12 @@ component accessors="true" singleton{
 		var tokens 		= arguments.mail.getBodyTokens();
 		var body 		= arguments.mail.getBody();
 		var mailParts	= arguments.mail.getMailParts();
-  		var key 		= 0;
 		var tokenMarker = getTokenMarker();
-		var mailPart 	= 1;
 		
 		//Check mail parts for content
 		if( arrayLen( mailparts ) ){
 			// Loop over mail parts
-			for(mailPart=1; mailPart lte arrayLen( mailParts ); mailPart++){
+			for( var mailPart=1; mailPart lte arrayLen( mailParts ); mailPart++){
 				body = mailParts[ mailPart ].body;
 				for( key in tokens ){
 					body = replaceNoCase( body, "#tokenMarker##key##tokenMarker#", tokens[ key ], "all" );
@@ -143,7 +141,7 @@ component accessors="true" singleton{
 		}
 		
 		// Do token replacement on the body text
-		for( key in tokens ){
+		for( var key in tokens ){
 			body = replaceNoCase( body, "#tokenMarker##key##tokenMarker#", tokens[ key ], "all" );
 		}
 		
