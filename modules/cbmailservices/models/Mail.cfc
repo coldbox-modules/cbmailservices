@@ -1,4 +1,4 @@
-﻿<!-----------------------------------------------------------------------
+<!-----------------------------------------------------------------------
 ********************************************************************************
 Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
 www.ortussolutions.com
@@ -24,6 +24,7 @@ Description :
 			instance.body = "";
 			instance.from = "";
 			instance.to = "";
+			instance.additionalInfo = structnew();
 
 			return config(argumentCollection=arguments);
 		</cfscript>
@@ -65,6 +66,7 @@ Description :
 		<cfargument name="useSSL" 			required="false" type="boolean" 	hint="Initial value for the useSSL property." />
 		<cfargument name="useTLS" 			required="false" type="boolean" 	hint="Initial value for the useTLS property." />
 		<cfargument name="wraptext" 		required="false" type="numeric" 	hint="Initial value for the wraptext property." />
+		<cfargument name="additionalInfo" 	required="false" type="struct" 	hint="Initial value for the additional info property." />
 		<cfscript>
 			var key = 0;
 
@@ -209,6 +211,10 @@ Description :
 
 	<cffunction name="getBody" access="public" output="false" returntype="string" hint="Get body">
 		<cfreturn instance.body/>
+	</cffunction>
+
+	<cffunction name="getAdditionalInfo" access="public" output="false" returntype="struct" hint="Get Additional Info">
+		<cfreturn instance.additionalInfo/>
 	</cffunction>
 
 <!------------------------------------------- SETTERS ------------------------------------------->
@@ -381,6 +387,12 @@ Description :
 		<cfreturn this>
 	</cffunction>
 
+	<cffunction name="setAdditionalInfo" access="public" output="false" returntype="any" hint="Set Additional Info">
+		<cfargument name="additionalInfo" type="struct" required="yes" />
+		<cfset instance.additionalInfo = arguments.additionalInfo />
+		<cfreturn this>
+	</cffunction>
+
 	<cffunction name="validate" access="public" returntype="boolean" hint="validates the basic fields of To, From and Body" output="false" >
 		<cfscript>
 			if( getFrom().length() eq 0 OR
@@ -398,6 +410,24 @@ Description :
 	</cffunction>
 
 <!------------------------------------------- PUBLIC HELPER METHODS ------------------------------------------->
+
+	<cffunction name="getAdditionalInfoItem" access="public" output="false" returntype="any" hint="Set Additional Info">
+		<cfargument name="key" type="string" required="yes" />
+		<cfif structKeyExists( instance.additionalInfo, arguments.key )>
+			<cfreturn instance.additionalInfo[ arguments.key ] >
+		<cfelse>
+			<cfreturn "">
+		</cfif>	
+	</cffunction>
+
+	<cffunction name="setAdditionalInfoItem" access="public" output="false" returntype="any" hint="Set Additional Info">
+		<cfargument name="key" type="string" required="yes" />
+		<cfargument name="value" required="yes" />
+		<cfset instance.additionalInfo[ arguments.key ] = arguments.value />
+		<cfreturn this>
+	</cffunction>
+
+	
 
 	<!--- setReadReceipt --->
     <cffunction name="setReadReceipt" output="false" access="public" returntype="any" hint="Set the email address that will receive read receipts. I just place the appropriate mail headers">
