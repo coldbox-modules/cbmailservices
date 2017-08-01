@@ -23,7 +23,7 @@ component accessors="true" singleton{
 	* @mailSettings 	A structure of mail settings and protocol to bind this service with. A MailSettingsBean object is created with it.
 	* @tokenMarker		The default token Marker Symbol
 	* @wirebox 			The wirebox instance
-	* @wirebox.inject	wirebox
+	* @wirebox.inject wirebox
 	*/
 	MailService function init( 
 		struct mailSettings={}, 
