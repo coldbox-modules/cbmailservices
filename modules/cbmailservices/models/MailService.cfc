@@ -8,20 +8,34 @@
 */
 component accessors="true" singleton{
 
+	/**
+	* The token marker used for token replacements, default is `@`
+	*/
 	property name="tokenMarker";
+
+	/**
+	* The mail settings configuration structure.
+	*/
 	property name="mailSettings";
 
 	/**
 	* Constructor
-	* @mailSettings A structure of mail settings and protocol to bind this service with. A MailSettingsBean object is created with it.
-	* @tokenMarker The default token Marker Symbol
+	* @mailSettings 	A structure of mail settings and protocol to bind this service with. A MailSettingsBean object is created with it.
+	* @tokenMarker		The default token Marker Symbol
+	* @wirebox 			The wirebox instance
+	* @wirebox.inject	wirebox
 	*/
-	MailService function init( struct mailSettings={}, string tokenMarker="@" ){
+	MailService function init( 
+		struct mailSettings={}, 
+		string tokenMarker="@",
+		wirebox
+	){
 		// Mail Token Symbol
-		variables.tokenMarker = arguments.tokenMarker;
-		
+		variables.tokenMarker 	= arguments.tokenMarker;
+		// WireBox
+		variables.wirebox 		= arguments.wirebox;
 		// Mail Settings setup
-		variables.mailSettings = new MailSettingsBean( argumentCollection=arguments.mailSettings );
+		variables.mailSettings 	= variables.wirebox.getInstance( name="MailSettingsBean@cbmailservices", initArguments=arguments.mailSettings );
 		
 		return this;
 	}
@@ -30,7 +44,7 @@ component accessors="true" singleton{
 	* Get a new Mail payload object, just use config() on it to prepare it or pass in all the arguments via this method
 	*/
 	Mail function newMail(){
-		var mail = new cbmailservices.models.Mail( argumentCollection=arguments );
+		var mail = variables.wirebox.getInstance( name="Mail@cbmailservices", initArguments=arguments );
 		
 		// If mail payload does not have a server and one is defined in the mail settings, use that
 		if( NOT mail.propertyExists( "server" ) AND len( variables.mailSettings.getServer() ) ){
@@ -104,8 +118,6 @@ component accessors="true" singleton{
 
 		return rtnStruct;
 	}
-	
-	/**------------------------------------------- PRIVATE ------------------------------------------- **/
 	
 	/**
 	* Parse the tokens and do body replacements.

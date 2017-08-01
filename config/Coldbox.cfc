@@ -23,7 +23,7 @@ component{
 			missingTemplateHandler	= "",
 
 			//Extension Points
-			ApplicationHelper 				= "",
+			ApplicationHelper 			= "",
 			coldboxExtensionsLocation 	= "",
 			modulesExternalLocation		= [],
 			pluginsExternalLocation 	= "",
@@ -46,9 +46,6 @@ component{
 		// custom settings
 		settings = {
 		};
-
-		// Activate WireBox
-		wirebox = { enabled = true, singletonReload=true };
 
 		// Module Directives
 		modules = {

@@ -46,24 +46,25 @@ Description :
 		<cfargument name="useSSL" 			required="false" type="boolean" 	hint="Initial value for the useSSL property." />
 		<cfargument name="useTLS" 			required="false" type="boolean" 	hint="Initial value for the useTLS property." />
 		<cfargument name="wraptext" 		required="false" type="numeric" 	hint="Initial value for the wraptext property." />
+		<!--- DI --->
+		<cfargument name="wirebox" 			inject="wirebox" />
 		<!--- ************************************************************* --->
 		<cfscript>
-			var key = 0;
-
 			instance 			= structnew();
+			variables.wirebox 	= arguments.wirebox;
 
 			// init _protocol
 			variables._protocol	= "";
 
 			// populate mail setting keys
-			for(key in arguments){
-				if( structKeyExists(arguments,key) ){
-					instance[key] = arguments[key];
+			for( var key in arguments ){
+				if( structKeyExists( arguments,key ) ){
+					instance[ key ] = arguments[ key ];
 				}
 			}
 
 			// Register the protocol to be used
-			registerProtocol(argumentcollection=instance.protocol);
+			registerProtocol( argumentcollection=instance.protocol );
 
 			// Return an instance of the class.
 			return this;
@@ -102,7 +103,7 @@ Description :
 		<cfargument name="class" 		required="false" default="cbmailservices.models.protocols.CFMailProtocol" hint="The instantiation path of the mail protocol object"/>
 		<cfargument name="properties"	required="false" default="#structNew()#" hint="The properties to construct the protocol object with" />
 		<cftry>
-			<cfset variables._protocol = createObject( "component", arguments.class).init( arguments.properties )>
+			<cfset variables._protocol = wirebox.getInstance( name=arguments.class, initArguments = arguments.properties )>
 			<cfcatch type="any">
 				<cfthrow type="MailSettingsBean.FailLoadProtocolException"
 					     message="Unable to successfully load the supplied mail protocol: #arguments.toString()#"

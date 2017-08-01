@@ -6,14 +6,15 @@
 		<cfscript>
 			this.mail = createObject("component","cbmailservices.models.MailSettingsBean");
 
-			this.instance.server = "mail.mail.com";
-			this.instance.username = "mail";
-		    this.instance.password = "pass" ;
-			this.instance.port = "110";
-			this.instance.protocol = structNew();
-			this.instance.from = "info@coldbox.org";
+			this.instance.server      = "mail.mail.com";
+			this.instance.username    = "mail";
+		    this.instance.password 	  = "pass" ;
+			this.instance.port        = "110";
+			this.instance.protocol    = structNew();
+			this.instance.from        = "info@coldbox.org";
+			this.instance.wirebox     = new coldbox.system.ioc.Injector();
 
-			this.mail = this.mail.init(argumentCollection=this.instance);
+			this.mail = this.mail.init( argumentCollection=this.instance );
 
 		</cfscript>
 	</cffunction>

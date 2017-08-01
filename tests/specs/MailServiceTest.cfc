@@ -1,28 +1,15 @@
-﻿<!-----------------------------------------------------------------------
-********************************************************************************
-Copyright 2005-2007 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
-www.ortussolutions.com
-********************************************************************************
-
-Author 	    :	Luis Majano
-Date        :	September 3, 2007
-Description :
-	debugger service tests
-
-Modification History:
-01/18/2007 - Created
------------------------------------------------------------------------>
-<cfcomponent extends="coldbox.system.testing.BaseTestCase" output="false">
-<cfscript>
-	this.loadColdBox = false;
-
+﻿component extends="coldbox.system.testing.BaseTestCase"{
+	
 	function setup(){
-		ms = getMockBox().createMock("cbmailservices.models.MailService").init();
+		super.setup();
+		ms = prepareMock( getInstance( "MailService@cbmailservices" ) );
 	}
+
 	function testNewMail(){
 		var mail = ms.newMail();
 		expect(	mail ).toBeComponent();
 	}
+
 	function testparseTokens(){
 		var mail = ms.newMail();
 		var tokens = {name="Luis Majano",time=dateformat(now(),"full")};
@@ -30,20 +17,17 @@ Modification History:
 		mail.setBodyTokens(tokens);
 		mail.setBody("Hello @name@, how are you today? Today is the @time@");
 
-		makePublic(ms,"parseTokens");
-
-		ms.parseTokens(mail);
+		ms.parseTokens( mail );
 
 		assertEquals( mail.getBody(), "Hello #tokens.name#, how are you today? Today is the #tokens.time#");
 	}
+
 	function testparseTokensCustom(){
 		ms.setTokenMarker("$");
 		mail = ms.newMail();
 		tokens = {name="Luis Majano",time=dateformat(now(),"full")};
 		mail.setBodyTokens(tokens);
 		mail.setBody("Hello $name$, how are you today? Today is the $time$");
-
-		makePublic(ms,"parseTokens");
 
 		ms.parseTokens(mail);
 
@@ -52,8 +36,8 @@ Modification History:
 
 	function testSend(){
 		// mockings
-		mockProtocol = getMockBox().createStub().$("send", {error=false,errorArray=[]} );
-		getMockBox().prepareMock( ms.getMailSettings() ).$("getTransit", mockProtocol);
+		mockProtocol = createStub().$("send", {error=false,errorArray=[]} );
+		prepareMock( ms.getMailSettings() ).$("getTransit", mockProtocol);
 
 		// 1:Mail with No Params
 		mail = ms.newMail().config(from="info@coldbox.org",to="automation@coldbox.org",type="html");
@@ -94,28 +78,34 @@ Modification History:
 
 	function testMailWithSettings(){
 		// Mocks
-		mockProtocol = getMockBox().createStub().$( "send", {error=false,errorArray=[]} );
-		mockSettings = getMockBox().createMock("cbmailservices.models.MailSettingsBean")
-			.init("0.0.0.0","test","test",25)
-			.$("getTransit", mockProtocol);
+		mockProtocol = createStub().$( "send", {error=false,errorArray=[]} );
+		mockSettings = prepareMock( 
+			getInstance( 
+				name 			= "cbmailservices.models.MailSettingsBean", 
+				initArguments	= {
+					server = "0.0.0.0", username="test", password="Test", port="25"
+				} 
+			) 
+		)
+		.$( "getTransit", mockProtocol);
 		
-		ms.init().setMailSettings( mockSettings );
+		ms.setMailSettings( mockSettings );
 
-		ms.$("parseTokens").$("mailIt");
+		ms.$( "mailIt" );
 
 		mail = ms.newMail(from="info@coldbox.org",to="automation@coldbox.org",type="html",body="TestMailWithSettings",subject="TestMailWithSettings");
 		ms.send( mail );
 		assertTrue( mockProtocol.$once("send") );
 
 		// Test with No settings
-		ms.init();
-		mockProtocol = getMockBox().createStub().$("send", {error=false,errorArray=[]} );
-		getMockBox().prepareMock( ms.getMailSettings() ).$("getTransit", mockProtocol);
+		ms.setMailSettings( prepareMock( getInstance( "cbmailservices.models.MailSettingsBean" )  ) );
+		mockProtocol = createStub().$( "send", {error=false,errorArray=[]} );
+		prepareMock( ms.getMailSettings() ).$("getTransit", mockProtocol );
 		mail = ms.newMail(from="info@coldbox.org",to="automation@coldbox.org",type="html",body="TestMailWithSettings",subject="TestMailWithSettings");
 		ms.send( mail );
 		assertTrue( mockProtocol.$once("send") );
 
 		//debug( mail.getMemento() );
 	}
-</cfscript>
-</cfcomponent>
+
+}
