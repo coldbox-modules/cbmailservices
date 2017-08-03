@@ -103,7 +103,10 @@ Description :
 		<cfargument name="class" 		required="false" default="cbmailservices.models.protocols.CFMailProtocol" hint="The instantiation path of the mail protocol object"/>
 		<cfargument name="properties"	required="false" default="#structNew()#" hint="The properties to construct the protocol object with" />
 		<cftry>
-			<cfset variables._protocol = wirebox.getInstance( name=arguments.class, initArguments = arguments.properties )>
+			<cfset variables._protocol = wirebox.getInstance( 
+				name 			= arguments.class, 
+				initArguments 	= arguments.properties 
+			)>
 			<cfcatch type="any">
 				<cfthrow type="MailSettingsBean.FailLoadProtocolException"
 					     message="Unable to successfully load the supplied mail protocol: #arguments.toString()#"

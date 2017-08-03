@@ -18,21 +18,26 @@ Description :
 	<cffunction name="init" access="public" returntype="FileProtocol" hint="Constructor" output="false">
 		<cfargument name="properties" required="false" default="#structnew()#" hint="A map of configuration properties for the protocol" />
 		<cfscript>
-			super.init(argumentCollection=arguments);
+			super.init( argumentCollection=arguments );
 			
 			// Property Checks
-			if(NOT propertyExists("filePath")){
+			if( NOT propertyExists( "filePath" ) ){
 				// No API key was found, so throw an exception.
-				throw(message="filePath property is Required",type="FileProtocol.PropertyNotFound");
+				throw( message="filePath property is Required", type="FileProtocol.PropertyNotFound" );
 			}	
 			// auto expand
-			if( NOT propertyExists("autoExpand") ){
-				setProperty("autoExpand",true);
+			if( NOT propertyExists( "autoExpand" ) ){
+				setProperty( "autoExpand", true );
 			}
 			
 			// expandPath?
-			if( getProperty("autoExpand") ){
-				setProperty("filePath", expandPath( getProperty('filePath') ) );
+			if( getProperty( "autoExpand" ) ){
+				setProperty( "filePath", expandPath( getProperty( 'filePath' ) ) );
+			}
+
+			// Check for filepath and create if not found
+			if( !directoryExists( getProperty( "filePath" ) ){
+				directoryCreate( getProperty( "filePath" ) );
 			}
 				
 			return this;
@@ -45,9 +50,9 @@ Description :
 		<cfargument name="payload" required="true" type="any" hint="I'm the payload to delivery" doc_generic="cbmailservices.models.Mail"/>
 		<cfscript>
 			// The return structure
-			var rtnStruct 	= {error=true, errorArray=[]};
+			var rtnStruct 	= { error=true, errorArray=[] };
 			var content		= "";
-			var filePath	= getProperty("filePath") & "/mail.#dateformat(now(),"mm-dd-yyyy")#.#timeFormat(now(),"HH-mm-ss-L")#.html";
+			var filePath	= getProperty( "filePath" ) & "/mail.#dateformat(now(),"mm-dd-yyyy")#.#timeFormat(now(),"HH-mm-ss-L")#.html";
 				
 			//Just mail the darned thing!!
 			try{

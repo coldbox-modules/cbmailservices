@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 1.4.1
+* Auto create folder paths in FileProtocol if they do not exist
+
 ## 1.4.0
 * Updated to use module templating
 * Proposed additionalInfo data struct for provider specific implementations. Added a couple of helper methods : https://github.com/coldbox-modules/cbox-mailservices/pull/5
