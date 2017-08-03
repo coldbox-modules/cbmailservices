@@ -65,6 +65,23 @@
 		</cfscript>
 	</cffunction>
 
+	<cffunction name="testsWithFileProtocol" access="public" returntype="void">
+		<cfscript>
+		
+			this.instance.protocol = {
+				class = "cbmailservices.models.protocols.FileProtocol",
+				properties = {
+					filePath = "/tests/resources/mail",
+					autoExpand = true
+				}
+			};
+
+			this.mail.init( argumentcollection=this.instance );
+		</cfscript>
+
+
+	</cffunction>
+
 	<cffunction name="testgetmemento" access="public" returnType="void">
 		<cfscript>
 			this.mail.setMemento(this.instance);
