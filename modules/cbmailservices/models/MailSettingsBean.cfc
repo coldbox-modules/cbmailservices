@@ -105,7 +105,9 @@ Description :
 		<cftry>
 			<cfset variables._protocol = wirebox.getInstance( 
 				name 			= arguments.class, 
-				initArguments 	= arguments.properties 
+				initArguments 	= {
+					"properties" : arguments.properties
+				} 
 			)>
 			<cfcatch type="any">
 				<cfthrow type="MailSettingsBean.FailLoadProtocolException"
