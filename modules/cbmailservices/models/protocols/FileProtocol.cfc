@@ -36,7 +36,7 @@ Description :
 			}
 
 			// Check for filepath and create if not found
-			if( !directoryExists( getProperty( "filePath" ) ){
+			if( !directoryExists( getProperty( "filePath" ) ) ){
 				directoryCreate( getProperty( "filePath" ) );
 			}
 				
