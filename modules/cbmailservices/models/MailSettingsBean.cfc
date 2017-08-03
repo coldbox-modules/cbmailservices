@@ -111,8 +111,9 @@ Description :
 			)>
 			<cfcatch type="any">
 				<cfthrow type="MailSettingsBean.FailLoadProtocolException"
-					     message="Unable to successfully load the supplied mail protocol: #arguments.toString()#"
-						 detail="#cfcatch.message# #cfcatch.detail# #cfcatch.stacktrace#">
+					     message="Unable to successfully load the supplied mail protocol: #arguments.toString()# The downstream message received was: #cfcatch.message#"
+						 detail=" Detail: #cfcatch.detail#"
+						 extendedInfo="StackTrace: #cfcatch.stacktrace#">
 			</cfcatch>
 		</cftry>
 	</cffunction>
