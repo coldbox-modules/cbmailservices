@@ -105,12 +105,15 @@ Description :
 		<cftry>
 			<cfset variables._protocol = wirebox.getInstance( 
 				name 			= arguments.class, 
-				initArguments 	= arguments.properties 
+				initArguments 	= {
+					"properties" : arguments.properties
+				} 
 			)>
 			<cfcatch type="any">
 				<cfthrow type="MailSettingsBean.FailLoadProtocolException"
-					     message="Unable to successfully load the supplied mail protocol: #arguments.toString()#"
-						 detail="#cfcatch.message# #cfcatch.detail# #cfcatch.stacktrace#">
+					     message="Unable to successfully load the supplied mail protocol: #arguments.toString()# The downstream message received was: #cfcatch.message#"
+						 detail=" Detail: #cfcatch.detail#"
+						 extendedInfo="StackTrace: #cfcatch.stacktrace#">
 			</cfcatch>
 		</cftry>
 	</cffunction>
