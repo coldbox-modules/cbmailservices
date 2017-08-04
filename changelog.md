@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## 1.4.2
+* Fixes incorrect argument collection nesting on protocol registration
+
 ## 1.4.1
 * Auto create folder paths in FileProtocol if they do not exist
 
