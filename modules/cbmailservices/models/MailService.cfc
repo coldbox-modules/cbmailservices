@@ -127,6 +127,7 @@ component accessors="true" singleton{
 		var body 		= arguments.mail.getBody();
 		var mailParts	= arguments.mail.getMailParts();
 		var tokenMarker = getTokenMarker();
+		var key = '';
 		
 		//Check mail parts for content
 		if( arrayLen( mailparts ) ){
