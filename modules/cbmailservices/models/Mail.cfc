@@ -23,6 +23,7 @@ Description :
 			instance.mailParts = ArrayNew(1);
 			instance.body = "";
 			instance.from = "";
+			instance.fromName = "";
 			instance.to = "";
 			instance.additionalInfo = structnew();
 
@@ -67,6 +68,7 @@ Description :
 		<cfargument name="useTLS" 			required="false" type="boolean" 	hint="Initial value for the useTLS property." />
 		<cfargument name="wraptext" 		required="false" type="numeric" 	hint="Initial value for the wraptext property." />
 		<cfargument name="additionalInfo" 	required="false" type="struct" 	hint="Initial value for the additional info property." />
+		<cfargument name="fromName"     	required="false" type="string" 	hint="Initial value for the additional info property." />
 		<cfscript>
 			var key = 0;
 
@@ -91,7 +93,11 @@ Description :
 
 	<cffunction name="getFrom" access="public" output="false" returntype="any" hint="Gets the from property">
 		<cfreturn instance.from />
-	</cffunction>
+    </cffunction>
+
+    <cffunction name="getFromName" access="public" output="false" returntype="any" hint="Gets the fromName property">
+        <cfreturn instance.fromName />
+    </cffunction>
 
 	<cffunction name="getTo" access="public" output="false" returntype="any" hint="Gets the to property">
 		<cfreturn instance.to />
@@ -229,7 +235,13 @@ Description :
 		<cfargument name="newFrom" type="string" required="yes" />
 		<cfset instance.from = arguments.newFrom />
 		<cfreturn this>
-	</cffunction>
+    </cffunction>
+
+    <cffunction name="setFromName" access="public" output="false" returntype="any" hint="Sets a new value for the fromName property">
+        <cfargument name="newFromName" type="string" required="yes" />
+        <cfset instance.fromName = arguments.newFromName />
+        <cfreturn this>
+    </cffunction>
 
 	<cffunction name="setTo" access="public" output="false" returntype="any" hint="Sets a new value for the to property">
 		<cfargument name="newTo" type="string" required="yes" />
@@ -417,7 +429,7 @@ Description :
 			<cfreturn instance.additionalInfo[ arguments.key ] >
 		<cfelse>
 			<cfreturn "">
-		</cfif>	
+		</cfif>
 	</cffunction>
 
 	<cffunction name="setAdditionalInfoItem" access="public" output="false" returntype="any" hint="Set Additional Info">
@@ -427,7 +439,7 @@ Description :
 		<cfreturn this>
 	</cffunction>
 
-	
+
 
 	<!--- setReadReceipt --->
     <cffunction name="setReadReceipt" output="false" access="public" returntype="any" hint="Set the email address that will receive read receipts. I just place the appropriate mail headers">
