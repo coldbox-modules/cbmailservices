@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/coldbox-modules/cbox-mailservices.svg?branch=development)](https://travis-ci.org/coldbox-modules/cbox-mailservices)
 
-#WELCOME TO THE COLDBOX MAILSERVICES MODULE
+# WELCOME TO THE COLDBOX MAILSERVICES MODULE
 
 The ColdBox Mail services module will allow you to send email the OO way in 
 multiple protocols for many environments.  The supported protocols are:
@@ -11,15 +11,15 @@ multiple protocols for many environments.  The supported protocols are:
 
 You can easily add your own mail protocols by building upon our standards.
 
-##LICENSE
+## LICENSE
 Apache License, Version 2.0.
 
-##IMPORTANT LINKS
+## IMPORTANT LINKS
 - https://github.com/coldbox-modules/cbox-mailservices
 - http://forgebox.io/view/cbmailservices
 - [Changelog](changelog.md)
 
-##SYSTEM REQUIREMENTS
+## SYSTEM REQUIREMENTS
 - Lucee 4.5+
 - ColdFusion 10+
 
