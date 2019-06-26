@@ -32,7 +32,7 @@ Just drop into your modules folder or use the box-cli to install
 The mail services registers all mail components so you can use them in your application.
 
 ## Settings
-You will need to update the your `ColdBox.cfc` with a `mailsettings` structure with your preferred mail settings and mail protocol to use.  All the keys that can go into the `mailsettings` struct map 1-1 to the `cfmail` tag except for the `tokenMarker` and `protocol` keys.
+You will need to update the your `ColdBox.cfc` with a `mailsettings` structure with your preferred mail settings and mail protocol to use.  All the keys that can go into the `mailsettings` struct map 1-1 to the `cfmail` tag except for the `tokenMarker` and `protocol` keys.  See below for more information on other protocols you can use.
  
 ```js
 mailsettings = {
@@ -40,7 +40,7 @@ mailsettings = {
     tokenMarker = "@",
     // protocol
     protocol = {
-        class = "",
+        class = "cbmailservices.models.protocols.CFMailProtocol",
         properties = {}
     }
 };
@@ -50,21 +50,29 @@ mailsettings = {
 This will register a `mailService@cbmailservices` in WireBox that you can leverage for usage.
 
 ```js
-// build mail and send
-var oMail = getInstance( "mailService@cbmailservices" )
-    .newMail( to="email@email.com",
+// build one-off mail
+var mailService = getInstance( "mailService@cbmailservices" );
+var oMail = mailService.newMail( to="email@email.com",
+              from="no_reply@ortussolutions.com",
               subject="Mail Services Rock",
+              type="html",
               bodyTokens={ user="Luis", product="ColdBox", link=event.buildLink( 'home' )} );
 
-// Set a Body
+// add a Body
 oMail.setBody("
     <p>Dear @user@,</p>
     <p>Thank you for downloading @product@, have a great day!</p>
     <p><a href='@link@'>@link@</a></p> 
 ");
 
-//send it
+// send it
 var results = mailService.send( oMail );
+```
+
+You can also inject mailService into your components as you would with other modules to avoid the getInstance() call.
+
+```js
+property name="mailService" inject="MailService@cbmailservices";
 ```
 
 ### Mail Additional Info
