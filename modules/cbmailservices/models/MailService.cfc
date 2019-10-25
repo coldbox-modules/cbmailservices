@@ -8,6 +8,8 @@
 */
 component accessors="true" singleton{
 
+	property name="inteceptorService" inject="coldbox:interceptorService";
+
 	/**
 	* The token marker used for token replacements, default is `@`
 	*/
@@ -109,8 +111,21 @@ component accessors="true" singleton{
 				
 		//Just mail the darned thing!!
 		try{
+
+			//announce interception point before mail send
+			inteceptorService.processState( "preMailSend", {
+				mail = payload
+			});
+
 			// We mail it using the protocol which is defined in the mail settings.
 			rtnStruct = variables.mailSettings.getTransit().send(payload);
+
+			//announce interception point after mail send
+			inteceptorService.processState( "postMailSend", {
+				mail = payload,
+				result = rtnStruct
+			});
+			
 		}
 		catch(Any e){
 			ArrayAppend(rtnStruct.errorArray,"Error sending mail. #e.message# : #e.detail# : #e.stackTrace#");
