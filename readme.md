@@ -120,6 +120,43 @@ protocol = {
 
 In order to create your own custom protocol you will create a CFC that inherits from `cbmailservices.models.AbstractProtocol` and make sure you implement the `init()` and `send()` method.
 
+### Interception Points
+
+The module will register two interception points. `PreMailSend` and `PostMailSend`. These interception points are useful to alter the mail object before it gets sent out, and/or perform any functions after the mail gets sent out. An example interceptor would be:
+
+```js
+component extends="coldbox.system.Interceptor"{
+    void function configure(){
+        
+    }
+
+    boolean function preMailSend( event, interceptData, buffer, rc, prc ){
+        var environment = getSetting('environment');
+        var appName = getSetting('appName');
+        var mail = interceptData.mail;
+        var subject = mail.getSubject()
+
+        if(environment eq 'development'){
+            //change recipient if we are on development
+            mail.setTo('johndoe@example.com');  
+            //prefix the subject if we are on development
+            mail.setSubject('<DEV-#appName#> #subject#');
+        }       
+
+        return false;
+    }
+
+    boolean function postMailSend( event, interceptData, buffer, rc, prc ){
+        if(interceptData.result.error eq true){
+            //log mail failure here...
+        }
+
+        return false;
+    }
+
+}
+```
+
 ********************************************************************************
 Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
 www.ortussolutions.com
