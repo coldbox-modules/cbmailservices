@@ -20,6 +20,10 @@ component {
 
 	function configure(){
 
+		interceptorSettings = {
+			customInterceptionPoints = "preMailSend,postMailSend"
+		};
+
 	}
 
 	/**
