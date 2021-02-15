@@ -49,4 +49,30 @@
         expect( messages[ 4 ] ).toBe( payloadD.getMemento() );
     }
 
+    public void function testHasMessage() {
+        variables.protocol.reset();
+        var sentPayload = getMockBox().createMock( className = "cbmailservices.models.Mail" ).init()
+            .config( from = "info@coldbox.org", to = "sent@coldbox.org", type = "html" );
+        sentPayload.setBodyTokens( { "name": "Luis Majano", "time": dateformat( now(), "full" ) } );
+        sentPayload.setBody( "<h1>Hello @name@, how are you today?</h1>  <p>Today is the <b>@time@</b>.</p> <br/><br/><a href=""http://www.coldbox.org"">ColdBox Rules!</a>" );
+        sentPayload.setSubject( "Mail SENT" );
+        variables.protocol.send( sentPayload );
+
+        var unsentPayload = getMockBox().createMock( className = "cbmailservices.models.Mail" ).init()
+            .config( from = "info@coldbox.org", to = "unsent@coldbox.org", type = "html" );
+        unsentPayload.setBodyTokens( { "name": "Luis Majano", "time": dateformat( now(), "full" ) } );
+        unsentPayload.setBody( "<h1>Hello @name@, how are you today?</h1>  <p>Today is the <b>@time@</b>.</p> <br/><br/><a href=""http://www.coldbox.org"">ColdBox Rules!</a>" );
+        unsentPayload.setSubject( "Mail NOT SENT" );
+
+        expect( variables.protocol.hasMessage( function( mail ) {
+            return mail.from == sentPayload.getMemento().from &&
+                mail.to == sentPayload.getMemento().to;
+        } ) ).toBeTrue( "hasMessage should return true for message that was sent." );
+        
+        expect( variables.protocol.hasMessage( function( mail ) {
+            return mail.from == unsentPayload.getMemento().from &&
+                mail.to == unsentPayload.getMemento().to;
+        } ) ).toBeFalse( "hasMessage should return true for message that was not sent." );
+    }
+
 }

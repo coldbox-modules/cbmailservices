@@ -31,7 +31,7 @@ component extends="cbmailservices.models.AbstractProtocol" singleton accessors="
      * @callback A callback function to check against each mail item.
      */
 	public boolean function hasMessage( required function callback ) {
-		return arraySome( variables.mail, arguments.callback );
+		return arrayFilter( variables.mail, arguments.callback ).len() > 0;
 	}
 
     /**
