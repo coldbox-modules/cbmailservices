@@ -6,6 +6,8 @@ The ColdBox Mail services module will allow you to send email the OO way in
 multiple protocols for many environments.  The supported protocols are:
 
 * **CFMail** - Traditional `cfmail` sending
+* **Null** - Ignores emails sent to it.
+* **InMemory** - Store email mementos in an array. Perfect for testing.
 * **Files** - Write emails to disk
 * **Postmark API** - Send via the PostMark Service (https://postmarkapp.com/)
 
@@ -103,6 +105,8 @@ getAdditionalInfoItem( key );
 The mail services can send mail via different protocols.  The available protocols are:
 
 * `CFMailProtocol`
+* `NullProtocol`
+* `InMemoryProtocol`
 * `FileProtocol`
 * `PostmarkProtocol`
 
@@ -116,7 +120,19 @@ protocol = {
         filePath = "logs",
         autoExpand = true
     }
-}
+};
+
+// NullProtocol
+protocol = {
+    class = "cbmailservices.models.protocols.NullProtocol",
+    properties = {}
+};
+
+// InMemoryProtocol
+protocol = {
+    class = "cbmailservices.models.protocols.InMemoryProtocol",
+    properties = {}
+};
 
 // PostMark
 protocol = {
@@ -124,7 +140,7 @@ protocol = {
     properties = {
         APIKey = ""
     }
-}
+};
 ```
 
 ### Custom Protocols
