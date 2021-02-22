@@ -1,14 +1,15 @@
 .vscode
-
 .artifacts/**
 .tmp/**
 
+# Test Harness
 test-harness/.engine/**
 test-harness/coldbox/**
 test-harness/docbox/**
 test-harness/testbox/**
 test-harness/logs/**
 test-harness/modules/**
+test-harness/WEB-INF/**
 
 # log files
 logs/**
