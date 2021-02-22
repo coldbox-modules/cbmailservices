@@ -29,9 +29,9 @@
         "*/.md"
     ],
     "scripts":{
-        "toMaster":"recipe build/toMaster.boxr",
-        "format":"cfformat models/**.cfc --overwrite",
-        "format:watch":"cfformat models/**.cfc --watch",
-        "format:check":"cfformat models/**.cfc --check"
+        "release":"recipe build/release.boxr",
+        "format":"cfformat models/**.cfc,test-harness/tests --overwrite",
+        "format:watch":"cfformat models/**.cfc,test-harness/tests --watch",
+        "format:check":"cfformat models/**.cfc,test-harness/tests --check"
     }
 }
