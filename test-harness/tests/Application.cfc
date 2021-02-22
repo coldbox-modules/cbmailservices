@@ -35,9 +35,14 @@ component {
 		return true;
 	}
 
-	function onRequestEnd(){
-		structDelete( application, "wirebox" );
+	public function onRequestEnd(){
+		// CB 6 graceful shutdown
+		if ( !isNull( application.cbController ) ) {
+			application.cbController.getLoaderService().processShutdown();
+		}
+
 		structDelete( application, "cbController" );
+		structDelete( application, "wirebox" );
 	}
 
 }
