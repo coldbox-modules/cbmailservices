@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Migration to github actions
 * Adobe 2021 Support
+* Migration to script of all core items
+* Added ability for the `getProperty( property, defaultValue )` method on the abstract protocol to have a default value
 
 ----
 
