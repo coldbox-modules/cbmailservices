@@ -8,7 +8,7 @@
         "coldbox":"^6.0.0"
     },
     "devDependencies":{
-		"testbox":"^4.0.0"
+        "testbox":"^4.0.0"
     },
     "installPaths":{
         "coldbox":"coldbox/",
@@ -20,6 +20,6 @@
     "scripts":{
         "cfpm":"echo '\".engine/adobe2021/WEB-INF/cfusion/bin/cfpm.sh\"' | run",
         "cfpm:install":"echo '\".engine/adobe2021/WEB-INF/cfusion/bin/cfpm.sh\" install ${1}' | run",
-        "install:2021":"run-script cfpm:install zip,debugger"
+        "install:2021":"run-script cfpm:install zip,mail,debugger"
     }
 }
