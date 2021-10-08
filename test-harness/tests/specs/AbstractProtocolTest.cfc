@@ -45,7 +45,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				expect( protocol.getProperty( "test" ) ).toBe( "test" );
 				expect( protocol.getProperty( "bogus", "test" ) ).toBe( "test" );
 				expect( function(){
-					property.getProperty( "bogussss" )
+					property.getProperty( "bogussss" );
 				} ).toThrow();
 			} );
 		} );
