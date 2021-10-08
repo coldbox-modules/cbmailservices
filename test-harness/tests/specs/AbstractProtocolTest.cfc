@@ -1,44 +1,54 @@
-﻿<cfcomponent extends="coldbox.system.testing.BaseTestCase" output="false">
+﻿/**
+ * My BDD Test
+ */
+component extends="coldbox.system.testing.BaseTestCase" {
 
-	<cfset this.loadColdBox = false>
+	/*********************************** LIFE CYCLE Methods ***********************************/
 
-	<cffunction name="setup" access="public" output="false" returntype="void">
-		<cfscript>
-			// Define the properties for the protocol.
-			props = {
-				APIKey = "this_is_my_postmark_api_key"
-			};
+	/**
+	 * executes before all suites+specs in the run() method
+	 */
+	function beforeAll(){
+	}
 
-			// Output the properties to the debug.
-			debug(props);
+	/**
+	 * executes after all suites+specs in the run() method
+	 */
+	function afterAll(){
+	}
 
-			// Create a mock instance of the protocol.
-			protocol =  getMockBox().createMock(className="cbmailservices.models.AbstractProtocol").init(props);
-		</cfscript>
-	</cffunction>
+	/*********************************** BDD SUITES ***********************************/
 
-	<cffunction name="testSend" access="public" output="false" returntype="void" mxunit:expectedException="AbstractProtocol.AbstractMethodException">
-		<cfscript>
-			// create a mock payload to pass in.
-			payload = getMockBox().createMock(className="cbmailservices.models.Mail").init();
+	function run( testResults, testBox ){
+		// all your suites go here.
+		describe( "Abstract Protocol", function(){
+			beforeEach( function( currentSpec ){
+				// Define the properties for the protocol.
+				props = { APIKey : "this_is_my_postmark_api_key" };
 
-			// As this is an abstract method that should be overwritten.
-			// We we're hoping it'll throw us a nice exception to chew on.
-			protocol.send(payload);
-		</cfscript>
-	</cffunction>
+				debug( props );
 
-	<cffunction name="testIsInited" access="public" output="false" returntype="void">
-		<cfscript>
-			// We only want the key to be local.
-			var key = "";
+				protocol = createMock( "cbmailservices.models.AbstractProtocol" ).init( props );
+			} );
 
-			// We want to check that all the properties we've handed it have been set.
-			for (key in props) {
-				// Assert that the property has been set.
-				assertTrue(protocol.propertyExists(key), "The propery (#key#) doesn't appear to have been set in the protocol.");
-			}
-		</cfscript>
-	</cffunction>
+			it( "can be created correctly", function(){
+				// We want to check that all the properties we've handed it have been set.
+				for ( var key in props ) {
+					expect( protocol.propertyExists( key ) ).toBeTrue(
+						"The propery (#key#) doesn't appear to have been set in the protocol."
+					);
+				}
+			} );
 
-</cfcomponent>
+			it( "can handle the property methods", function(){
+				protocol.setProperty( "test", "test" );
+				expect( protocol.getProperty( "test" ) ).toBe( "test" );
+				expect( protocol.getProperty( "bogus", "test" ) ).toBe( "test" );
+				expect( function(){
+					property.getProperty( "bogussss" )
+				} ).toThrow();
+			} );
+		} );
+	}
+
+}

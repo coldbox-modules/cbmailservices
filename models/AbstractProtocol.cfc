@@ -1,123 +1,67 @@
-﻿<!-----------------------------------------------------------------------
-********************************************************************************
-Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
-www.ortussolutions.com
-********************************************************************************
-Author 	 :	Luis Majano & Robert Rawlings
-Description :
-An abstract class that give identity to mail protocols when building custom or
-extending mail protocols the Mail Service uses.
------------------------------------------------------------------------>
-<cfcomponent
-	output="false"
-	hint  ="An abstract class that give identity to mail protocols when building custom or extending mail protocols the Mail Service uses."
->
-	<!------------------------------------------- CONSTRUCTOR ------------------------------------------>
+﻿/**
+ * An abstract class that give identity to mail protocols when building custom or extending mail protocols the Mail Service uses.
+ */
+component accessors="true" {
 
-	<!--- init --->
-	<cffunction
-		name      ="init"
-		access    ="public"
-		returntype="AbstractProtocol"
-		hint      ="Constructor called by a Concrete Protocol"
-		output    ="false"
-	>
-		<cfargument
-			name    ="properties"
-			required="false"
-			default ="#structNew()#"
-			hint    ="A map of configuration properties for the protocol"
-		/>
-		<cfscript>
-		instance            = structNew();
-		// Set internal properties
-		instance.properties = arguments.properties;
-
-		// Return an inatcen of the protocol.
+	/**
+	 * Constructor
+	 *
+	 * @properties The protocol properties to instantiate
+	 */
+	function init( struct properties = {} ){
+		variables.properties = arguments.properties;
 		return this;
-		</cfscript>
-	</cffunction>
+	}
 
-	<!------------------------------------------- IMPLEMENTABLE METHODS ------------------------------------------>
+	/**
+	 * Implemented by concrete protocols to send a message
+	 *
+	 * @payload The paylod object to send the message with
+	 * @payload.doc_generic cbmailservices.models.Mail
+	 */
+	struct function send( required payload ){
+		throw( type = "NotImplementedException" );
+	}
 
-	<!--- send --->
-	<cffunction
-		name      ="send"
-		access    ="public"
-		returntype="struct"
-		hint      ="I send a payload via the this protocol."
-	>
-		<cfargument
-			name       ="payload"
-			required   ="true"
-			type       ="any"
-			hint       ="I'm the payload to delivery"
-			doc_generic="cbmailservices.models.Mail"
-		/>
-		<cfthrow message="" type="AbstractProtocol.AbstractMethodException">
-	</cffunction>
+	/**
+	 * Get a property, throws an exception if not found.
+	 *
+	 * @property The property to get
+	 * @defaultValue The default value to retrieve if property doesn't exist
+	 *
+	 * @throws PropertyNotFoundException if the property doesn't exist
+	 */
+	function getProperty( required property, defaultValue ){
+		if ( structKeyExists( variables.properties, arguments.property ) ) {
+			return variables.properties[ arguments.property ];
+		}
+		if ( !isNull( arguments.defaultValue ) ) {
+			return arguments.defaultValue;
+		}
+		throw(
+			type   : "PropertyNotFoundException",
+			message: "The property (#arguments.property#) doesn't exist. Valid properties are #variables.properties.keyList()#"
+		)
+	}
 
-	<!------------------------------------------- PROPERTY METHODS ------------------------------------------>
+	/**
+	 * Set a property with a value
+	 *
+	 * @property The property key
+	 * @value The property value
+	 */
+	AbstractProtocol function setProperty( required property, required value ){
+		variables.properties[ arguments.property ] = arguments.value;
+		return this;
+	}
 
-	<!--- getter for the properties structure --->
-	<cffunction
-		name       ="getProperties"
-		access     ="public"
-		output     ="false"
-		returntype ="any"
-		hint       ="Get properties structure map"
-		doc_generic="struct"
-	>
-		<cfreturn instance.properties/>
-	</cffunction>
+	/**
+	 * Verifies if a property exists or not
+	 *
+	 * @property The property key
+	 */
+	boolean function propertyExists( required property ){
+		return structKeyExists( variables.properties, arguments.property );
+	}
 
-	<!--- setter for the properties structure --->
-	<cffunction
-		name      ="setProperties"
-		access    ="public"
-		output    ="false"
-		returntype="void"
-		hint      ="Set the entire properties structure map"
-	>
-		<cfargument name="properties" required="true" doc_generic="struct"/>
-		<cfset instance.properties = arguments.properties/>
-	</cffunction>
-
-	<!--- get a property --->
-	<cffunction
-		name      ="getProperty"
-		access    ="public"
-		returntype="any"
-		hint      ="Get a property, throws exception if not found."
-		output    ="false"
-	>
-		<cfargument name="property" required="true" hint="The key of the property to return.">
-		<cfreturn instance.properties[ arguments.property ]>
-	</cffunction>
-
-	<!--- set a property --->
-	<cffunction
-		name      ="setProperty"
-		access    ="public"
-		returntype="void"
-		hint      ="Set a property"
-		output    ="false"
-	>
-		<cfargument name="property" required="true" hint="The property name to set.">
-		<cfargument name="value" required="true" hint="The value of the property.">
-		<cfset instance.properties[ arguments.property ] = arguments.value>
-	</cffunction>
-
-	<!--- check for a property --->
-	<cffunction
-		name       ="propertyExists"
-		access     ="public"
-		returntype ="any"
-		hint       ="Checks wether a given property exists or not."
-		output     ="false"
-		doc_generic="Boolean"
-	>
-		<cfargument name="property" required="true" hint="The property name">
-		<cfreturn structKeyExists( instance.properties, arguments.property )>
-	</cffunction>
-</cfcomponent>
+}
