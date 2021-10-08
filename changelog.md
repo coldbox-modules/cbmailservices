@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
+## [v2.0.0] => 2021-OCT
+
+### Added
+
+* Migration to github actions
+* Adobe 2021 Support
+
+----
+
 ## [v1.6.0] => 2021-FEB-22
 
 ### Addded
