@@ -6,7 +6,6 @@ www.ortussolutions.com
 Author 	 :	Luis Majano & Robert Rawlings
 Description :
 A mail protocol that sends via cffile
-
 Properties:
 - filePath   : location to store files
 - autoExpand(true) : auto expand path or not
@@ -31,6 +30,7 @@ Properties:
 			hint    ="A map of configuration properties for the protocol"
 		/>
 		<cfscript>
+		variables.name = "File";
 		super.init( argumentCollection = arguments );
 
 		// Property Checks
@@ -127,11 +127,11 @@ Properties:
 				<hr/>
 				<cfdump var="#arguments.mail.getMemento()#">
 				<hr/>
-				Mail Params 
+				Mail Params
 				<hr/>
 				<cfdump var="#arguments.mail.getMailParams()#">
 				<hr/>
-				Mail Parts  
+				Mail Parts
 				<hr/>
 				<cfdump var="#arguments.mail.getMailParts()#">
 				<hr/>

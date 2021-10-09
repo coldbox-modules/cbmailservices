@@ -9,8 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v2.0.0] => 2021-OCT
 
+### Changed
+
+* `COMPATIBILITY` : Settings are now using ColdBox 5 module approach of `moduleSettings.cbmailservices` instead of a root key element called `cbmailservices`.  Make sure you update your settings.
+* `COMPATIBILITY` : Changed all arguments called `default` to `defaultValue` to avoid ACF issues with the parser
+* `Mail` object `config()` renamed to `configure()`
+
 ### Added
 
+* `Mail` object now can send itself via the new `send()` method which delegates to the service, but provides a nice sending DSL
+* `Mail` object now has dynamic getters and setters for ALL configuration objects
+* Modernization of all source code.
+* Each protocol get's a `name` property now for a numan readable name
+* You can now use aliases to build out any of the core protocols: `CFMail, File, InMemory, Null or Postmark`
+* You can now use a wirebox id or class path as the protocol class apart from the core protocols.
 * Migration to github actions
 * Adobe 2021 Support
 * Migration to script of all core items

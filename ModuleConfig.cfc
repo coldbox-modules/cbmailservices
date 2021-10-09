@@ -1,4 +1,10 @@
 /**
+ ********************************************************************************
+ * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
+ * www.ortussolutions.com
+ ********************************************************************************
+ * @author Luis Majano <lmajano@ortussolutions.com>
+ * ----
  * Module Config
  */
 component {
@@ -17,7 +23,19 @@ component {
 	// CF Mapping
 	this.cfmapping          = "cbmailservices";
 
+	/**
+	 * Configure the module
+	 */
 	function configure(){
+		// Module Settings
+		settings = {
+			// The default token Marker Symbol
+			tokenMarker : "@",
+			// Default protocol is to use cfmail
+			protocol    : { class : "CFMail", properties : {} }
+		};
+
+		// Listeners
 		interceptorSettings = { customInterceptionPoints : "preMailSend,postMailSend" };
 	}
 
@@ -25,36 +43,12 @@ component {
 	 * Fired when the module is registered and activated.
 	 */
 	function onLoad(){
-		var configSettings = controller.getConfigSettings();
-		// Parse parent settings
-		parseParentSettings();
-		// Map the mail service with correct arguments
-		binder
-			.map( "MailService@cbmailservices" )
-			.to( "cbmailservices.models.MailService" )
-			.initArg( name = "mailSettings", value = configSettings.mailSettings )
-			.initArg( name = "tokenMarker", value = configSettings.mailSettings.tokenMarker );
 	}
 
 	/**
 	 * Fired when the module is unregistered and unloaded
 	 */
 	function onUnload(){
-	}
-
-	/**
-	 * Prepare settings and returns true if using i18n else false.
-	 */
-	private function parseParentSettings(){
-		var oConfig      = controller.getSetting( "ColdBoxConfig" );
-		var configStruct = controller.getConfigSettings();
-		var mailsettings = oConfig.getPropertyMixin( "mailsettings", "variables", structNew() );
-
-		// defaults
-		configStruct.mailsettings = { tokenMarker : "@" };
-
-		// Incorporate settings
-		structAppend( configStruct.mailsettings, mailsettings, true );
 	}
 
 }

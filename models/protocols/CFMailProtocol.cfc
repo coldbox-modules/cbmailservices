@@ -27,6 +27,7 @@ A mail protocol that sends via email
 			hint    ="A map of configuration properties for the protocol"
 		/>
 		<cfscript>
+		variables.name = "CFMail";
 		super.init( argumentCollection = arguments );
 
 		return this;

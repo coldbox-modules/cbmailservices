@@ -1,114 +1,193 @@
-﻿component extends="coldbox.system.testing.BaseTestCase"{
+﻿component extends="coldbox.system.testing.BaseTestCase" {
 
-	// Making sure ColdBox is unloaded, so mocks don't collide.
-	this.unloadColdBox = true;
-	
-	function setup(){
+	/*********************************** LIFE CYCLE Methods ***********************************/
+
+	/**
+	 * executes before all suites+specs in the run() method
+	 */
+	function beforeAll(){
 		super.setup();
-		ms = prepareMock( getInstance( "MailService@cbmailservices" ) );
 	}
 
-	function testNewMail(){
-		var mail = ms.newMail();
-		expect(	mail ).toBeComponent();
+	/**
+	 * executes after all suites+specs in the run() method
+	 */
+	function afterAll(){
 	}
 
-	function testparseTokens(){
-		ms.setTokenMarker( "@" );
-		var mail 	= ms.newMail();
-		var tokens 	= { "name"="Luis Majano", "time"=dateformat(now(),"full" ) };
-		
-		mail.setBodyTokens( tokens );
-		mail.setBody( "Hello @name@, how are you today? Today is the @time@" );
+	/*********************************** BDD SUITES ***********************************/
 
-		ms.parseTokens( mail );
-		
-		//debug( mail.getBody() );
-		expect(	mail.getBody() ).toBe( "Hello #tokens.name#, how are you today? Today is the #tokens.time#" );
-	}
+	function run( testResults, testBox ){
+		describe( "Mail Services Suite", function(){
+			beforeEach( function( currentSpec ){
+				mailService = prepareMock( getInstance( "MailService@cbmailservices" ) );
+				mailService.getMailSettings().registerProtocol( "InMemory" );
+			} );
 
-	function testparseTokensCustom(){
-		ms.setTokenMarker( "$" );
-		var mail = ms.newMail();
-		var tokens = {name="Luis Majano",time=dateformat(now(),"full")};
-		
-		mail.setBodyTokens(tokens);
-		mail.setBody("Hello $name$, how are you today? Today is the $time$");
+			afterEach( function( currentSpec ){
+				// clear mail
+				mailService
+					.getMailSettings()
+					.getTransit()
+					.setMail( [] );
+			} );
 
-		ms.parseTokens(mail);
+			it( "can create a new mail object", function(){
+				expect( mailService.newMail() ).toBeComponent();
+			} );
 
-		expect(	mail.getBody() ).toBe( "Hello #tokens.name#, how are you today? Today is the #tokens.time#" );
-	}
+			it( "can parse tokens", function(){
+				mailService.setTokenMarker( "@" );
+				var mail   = mailService.newMail();
+				var tokens = {
+					"name" : "Luis Majano",
+					"time" : dateFormat( now(), "full" )
+				};
 
-	function testSend(){
-		// mockings
-		mockProtocol = createStub().$("send", {error=false,errorArray=[]} );
-		prepareMock( ms.getMailSettings() ).$( "getTransit", mockProtocol );
+				mail.setBodyTokens( tokens );
+				mail.setBody( "Hello @name@, how are you today? Today is the @time@" );
 
-		// 1:Mail with No Params
-		mail = ms.newMail().config(from="info@coldbox.org",to="automation@coldbox.org",type="html");
-		tokens = {name="Luis Majano",time=dateformat(now(),"full")};
-		mail.setBodyTokens(tokens);
-		mail.setBody("<h1>Hello @name@, how are you today?</h1>  <p>Today is the <b>@time@</b>.</p> <br/><br/><a href=""http://www.coldbox.org"">ColdBox Rules!</a>");
-		mail.setSubject("Mail NO Params-Hello Luis");
-		rtn = ms.send(mail);
-		assertTrue( mockProtocol.$once("send") );
-		//debug(rtn);
+				mailService.parseTokens( mail );
 
-		// 2:Mail with params
-		mail = ms.newMail().config(from="info@coldbox.org",to="automation@coldbox.org",subject="Mail With Params - Hello Luis");
-		mail.setBody("Hello This is my great unit test");
-		mail.addMailParam(name="Disposition-Notification-To",value="info@coldbox.org");
-		mail.addMailParam(name="Importance",value="High");
-		rtn = ms.send(mail);
-		assertTrue( mockProtocol.$times(2,"send") );
-		//debug(rtn);
+				// debug( mail.getBody() );
+				expect( mail.getBody() ).toBe(
+					"Hello #tokens.name#, how are you today? Today is the #tokens.time#"
+				);
+			} );
 
-		// 3:Mail multi-part no params
-		mail = ms.newMail().config(from="info@coldbox.org",to="automation@coldbox.org",subject="Mail MultiPart No Params - Hello Luis");
-		mail.addMailPart(type="text",body="You are reading this message as plain text, because your mail reader does not handle it.");
-		mail.addMailPart(type="html",body="This is the body of the message.");
-		rtn = ms.send(mail);
-		assertTrue( mockProtocol.$times(3,"send") );
-		//debug(rtn);
+			it( "can parse custom tokens", function(){
+				mailService.setTokenMarker( "$" );
+				var mail   = mailService.newMail();
+				var tokens = { name : "Luis Majano", time : dateFormat( now(), "full" ) };
 
-		// 4:Mail multi-part with params
-		mail = ms.newMail().config(from="info@coldbox.org",to="automation@coldbox.org",subject="Mail MultiPart With Params - Hello Luis");
-		mail.addMailPart(type="text",body="You are reading this message as plain text, because your mail reader does not handle it.");
-		mail.addMailPart(type="html",body="This is the body of the message.");
-		mail.addMailParam(name="Disposition-Notification-To",value="info@coldbox.org");
-		rtn = ms.send(mail);
-		assertTrue( mockProtocol.$times(4,"send") );
-		//debug(rtn);
-	}
+				mail.setBodyTokens( tokens );
+				mail.setBody( "Hello $name$, how are you today? Today is the $time$" );
 
-	function testMailWithSettings(){
-		// Mocks
-		mockProtocol = createStub().$( "send", {error=false,errorArray=[]} );
-		mockSettings = prepareMock( 
-			getInstance( 
-				name 			= "cbmailservices.models.MailSettingsBean", 
-				initArguments	= {
-					server = "0.0.0.0", username="test", password="Test", port="25"
-				} 
-			) 
-		)
-		.$( "getTransit", mockProtocol);
-		
-		ms.setMailSettings( mockSettings );
+				mailService.parseTokens( mail );
 
-		mail = ms.newMail(from="info@coldbox.org",to="automation@coldbox.org",type="html",body="TestMailWithSettings",subject="TestMailWithSettings");
-		ms.send( mail );
-		assertTrue( mockProtocol.$once("send") );
+				expect( mail.getBody() ).toBe(
+					"Hello #tokens.name#, how are you today? Today is the #tokens.time#"
+				);
+			} );
 
-		// Test with No settings
-		ms.setMailSettings( prepareMock( getInstance( "cbmailservices.models.MailSettingsBean" )  ) );
-		mockProtocol = createStub().$( "send", {error=false,errorArray=[]} );
-		prepareMock( ms.getMailSettings() ).$("getTransit", mockProtocol );
-		mail = ms.newMail(from="info@coldbox.org",to="automation@coldbox.org",type="html",body="TestMailWithSettings",subject="TestMailWithSettings");
-		ms.send( mail );
-		assertTrue( mockProtocol.$once("send") );
-		//debug( mail.getMemento() );
+			it( "can send mail with no params", function(){
+				var mail = mailService
+					.newMail()
+					.configure(
+						from = "info@coldbox.org",
+						to   = "automation@coldbox.org",
+						type = "html"
+					);
+				var tokens = { name : "Luis Majano", time : dateFormat( now(), "full" ) };
+				mail.setBodyTokens( tokens );
+				mail.setBody(
+					"<h1>Hello @name@, how are you today?</h1>  <p>Today is the <b>@time@</b>.</p> <br/><br/><a href=""http://www.coldbox.org"">ColdBox Rules!</a>"
+				);
+				mail.setSubject( "Mail NO Params-Hello Luis" );
+				var results = mailService.send( mail );
+				expect(
+					mailService
+						.getMailSettings()
+						.getTransit()
+						.getMail()
+				).notToBeEmpty();
+				expect( results.error ).toBeFalse();
+			} );
+
+
+			it( "can send mail with params", function(){
+				var mail = mailService
+					.newMail()
+					.configure(
+						from    = "info@coldbox.org",
+						to      = "automation@coldbox.org",
+						subject = "Mail With Params - Hello Luis"
+					);
+				mail.setBody( "Hello This is my great unit test" );
+				mail.addMailParam(
+					name  = "Disposition-Notification-To",
+					value = "info@coldbox.org"
+				);
+				mail.addMailParam( name = "Importance", value = "High" );
+				var results = mailService.send( mail );
+				expect(
+					mailService
+						.getMailSettings()
+						.getTransit()
+						.getMail()
+				).notToBeEmpty();
+				expect( results.error ).toBeFalse();
+			} );
+
+
+			it( "can send mail with multi-part no params", function(){
+				var mail = mailService
+					.newMail()
+					.configure(
+						from    = "info@coldbox.org",
+						to      = "automation@coldbox.org",
+						subject = "Mail MultiPart No Params - Hello Luis"
+					);
+				mail.addMailPart(
+					type = "text",
+					body = "You are reading this message as plain text, because your mail reader does not handle it."
+				);
+				mail.addMailPart( type = "html", body = "This is the body of the message." );
+				var results = mailService.send( mail );
+				expect(
+					mailService
+						.getMailSettings()
+						.getTransit()
+						.getMail()
+				).notToBeEmpty();
+				expect( results.error ).toBeFalse();
+			} );
+
+			it( "can send mail with multi-part with params", function(){
+				var mail = mailService
+					.newMail()
+					.configure(
+						from    = "info@coldbox.org",
+						to      = "automation@coldbox.org",
+						subject = "Mail MultiPart With Params - Hello Luis"
+					);
+				mail.addMailPart(
+					type = "text",
+					body = "You are reading this message as plain text, because your mail reader does not handle it."
+				);
+				mail.addMailPart( type = "html", body = "This is the body of the message." );
+				mail.addMailParam(
+					name  = "Disposition-Notification-To",
+					value = "info@coldbox.org"
+				);
+				var results = mailService.send( mail );
+				expect(
+					mailService
+						.getMailSettings()
+						.getTransit()
+						.getMail()
+				).notToBeEmpty();
+				expect( results.error ).toBeFalse();
+			} );
+
+			it( "can send mail with custom settings", function(){
+				var mail = mailService.newMail(
+					from    = "info@coldbox.org",
+					to      = "automation@coldbox.org",
+					type    = "html",
+					body    = "TestMailWithSettings",
+					subject = "TestMailWithSettings"
+				);
+				var results = mailService.send( mail );
+				expect(
+					mailService
+						.getMailSettings()
+						.getTransit()
+						.getMail()
+				).notToBeEmpty();
+				expect( results.error ).toBeFalse();
+			} );
+		} );
 	}
 
 }

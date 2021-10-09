@@ -5,6 +5,16 @@ component
 {
 
 	/**
+	 * Constructor
+	 *
+	 * @properties
+	 */
+	function init( struct properties = {} ){
+		variables.name = "Null";
+		return super.init( argumentCollection = arguments );
+	}
+
+	/**
 	 * Ignore the sent message and return a successful response.
 	 *
 	 * @payload The payload to deliver

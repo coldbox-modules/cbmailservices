@@ -12,6 +12,7 @@ component
 	 * @properties A map of configuration properties for the protocol
 	 */
 	public InMemoryProtocol function init( struct properties = {} ){
+		variables.name = "InMemory";
 		super.init( argumentCollection = arguments );
 		variables.mail = [];
 		return this;

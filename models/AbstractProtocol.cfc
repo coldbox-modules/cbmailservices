@@ -1,7 +1,23 @@
 ﻿/**
+ ********************************************************************************
+ * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
+ * www.ortussolutions.com
+ ********************************************************************************
+ * @author Luis Majano <lmajano@ortussolutions.com>
+ * ----
  * An abstract class that give identity to mail protocols when building custom or extending mail protocols the Mail Service uses.
  */
 component accessors="true" {
+
+	/**
+	 * A collection of configuration properties for a protocol
+	 */
+	property name="properties" type="struct";
+
+	/**
+	 * The protocol's human name
+	 */
+	property name="name";
 
 	/**
 	 * Constructor
