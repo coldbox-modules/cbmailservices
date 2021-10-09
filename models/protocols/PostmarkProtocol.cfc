@@ -28,6 +28,7 @@ A mail protocol that sends via http://postmarkapp.com/
 		/>
 
 		<cfscript>
+		variables.name = "Postmark";
 		super.init( argumentCollection = arguments );
 
 		// Property Checks

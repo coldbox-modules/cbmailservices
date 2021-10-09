@@ -1,125 +1,95 @@
-﻿<cfcomponent name="mailsettingsBeanTest" extends="coldbox.system.testing.BaseTestCase">
+﻿/**
+ * My BDD Test
+ */
+component extends="coldbox.system.testing.BaseTestCase" {
 
-	<cfset this.loadColdBox = false>
+	/*********************************** LIFE CYCLE Methods ***********************************/
 
-	<cffunction name="setUp" returntype="void" access="public">
-		<cfscript>
-			this.mail = createObject("component","cbmailservices.models.MailSettingsBean");
+	/**
+	 * executes before all suites+specs in the run() method
+	 */
+	function beforeAll(){
+	}
 
-			this.instance.server      = "mail.mail.com";
-			this.instance.username    = "mail";
-		    this.instance.password 	  = "pass" ;
-			this.instance.port        = "110";
-			this.instance.protocol    = structNew();
-			this.instance.from        = "info@coldbox.org";
-			this.instance.wirebox     = new coldbox.system.ioc.Injector();
+	/**
+	 * executes after all suites+specs in the run() method
+	 */
+	function afterAll(){
+	}
 
-			this.mail = this.mail.init( argumentCollection=this.instance );
+	/*********************************** BDD SUITES ***********************************/
 
-		</cfscript>
-	</cffunction>
+	function run( testResults, testBox ){
+		// all your suites go here.
+		describe( "Mail Settings Bean", function(){
+			beforeEach( function( currentSpec ){
+				setup();
 
-	<!--- Begin specific tests --->
-	<cffunction name="testExtraValues" access="public" returnType="void">
-		<cfscript>
-			assertEquals( this.instance.from, this.mail.getValue('from') );
-			assertEquals( "null", this.mail.getValue("bogus","null") );
-		</cfscript>
-	</cffunction>
+				mailConfig = {
+					server   : "mail.mail.com",
+					username : "mail",
+					password : "pass",
+					port     : "110",
+					protocol : { class : "CFMail", properties : {} },
+					from     : "info@coldbox.org"
+				};
 
-	<cffunction name="testWithCustomProtocol" access="public" returnType="void">
-		<cfscript>
-			// Establish the custom protocol we're going to use.
-			this.instance.protocol = {
-				class="cbmailservices.models.protocols.cfmailProtocol",
-				properties = {}
-			};
-
-			// Init the settings with this protocol.
-			this.mail.init(argumentCollection=this.instance);
-		</cfscript>
-	</cffunction>
-
-	<cffunction name="testWithUnknownCustomProtocol" access="public" returnType="void" mxunit:expectedException="MailSettingsBean.FailLoadProtocolException">
-		<cfscript>
-			// Establish the custom protocol we're going to use.
-			this.instance.protocol = {
-				class="cbmailservices.models.protocols.someUnknownProtocol",
-				properties = {}
-			};
-
-			// Init the settings with this protocol.
-			this.mail.init(argumentCollection=this.instance);
-		</cfscript>
-	</cffunction>
-
-	<cffunction name="testWithCustomProtocolWithoutProperties" access="public" returnType="void">
-		<cfscript>
-			// Establish the custom protocol we're going to use.
-			this.instance.protocol = {
-				class="cbmailservices.models.protocols.cfmailProtocol"
-			};
-
-			// Init the settings with this protocol.
-			this.mail.init(argumentCollection=this.instance);
-		</cfscript>
-	</cffunction>
-
-	<cffunction name="testsWithFileProtocol" access="public" returntype="void">
-		<cfscript>
-		
-			this.instance.protocol = {
-				class = "cbmailservices.models.protocols.FileProtocol",
-				properties = {
-					filePath = "/tests/resources/mail",
-					autoExpand = true
-				}
-			};
-
-			this.mail.init( argumentcollection=this.instance );
-		</cfscript>
+				mailSettings = getInstance( "MailSettingsBean@cbmailservices" ).configure(
+					argumentCollection = mailConfig
+				);
+			} );
 
 
-	</cffunction>
+			it( "can build out with defaults", function(){
+				expect( mailSettings.getTransit() ).toBeComponent();
+			} );
 
-	<cffunction name="testgetmemento" access="public" returnType="void">
-		<cfscript>
-			this.mail.setMemento(this.instance);
-			assertEquals( this.mail.getMemento(), this.instance);
-		</cfscript>
-	</cffunction>
+			it( "can get values", function(){
+				expect( mailSettings.getValue( "from" ) ).toBe( mailConfig.from );
+				expect( mailSettings.getValue( "bogus", "nothing" ) ).toBe( "nothing" );
+				expect( function(){
+					mailSettings.getValue( "bogusloco" );
+				} ).toThrow();
+			} );
 
-	<cffunction name="testsetmemento" access="public" returnType="void">
-		<cfscript>
-			this.mail.setMemento(this.instance);
-			assertEquals( this.mail.getMemento(), this.instance);
-		</cfscript>
-	</cffunction>
+			it( "can build out custom protocols by path", function(){
+				mailSettings.registerProtocol(
+					class: "cbmailservices.models.protocols.CFMailProtocol"
+				);
+				expect( mailSettings.getTransit() ).toBeComponent();
+			} );
 
-	<cffunction name="testgetPassword" access="public" returnType="void">
-		<cfscript>
-			assertEquals( this.mail.getPassword(), this.instance.password );
-		</cfscript>
-	</cffunction>
+			it( "can throw an exception with an uknown protocol", function(){
+				expect( function(){
+					mailSettings.registerProtocol(
+						class: "cbmailservices.models.protocols.SomeUnknownProtocol"
+					)
+				} ).toThrow();
+			} );
 
-	<cffunction name="testgetport" access="public" returnType="void">
-		<cfscript>
-			assertEquals( this.mail.getPort(), this.instance.port);
-		</cfscript>
-	</cffunction>
+			it( "can build out the FileProtocol", function(){
+				mailSettings.registerProtocol(
+					class     : "File",
+					properties: { filePath : "/tests/resources/mail", autoExpand : true }
+				);
+				expect( mailSettings.getTransit() ).toBeComponent();
+			} );
 
-	<cffunction name="testgetserver" access="public" returnType="void">
-		<cfscript>
-			assertEquals( this.mail.getServer(), this.instance.server );
-		</cfscript>
-	</cffunction>
+			it( "can build out the InMemoryProtocol", function(){
+				mailSettings.registerProtocol( class: "InMemory" );
+				expect( mailSettings.getTransit() ).toBeComponent();
+			} );
 
-	<cffunction name="testgetUsername" access="public" returnType="void">
-		<cfscript>
-			assertEquals( this.mail.getUsername(), this.instance.username );
-		</cfscript>
-	</cffunction>
+			it( "can build out the NullProtocol", function(){
+				mailSettings.registerProtocol( class: "InMemory" );
+				expect( mailSettings.getTransit() ).toBeComponent();
+			} );
 
+			it( "can build out the PostMarkProtocol", function(){
+				mailSettings.registerProtocol( class: "Postmark", properties: { apiKey : "123" } );
+				expect( mailSettings.getTransit() ).toBeComponent();
+			} );
+		} );
+	}
 
-
-</cfcomponent>
+}

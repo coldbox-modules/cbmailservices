@@ -4,11 +4,16 @@
  * www.ortussolutions.com
  ********************************************************************************
  * @author Luis Majano <lmajano@ortussolutions.com>
+ * ----
  * The ColdBox Mail Service used to send emails in an oo and ColdBoxy fashion
  */
-component accessors="true" singleton {
+component accessors="true" singleton threadsafe {
 
+	// DI
 	property name="inteceptorService" inject="coldbox:interceptorService";
+	property name="settings" inject="coldbox:moduleSettings:cbmailservices";
+	property name="wirebox" inject="wirebox";
+	property name="log" inject="logbox:logger:{this}";
 
 	/**
 	 * The token marker used for token replacements, default is `@`
@@ -16,33 +21,28 @@ component accessors="true" singleton {
 	property name="tokenMarker";
 
 	/**
-	 * The mail settings configuration structure.
+	 * A mail settings bean configuration object that mimics all settings needed for sending mail
 	 */
 	property name="mailSettings";
 
 	/**
 	 * Constructor
-	 * @mailSettings 	A structure of mail settings and protocol to bind this service with. A MailSettingsBean object is created with it.
-	 * @tokenMarker		The default token Marker Symbol
-	 * @wirebox 			The wirebox instance
-	 * @wirebox.inject wirebox
 	 */
-	MailService function init(
-		struct mailSettings = {},
-		string tokenMarker  = "@",
-		wirebox
-	){
-		// Mail Token Symbol
-		variables.tokenMarker  = arguments.tokenMarker;
-		// WireBox
-		variables.wirebox      = arguments.wirebox;
-		// Mail Settings setup
-		variables.mailSettings = variables.wirebox.getInstance(
-			name          = "MailSettingsBean@cbmailservices",
-			initArguments = arguments.mailSettings
-		);
-
+	MailService function init(){
 		return this;
+	}
+
+	/**
+	 * Prepare the mail services for operation
+	 */
+	function onDIComplete(){
+		// Mail Token Symbol
+		variables.tokenMarker  = variables.settings.tokenMarker;
+		// Mail Settings Bean
+		variables.mailSettings = variables.wirebox
+			.getInstance( "MailSettingsBean@cbmailservices" )
+			// Seed the mail settings with the global app settings
+			.configure( argumentCollection = variables.settings );
 	}
 
 	/**
@@ -55,20 +55,34 @@ component accessors="true" singleton {
 		);
 
 		// If mail payload does not have a server and one is defined in the mail settings, use that
-		if ( NOT mail.propertyExists( "server" ) AND len( variables.mailSettings.getServer() ) ) {
-			mail.setServer( variables.mailSettings.getServer() );
+		if (
+			NOT mail.propertyExists( "server" ) AND len(
+				variables.mailSettings.getValue( "server" )
+			)
+		) {
+			mail.setServer( variables.mailSettings.getValue( "server" ) );
 		}
 		// Same with username, password, port, useSSL and useTLS
-		if ( NOT mail.propertyExists( "username" ) AND len( variables.mailSettings.getUsername() ) ) {
-			mail.setUsername( variables.mailSettings.getUsername() );
-		}
-		if ( NOT mail.propertyExists( "password" ) AND len( variables.mailSettings.getPassword() ) ) {
-			mail.setPassword( variables.mailSettings.getPassword() );
+		if (
+			NOT mail.propertyExists( "username" ) AND len(
+				variables.mailSettings.getValue( "username" )
+			)
+		) {
+			mail.setUsername( variables.mailSettings.getValue( "username" ) );
 		}
 		if (
-			NOT mail.propertyExists( "port" ) AND len( variables.mailSettings.getPort() ) and variables.mailSettings.getPort() NEQ 0
+			NOT mail.propertyExists( "password" ) AND len(
+				variables.mailSettings.getValue( "password" )
+			)
 		) {
-			mail.setPort( variables.mailSettings.getPort() );
+			mail.setPassword( variables.mailSettings.getValue( "password" ) );
+		}
+		if (
+			NOT mail.propertyExists( "port" ) AND len( variables.mailSettings.getValue( "port" ) ) and variables.mailSettings.getValue(
+				"port"
+			) NEQ 0
+		) {
+			mail.setPort( variables.mailSettings.getValue( "port" ) );
 		}
 		if (
 			NOT mail.propertyExists( "useSSL" ) AND len(
@@ -118,43 +132,46 @@ component accessors="true" singleton {
 
 	/**
 	 * Send an email payload. Returns a struct: [error:boolean, errorArray:array]
+	 *
 	 * @mail The mail payload to send.
+	 *
+	 * @return { error:boolean, errorArray:array }
 	 */
 	struct function send( required Mail mail ){
-		var rtnStruct = structNew();
-		var payload   = arguments.mail;
+		var rtnStruct = { "error" : true, "errorArray" : [] }
 
-		// The return structure
-		rtnStruct.error      = true;
-		rtnStruct.errorArray = arrayNew( 1 );
-
-		// Validate Basic Mail Fields
-		if ( NOT payload.validate() ) {
+		// Validate Basic Mail Fields and error out
+		if ( NOT arguments.mail.validate() ) {
 			arrayAppend(
 				rtnStruct.errorArray,
-				"Please check the basic mail fields of To, From and Body as they are empty. To: #payload.getTo()#, From: #payload.getFrom()#, Body Len = #payload.getBody().length()#."
+				"Please check the basic mail fields of To, From and Body as they are empty. To: #arguments.mail.getTo()#, From: #arguments.mail.getFrom()#, Body Len = #arguments.mail.getBody().length()#."
 			);
+			log.error( "Mail object does not validate.", arguments.mail.getMemento() );
 			return rtnStruct;
 		}
 
 		// Parse Body Tokens
-		parseTokens( payload );
+		parseTokens( arguments.mail );
 
 		// Just mail the darned thing!!
 		try {
 			// announce interception point before mail send
-			inteceptorService.processState( "preMailSend", { mail : payload } );
+			variables.inteceptorService.processState( "preMailSend", { mail : arguments.mail } );
 
 			// We mail it using the protocol which is defined in the mail settings.
-			rtnStruct = variables.mailSettings.getTransit().send( payload );
+			rtnStruct = variables.mailSettings.getTransit().send( arguments.mail );
 
 			// announce interception point after mail send
-			inteceptorService.processState( "postMailSend", { mail : payload, result : rtnStruct } );
+			variables.inteceptorService.processState(
+				"postMailSend",
+				{ mail : arguments.mail, result : rtnStruct }
+			);
 		} catch ( Any e ) {
 			arrayAppend(
 				rtnStruct.errorArray,
 				"Error sending mail. #e.message# : #e.detail# : #e.stackTrace#"
 			);
+			log.error( "Error sending mail. #e.message# : #e.detail# : #e.stackTrace#", e );
 		}
 
 		return rtnStruct;
@@ -162,6 +179,8 @@ component accessors="true" singleton {
 
 	/**
 	 * Parse the tokens and do body replacements.
+	 *
+	 * @mail The mail payload to use for parsing and usage.
 	 */
 	function parseTokens( required mail ){
 		var tokens      = arguments.mail.getBodyTokens();
