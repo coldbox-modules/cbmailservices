@@ -5,7 +5,7 @@
  ********************************************************************************
  * @author Luis Majano <lmajano@ortussolutions.com>
  * ----
- * The ColdBox Mail Service used to send emails in an oo and ColdBoxy fashion
+ * The ColdBox Mail Service is used to send emails in a fluent and human fashion.
  */
 component accessors="true" singleton threadsafe {
 
@@ -29,6 +29,8 @@ component accessors="true" singleton threadsafe {
 	 * Constructor
 	 */
 	MailService function init(){
+		variables.tokenMarker  = "@";
+		variables.mailSettings = "";
 		return this;
 	}
 
@@ -47,6 +49,7 @@ component accessors="true" singleton threadsafe {
 
 	/**
 	 * Get a new Mail payload object, just use config() on it to prepare it or pass in all the arguments via this method
+	 * All arguments passed to this method will be bound into the returning Mail object.
 	 */
 	Mail function newMail(){
 		var mail = variables.wirebox.getInstance(
@@ -146,7 +149,7 @@ component accessors="true" singleton threadsafe {
 				rtnStruct.errorArray,
 				"Please check the basic mail fields of To, From and Body as they are empty. To: #arguments.mail.getTo()#, From: #arguments.mail.getFrom()#, Body Len = #arguments.mail.getBody().length()#."
 			);
-			log.error( "Mail object does not validate.", arguments.mail.getMemento() );
+			log.error( "Mail object does not validate.", arguments.mail.getConfig() );
 			return rtnStruct;
 		}
 
@@ -167,6 +170,8 @@ component accessors="true" singleton threadsafe {
 				{ mail : arguments.mail, result : rtnStruct }
 			);
 		} catch ( Any e ) {
+			writeDump( var = e );
+			abort;
 			arrayAppend(
 				rtnStruct.errorArray,
 				"Error sending mail. #e.message# : #e.detail# : #e.stackTrace#"

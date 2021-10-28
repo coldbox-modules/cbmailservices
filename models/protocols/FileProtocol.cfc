@@ -125,7 +125,7 @@ Properties:
 				<hr/>
 				Mail Attributes
 				<hr/>
-				<cfdump var="#arguments.mail.getMemento()#">
+				<cfdump var="#arguments.mail.getConfig()#">
 				<hr/>
 				Mail Params
 				<hr/>
@@ -137,8 +137,8 @@ Properties:
 				<hr/>
 				Mail Body
 				<hr/>
-				<cfif structKeyExists( arguments.mail.getMemento(), "type" ) AND
-				arguments.mail.getMemento().type eq "text">
+				<cfif structKeyExists( arguments.mail.getConfig(), "type" ) AND
+				arguments.mail.getConfig().type eq "text">
 					<pre>#htmlCodeFormat( arguments.mail.getBody() )#</pre>
 				<cfelse>
 					#arguments.mail.getBody()#

@@ -5,8 +5,11 @@
  ********************************************************************************
  * @author Luis Majano <lmajano@ortussolutions.com>
  * ----
- * I model mail server settings. You can send this bean to model or EJB's and when sending email. It will use its settings.
+ * I model mail server settings. You can send this bean to model or EJB's and when sending email.
+ * All settings recorded in the cbmailservices in your config/ColdBox.cfc will be stored here.
  * All settings are stored in the variables scope as first-class properties.
+ *
+ * This object also stores the sending transit protocol object.
  */
 component accessors="true" singleton threadsafe {
 

@@ -101,7 +101,7 @@ A mail protocol that sends via email
 		<cfsetting enablecfoutputonly="true">
 
 		<!--- I HATE FREAKING CF WHITESPACE, LOOK HOW UGLY THIS IS --->
-		<cfmail attributeCollection="#payload.getMemento()#">
+		<cfmail attributeCollection="#payload.getConfig()#">
 			<cfoutput>#payload.getBody()#</cfoutput>
 			<cfsilent>
 				<cfloop array="#payload.getMailParams()#" index="mailparam">
@@ -138,7 +138,7 @@ A mail protocol that sends via email
 		<cfsetting enablecfoutputonly="true">
 
 		<!--- I HATE FREAKING CF WHITESPACE, LOOK HOW UGLY THIS IS --->
-		<cfmail attributeCollection="#payload.getMemento()#">
+		<cfmail attributeCollection="#payload.getConfig()#">
 			<!--- Mail Params --->
 			<cfloop array="#payload.getMailParams()#" index="mailparam">
 				<cfif structKeyExists( mailParam, "name" )>

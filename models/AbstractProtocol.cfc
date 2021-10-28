@@ -5,7 +5,9 @@
  ********************************************************************************
  * @author Luis Majano <lmajano@ortussolutions.com>
  * ----
- * An abstract class that give identity to mail protocols when building custom or extending mail protocols the Mail Service uses.
+ * An abstract class that gives identity to mail protocols when building custom or extending mail protocols the Mail Service uses.
+ *
+ * The `send()` function is the one you want to implement in your protocols
  */
 component accessors="true" {
 
@@ -27,16 +29,6 @@ component accessors="true" {
 	function init( struct properties = {} ){
 		variables.properties = arguments.properties;
 		return this;
-	}
-
-	/**
-	 * Implemented by concrete protocols to send a message
-	 *
-	 * @payload The paylod object to send the message with
-	 * @payload.doc_generic cbmailservices.models.Mail
-	 */
-	struct function send( required payload ){
-		throw( type = "NotImplementedException" );
 	}
 
 	/**
@@ -78,6 +70,24 @@ component accessors="true" {
 	 */
 	boolean function propertyExists( required property ){
 		return structKeyExists( variables.properties, arguments.property );
+	}
+
+	/******************** TO IMPLEMENT ************************/
+
+	/**
+	 * Implemented by concrete protocols to send a message.
+	 *
+	 * The return is a struct with two keys
+	 * - `error` - A boolean flag if the message was sent or not
+	 * - `errorArray` - An array of error messages the protocol stored if any
+	 *
+	 * @payload The paylod object to send the message with
+	 * @payload.doc_generic cbmailservices.models.Mail
+	 *
+	 * @return struct of { "error" : boolean, "errorArray" : [] }
+	 */
+	struct function send( required cbmailservices.models.Mail payload ){
+		throw( type = "NotImplementedException" );
 	}
 
 }
