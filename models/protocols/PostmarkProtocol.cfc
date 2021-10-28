@@ -67,7 +67,7 @@ A mail protocol that sends via http://postmarkapp.com/
 
 		<!--- If we've made it this far then then the payload should be fit for purpose. --->
 		<!--- Get the information from the email payload. --->
-		<cfset local.data = arguments.mail.getMemento()/>
+		<cfset local.data = arguments.mail.getConfig()/>
 
 		<!--- We can now start to assemble our augmented payload ready to send to PostMark. --->
 		<!--- Create a default array for the custom mail headers. --->

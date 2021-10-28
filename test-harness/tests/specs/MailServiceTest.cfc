@@ -6,13 +6,8 @@
 	 * executes before all suites+specs in the run() method
 	 */
 	function beforeAll(){
+		super.beforeAll();
 		super.setup();
-	}
-
-	/**
-	 * executes after all suites+specs in the run() method
-	 */
-	function afterAll(){
 	}
 
 	/*********************************** BDD SUITES ***********************************/
@@ -96,20 +91,21 @@
 
 
 			it( "can send mail with params", function(){
-				var mail = mailService
+				var results = mailService
 					.newMail()
 					.configure(
 						from    = "info@coldbox.org",
 						to      = "automation@coldbox.org",
 						subject = "Mail With Params - Hello Luis"
-					);
-				mail.setBody( "Hello This is my great unit test" );
-				mail.addMailParam(
-					name  = "Disposition-Notification-To",
-					value = "info@coldbox.org"
-				);
-				mail.addMailParam( name = "Importance", value = "High" );
-				var results = mailService.send( mail );
+					)
+					.setBody( "Hello This is my great unit test" )
+					.addMailParam(
+						name  = "Disposition-Notification-To",
+						value = "info@coldbox.org"
+					)
+					.addMailParam( name = "Importance", value = "High" )
+					.send();
+
 				expect(
 					mailService
 						.getMailSettings()
@@ -171,14 +167,16 @@
 			} );
 
 			it( "can send mail with custom settings", function(){
-				var mail = mailService.newMail(
-					from    = "info@coldbox.org",
-					to      = "automation@coldbox.org",
-					type    = "html",
-					body    = "TestMailWithSettings",
-					subject = "TestMailWithSettings"
-				);
-				var results = mailService.send( mail );
+				var results = mailService
+					.newMail(
+						from    = "info@coldbox.org",
+						to      = "automation@coldbox.org",
+						type    = "html",
+						body    = "TestMailWithSettings",
+						subject = "TestMailWithSettings"
+					)
+					.send();
+
 				expect(
 					mailService
 						.getMailSettings()

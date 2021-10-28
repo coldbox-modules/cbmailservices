@@ -85,7 +85,7 @@ component accessors="true" {
 	 * Place holder for `configure()` as a compatibility shim
 	 * @deprecated This will be removed
 	 */
-	function config(){
+	Mail function config(){
 		return this.configure( argumentCollection = arguments );
 	}
 
@@ -330,16 +330,22 @@ component accessors="true" {
 	}
 
 	/**
-	 * Send an email payload. Returns a struct: [error:boolean, errorArray:array]
-	 *
-	 * @mail The mail payload to send.
+	 * Send this mail payload!
+	 * Returns a struct: [error:boolean, errorArray:array]
 	 *
 	 * @return { error:boolean, errorArray:array }
 	 */
-	struct function send( required Mail mail ){
-		return variables.wirebox
-			.getInstance( "MailService@cbmailservices" )
-			.send( argumentCollection = arguments );
+	struct function send(){
+		return variables.wirebox.getInstance( "MailService@cbmailservices" ).send( this );
+	}
+
+	/**
+	 * Return the configuration structure
+	 *
+	 * @deprecated This will be dropped do not use anymore, use getConfig()
+	 */
+	struct function getMemento(){
+		return variables.config;
 	}
 
 }

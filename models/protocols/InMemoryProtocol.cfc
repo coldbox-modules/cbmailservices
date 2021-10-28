@@ -1,9 +1,21 @@
+/**
+ ********************************************************************************
+ * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
+ * www.ortussolutions.com
+ ********************************************************************************
+ * @author Eric Peterson <eric@ortussolutions.com>, Luis Majano <lmajano@ortussolutions.com>
+ * ----
+ * This protocol stores the mail in the `mail` property file.
+ */
 component
 	extends="cbmailservices.models.AbstractProtocol"
 	singleton
 	accessors="true"
 {
 
+	/**
+	 * This is the mail log for all sent mail
+	 */
 	property name="mail" type="array";
 
 	/**
@@ -11,7 +23,7 @@ component
 	 *
 	 * @properties A map of configuration properties for the protocol
 	 */
-	public InMemoryProtocol function init( struct properties = {} ){
+	InMemoryProtocol function init( struct properties = {} ){
 		variables.name = "InMemory";
 		super.init( argumentCollection = arguments );
 		variables.mail = [];
@@ -19,12 +31,19 @@ component
 	}
 
 	/**
-	 * Log the message as sent.
+	 * Store them locally in our maillog property
 	 *
-	 * @payload The payload to deliver
+	 * The return is a struct with two keys
+	 * - `error` - A boolean flag if the message was sent or not
+	 * - `errorArray` - An array of error messages the protocol stored if any
+	 *
+	 * @payload The paylod object to send the message with
+	 * @payload.doc_generic cbmailservices.models.Mail
+	 *
+	 * @return struct of { "error" : boolean, "errorArray" : [] }
 	 */
-	public struct function send( required cbmailservices.models.Mail payload ){
-		variables.mail.append( arguments.payload.getMemento() );
+	struct function send( required cbmailservices.models.Mail payload ){
+		variables.mail.append( arguments.payload.getConfig() );
 		return { "error" : false, "errorArray" : [] };
 	}
 
@@ -35,15 +54,16 @@ component
 	 *
 	 * @callback A callback function to check against each mail item.
 	 */
-	public boolean function hasMessage( required function callback ){
+	boolean function hasMessage( required function callback ){
 		return arrayFilter( variables.mail, arguments.callback ).len() > 0;
 	}
 
 	/**
 	 * Resets the in-memory array.
 	 */
-	public void function reset(){
+	InMemoryProtocol function reset(){
 		variables.mail = [];
+		return this;
 	}
 
 }
