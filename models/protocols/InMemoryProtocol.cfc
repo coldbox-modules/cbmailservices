@@ -35,16 +35,16 @@ component
 	 *
 	 * The return is a struct with two keys
 	 * - `error` - A boolean flag if the message was sent or not
-	 * - `errorArray` - An array of error messages the protocol stored if any
+	 * - `messages` - An array of error messages the protocol stored if any
 	 *
 	 * @payload The paylod object to send the message with
 	 * @payload.doc_generic cbmailservices.models.Mail
 	 *
-	 * @return struct of { "error" : boolean, "errorArray" : [] }
+	 * @return struct of { "error" : boolean, "messages" : [] }
 	 */
 	struct function send( required cbmailservices.models.Mail payload ){
 		variables.mail.append( arguments.payload.getConfig() );
-		return { "error" : false, "errorArray" : [] };
+		return { "error" : false, "messages" : [] };
 	}
 
 	/**

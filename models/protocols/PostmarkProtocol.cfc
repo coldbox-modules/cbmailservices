@@ -48,7 +48,7 @@ A mail protocol that sends via http://postmarkapp.com/
 		access    ="public"
 		returntype="struct"
 		output    ="true"
-		hint      ="Send an email payload. Returns a struct: [error:boolean,errorArray:array,messageid:string]"
+		hint      ="Send an email payload. Returns a struct: [error:boolean,messages:array,messageid:string]"
 	>
 		<cfargument
 			name    ="mail"
@@ -63,7 +63,7 @@ A mail protocol that sends via http://postmarkapp.com/
 		<!--- Create a default return structure. --->
 		<cfset local.rtnStruct = structNew()/>
 		<cfset local.rtnStruct.error = true/>
-		<cfset local.rtnStruct.errorArray = arrayNew( 1 )/>
+		<cfset local.rtnStruct.messages = arrayNew( 1 )/>
 
 		<!--- If we've made it this far then then the payload should be fit for purpose. --->
 		<!--- Get the information from the email payload. --->
@@ -180,7 +180,7 @@ A mail protocol that sends via http://postmarkapp.com/
 				<!--- This probably means that something substantial has gone wrong. --->
 				<!--- We'll append the details of the error into an error structure. --->
 				<cfset arrayAppend(
-					local.rtnStruct.errorArray,
+					local.rtnStruct.messages,
 					"Error sending mail. #cfcatch.message# : #cfcatch.detail# : #cfcatch.stackTrace#"
 				)/>
 
@@ -318,7 +318,7 @@ A mail protocol that sends via http://postmarkapp.com/
 			<cfset local.ReturnStruct[ "error" ] = False/>
 
 			<!--- Create an array for us to put the errors into. --->
-			<cfset local.ReturnStruct[ "errorArray" ] = arrayNew( 1 )/>
+			<cfset local.ReturnStruct[ "messages" ] = arrayNew( 1 )/>
 
 			<!--- We're also going to append the message ID. --->
 			<!---
@@ -328,14 +328,14 @@ A mail protocol that sends via http://postmarkapp.com/
 		<cfelse>
 			<!--- If this message was not OK then we have an error on our hands. --->
 			<!--- Create an array for us to put the errors into. --->
-			<cfset local.ReturnStruct[ "errorArray" ] = arrayNew( 1 )/>
+			<cfset local.ReturnStruct[ "messages" ] = arrayNew( 1 )/>
 
 			<!--- Set the error variable to true. --->
 			<cfset local.ReturnStruct[ "error" ] = True/>
 
 			<!--- We're also going to append the error code and message into the error array. --->
 			<cfset arrayAppend(
-				local.ReturnStruct[ "errorArray" ],
+				local.ReturnStruct[ "messages" ],
 				"#PostMarkReturnStruct[ "ErrorCode" ]# - #PostMarkReturnStruct[ "Message" ]#"
 			)/>
 		</cfif>

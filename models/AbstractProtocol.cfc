@@ -79,12 +79,12 @@ component accessors="true" {
 	 *
 	 * The return is a struct with two keys
 	 * - `error` - A boolean flag if the message was sent or not
-	 * - `errorArray` - An array of error messages the protocol stored if any
+	 * - `messages` - An array of messages the protocol stored if any when sending the payload
 	 *
 	 * @payload The paylod object to send the message with
 	 * @payload.doc_generic cbmailservices.models.Mail
 	 *
-	 * @return struct of { "error" : boolean, "errorArray" : [] }
+	 * @return struct of { "error" : boolean, "messages" : [] }
 	 */
 	struct function send( required cbmailservices.models.Mail payload ){
 		throw( type = "NotImplementedException" );
