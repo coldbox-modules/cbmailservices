@@ -51,9 +51,9 @@ A mail protocol that sends via email
 		/>
 		<cfscript>
 		// The return structure
-		var rtnStruct        = structNew();
-		rtnStruct.error      = true;
-		rtnStruct.errorArray = arrayNew( 1 );
+		var rtnStruct      = structNew();
+		rtnStruct.error    = true;
+		rtnStruct.messages = arrayNew( 1 );
 
 		// Just mail the darned thing!!
 		try {
@@ -68,7 +68,7 @@ A mail protocol that sends via email
 			rtnStruct.error = false;
 		} catch ( Any e ) {
 			arrayAppend(
-				rtnStruct.errorArray,
+				rtnStruct.messages,
 				"Error sending mail. #e.message# : #e.detail# : #e.stackTrace#"
 			);
 		}

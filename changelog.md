@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `COMPATIBILITY` : Settings are now using ColdBox 5 module approach of `moduleSettings.cbmailservices` instead of a root key element called `cbmailservices`.  Make sure you update your settings and move them to `modulesettings.cbmailservices`
 * `COMPATIBILITY` : Changed all arguments called `default` to `defaultValue` to avoid ACF issues with the parser
 * `Mail` object `config()` renamed to `configure()`
+* The return results structure from the protocols `errorArray` has been renamed to just `messages` as it can contain warnings, information messages as well as error messages
 
 ### Added
 

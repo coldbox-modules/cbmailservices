@@ -57,16 +57,16 @@ component
 	 *
 	 * The return is a struct with two keys
 	 * - `error` - A boolean flag if the message was sent or not
-	 * - `errorArray` - An array of error messages the protocol stored if any
+	 * - `messages` - An array of error messages the protocol stored if any
 	 *
 	 * @payload The paylod object to send the message with
 	 * @payload.doc_generic cbmailservices.models.Mail
 	 *
-	 * @return struct of { "error" : boolean, "errorArray" : [] }
+	 * @return struct of { "error" : boolean, "messages" : [] }
 	 */
 	struct function send( required cbmailservices.models.Mail payload ){
 		// The return structure
-		var rtnStruct = { "error" : true, "errorArray" : [] };
+		var rtnStruct = { "error" : true, "messages" : [] };
 		var content   = "";
 		var filePath  = getProperty( "filePath" ) & "/mail.#dateFormat( now(), "mm-dd-yyyy" )#.#timeFormat( now(), "HH-mm-ss-L" )#.html";
 
@@ -82,7 +82,7 @@ component
 			rtnStruct.error = false;
 		} catch ( Any e ) {
 			arrayAppend(
-				rtnStruct.errorArray,
+				rtnStruct.messages,
 				"Error sending mail. #e.message# : #e.detail# : #e.stackTrace#"
 			);
 		}

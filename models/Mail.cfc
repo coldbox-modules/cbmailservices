@@ -17,9 +17,16 @@ component accessors="true" {
 	property name="wirebox" inject="wirebox";
 
 	/**
-	 * The config struct representing the mail payload
+	 * The config struct representing the mail payload which is sent to the configured protocol in the mail service
 	 */
 	property name="config" type="struct";
+
+	/**
+	 * The structure of results of sending the mail via the protocol. At most it will contain the following keys:
+	 * - error : boolean
+	 * - messages : array of messages
+	 */
+	property name="results" type="struct";
 
 	/**
 	 * Constructor
@@ -331,9 +338,9 @@ component accessors="true" {
 
 	/**
 	 * Send this mail payload!
-	 * Returns a struct: [error:boolean, errorArray:array]
+	 * Returns a struct: [error:boolean, messages:array]
 	 *
-	 * @return { error:boolean, errorArray:array }
+	 * @return { error:boolean, messages:array }
 	 */
 	struct function send(){
 		return variables.wirebox.getInstance( "MailService@cbmailservices" ).send( this );

@@ -134,19 +134,19 @@ component accessors="true" singleton threadsafe {
 	}
 
 	/**
-	 * Send an email payload. Returns a struct: [error:boolean, errorArray:array]
+	 * Send an email payload. Returns a struct: [error:boolean, messages:array]
 	 *
 	 * @mail The mail payload to send.
 	 *
-	 * @return { error:boolean, errorArray:array }
+	 * @return { error:boolean, messages:array }
 	 */
 	struct function send( required Mail mail ){
-		var rtnStruct = { "error" : true, "errorArray" : [] }
+		var rtnStruct = { "error" : true, "messages" : [] }
 
 		// Validate Basic Mail Fields and error out
 		if ( NOT arguments.mail.validate() ) {
 			arrayAppend(
-				rtnStruct.errorArray,
+				rtnStruct.messages,
 				"Please check the basic mail fields of To, From and Body as they are empty. To: #arguments.mail.getTo()#, From: #arguments.mail.getFrom()#, Body Len = #arguments.mail.getBody().length()#."
 			);
 			log.error( "Mail object does not validate.", arguments.mail.getConfig() );
@@ -173,7 +173,7 @@ component accessors="true" singleton threadsafe {
 			writeDump( var = e );
 			abort;
 			arrayAppend(
-				rtnStruct.errorArray,
+				rtnStruct.messages,
 				"Error sending mail. #e.message# : #e.detail# : #e.stackTrace#"
 			);
 			log.error( "Error sending mail. #e.message# : #e.detail# : #e.stackTrace#", e );
