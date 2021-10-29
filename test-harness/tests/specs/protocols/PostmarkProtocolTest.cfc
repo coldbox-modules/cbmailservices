@@ -12,7 +12,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 		super.beforeAll();
 		setup();
 		variables.mailservice = getInstance( "MailService@cbmailservices" );
-		variables.apikey      = getUtil().getSystemSetting( "POSTMARK_API_KEY", "0" );
+		variables.apikey      = getUtil().getSystemSetting( "POSTMARK_API_KEY", "POSTMARK_API_TEST" );
 	}
 
 	/*********************************** BDD SUITES ***********************************/
@@ -47,8 +47,10 @@ component extends="coldbox.system.testing.BaseTestCase" {
 
 				var results = protocol.send( payload );
 
+				debug( results );
+
 				expect( results.error ).toBeFalse();
-				expect( results.message_id ).notToBeEmpty();
+				expect( results.messageID ).notToBeEmpty();
 			} );
 		} );
 	}

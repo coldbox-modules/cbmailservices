@@ -11,6 +11,9 @@
  */
 component accessors="true" {
 
+	// DI
+	property name="log" inject="logbox:logger:{this}";
+
 	/**
 	 * A collection of configuration properties for a protocol
 	 */
