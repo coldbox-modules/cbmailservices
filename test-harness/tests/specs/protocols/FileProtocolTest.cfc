@@ -1,101 +1,94 @@
-﻿<cfcomponent extends="coldbox.system.testing.BaseTestCase" output="false">
+﻿/**
+ * My BDD Test
+ */
+component extends="coldbox.system.testing.BaseTestCase" {
 
-	<cfset this.loadColdBox = false>
+	/*********************************** LIFE CYCLE Methods ***********************************/
 
-	<cffunction name="setup" access="public" output="false" returntype="void">
-		<cfscript>
-			// Set any properties this protocol might need.
-			props = { filePath="/tests/specs/protocols/tmp" };
+	/**
+	 * executes before all suites+specs in the run() method
+	 */
+	function beforeAll(){
+		super.beforeAll();
+		setup();
+		variables.mailservice = getInstance( "MailService@cbmailservices" );
+		variables.tmpPath     = expandPath( "/tests/tmp" );
+		cleanup();
+	}
 
-			// Create a mock instance of the protocol.
-			protocol =  getMockBox().createMock(className="cbmailservices.models.protocols.FileProtocol").init(props);
-		</cfscript>
-	</cffunction>
+	function cleanup(){
+		if ( directoryExists( variables.tmpPath ) ) {
+			directoryDelete( variables.tmpPath, true );
+		}
+	}
 
-	<cffunction name="testIsInited" access="public" output="false" returntype="void">
-		<cfscript>
-			// We only want the key to be local.
-			var key = "";
+	/*********************************** BDD SUITES ***********************************/
 
-			// We want to check that all the properties we've handed it have been set.
-			for (key in props) {
-				// Assert that the property has been set.
-				assertTrue(protocol.propertyExists(key), "The propery (#key#) doesn't appear to have been set in the protocol.");
-			}
-		</cfscript>
-	</cffunction>
+	function run( testResults, testBox ){
+		// all your suites go here.
+		describe( "File Protocol", function(){
+			beforeEach( function( currentSpec ){
+				// Create a mock instance of the protocol.
+				variables.protocol = createMock( "cbmailservices.models.protocols.FileProtocol" ).init( { filePath : variables.tmpPath, autoExpand : false } );
+			} );
 
-	<cffunction name="testSend" access="public" output="false" returntype="void">
-		<cfscript>
-			// 1:Mail with No Params
-			payload = getMockBox().createMock(className="cbmailservices.models.Mail").init().config(from="info@coldbox.org",to="automation@coldbox.org",type="html");
-			tokens = {name="Luis Majano",time=dateformat(now(),"full")};
-			payload.setBodyTokens(tokens);
-			payload.setBody("<h1>Hello @name@, how are you today?</h1>  <p>Today is the <b>@time@</b>.</p> <br/><br/><a href=""http://www.coldbox.org"">ColdBox Rules!</a>");
-			payload.setSubject("Mail NO Params-Hello Luis");
-			rtn = protocol.send(payload);
+			it( "can be inited correctly", function(){
+				expect( variables.protocol.propertyExists( "filePath" ) ).toBeTrue();
+			} );
 
+			it( "can send mail to files", function(){
+				var payload = variables.mailservice
+					.newMail()
+					.config(
+						from = "info@coldbox.org",
+						to   = "automation@coldbox.org",
+						type = "html"
+					);
+				var tokens = { name : "Luis Majano", time : dateFormat( now(), "full" ) };
+				payload.setBodyTokens( tokens );
+				payload.setBody(
+					"<h1>Hello @name@, how are you today?</h1>  <p>Today is the <b>@time@</b>.</p> <br/><br/><a href=""http://www.coldbox.org"">ColdBox Rules!</a>"
+				);
+				payload.setSubject( "Mail NO Params-Hello Luis" );
+				var results = protocol.send( payload );
 
-			// 2:Mail with params
-			payload = getMockBox().createMock(className="cbmailservices.models.Mail").init().config(from="info@coldbox.org",to="automation@coldbox.org",subject="Mail With Params - Hello Luis");
-			payload.setBody("Hello This is my great unit test");
-			payload.addMailParam(name="Disposition-Notification-To",value="info@coldbox.org");
-			payload.addMailParam(name="Importance",value="High");
-			rtn = protocol.send(payload);
-			debug(rtn);
+				var fileListing = directoryList(
+					expandPath( variables.tmpPath ),
+					false,
+					"Name",
+					"*.html"
+				);
+				debug( fileListing );
+				expect( fileListing.len() ).toBeGT( 0 );
+			} );
 
-			// 3:Mail multi-part no params
-			payload = getMockBox().createMock(className="cbmailservices.models.Mail").init().config(from="info@coldbox.org",to="automation@coldbox.org",subject="Mail MultiPart No Params - Hello Luis");
-			payload.addMailPart(type="text",body="You are reading this message as plain text, because your mail reader does not handle it.");
-			payload.addMailPart(type="html",body="This is the body of the message.");
-			rtn = protocol.send(payload);
-			debug(rtn);
+			it( "can send mail with no type specified", function(){
+				var payload = getMockBox()
+					.createMock( className = "cbmailservices.models.Mail" )
+					.init()
+					.config(
+						from    = "info@coldbox.org",
+						to      = "automation@coldbox.org",
+						subject = "Mail With Params - Hello Luis"
+					);
+				payload.setBody( "Hello This is my great unit test" );
+				payload.addMailParam(
+					name  = "Disposition-Notification-To",
+					value = "info@coldbox.org"
+				);
+				payload.addMailParam( name = "Importance", value = "High" );
+				var results = protocol.send( payload );
+				debug( results );
+				var fileListing = directoryList(
+					expandPath( variables.tmpPath ),
+					false,
+					"Name",
+					"*.html"
+				);
+				debug( fileListing );
+				expect( fileListing.len() ).toBeGT( 1 );
+			} );
+		} );
+	}
 
-			// 4:Mail multi-part with params
-			payload = getMockBox().createMock(className="cbmailservices.models.Mail").init().config(from="info@coldbox.org",to="automation@coldbox.org",subject="Mail MultiPart With Params - Hello Luis");
-			payload.addMailPart(type="text",body="You are reading this message as plain text, because your mail reader does not handle it.");
-			payload.addMailPart(type="html",body="This is the body of the message.");
-			payload.addMailParam(name="Disposition-Notification-To",value="info@coldbox.org");
-			rtn = protocol.send(payload);
-			debug(rtn);
-
-			// Check if files exist
-
-		</cfscript>
-
-		<cfdirectory action="list" directory="#expandPath('/tests/specs/protocols/tmp')#" filter="*.html" listinfo="name" name="qTesting" >
-
-		<cfset debug(qTesting)>
-		<cfset AssertTrue( qTesting.recordcount )>
-
-		<cfloop query="qTesting">
-			<cfset fileDelete( expandPath('/tests/specs/protocols/tmp/#qTesting.name#') )>
-		</cfloop>
-
-
-	</cffunction>
-
-	<cffunction name="testDoesNotFailIfNoTypeWasProvided" access="public" output="false" returntype="void">
-		<cfscript>
-			payload = getMockBox().createMock(className="cbmailservices.models.Mail").init().config(from="info@coldbox.org",to="automation@coldbox.org",subject="Mail With Params - Hello Luis");
-			payload.setBody("Hello This is my great unit test");
-			payload.addMailParam(name="Disposition-Notification-To",value="info@coldbox.org");
-			payload.addMailParam(name="Importance",value="High");
-			rtn = protocol.send(payload);
-			debug(rtn);
-
-			// Check if files exist
-
-		</cfscript>
-
-		<cfdirectory action="list" directory="#expandPath('/tests/specs/protocols/tmp')#" filter="*.html" listinfo="name" name="qTesting" >
-
-		<cfset debug(qTesting)>
-		<cfset AssertTrue( qTesting.recordcount )>
-
-		<cfloop query="qTesting">
-			<cfset fileDelete( expandPath('/tests/specs/protocols/tmp/#qTesting.name#') )>
-		</cfloop>
-	</cffunction>
-
-</cfcomponent>
+}

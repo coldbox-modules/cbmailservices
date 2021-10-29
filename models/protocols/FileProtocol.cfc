@@ -1,35 +1,28 @@
-﻿<!-----------------------------------------------------------------------
-********************************************************************************
-Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
-www.ortussolutions.com
-********************************************************************************
-Author 	 :	Luis Majano & Robert Rawlings
-Description :
-A mail protocol that sends via cffile
-Properties:
-- filePath   : location to store files
-- autoExpand(true) : auto expand path or not
------------------------------------------------------------------------>
-<cfcomponent
+﻿/**
+ ********************************************************************************
+ * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
+ * www.ortussolutions.com
+ ********************************************************************************
+ * @author Luis Majano <lmajano@ortussolutions.com>
+ * ----
+ * This protocol stores the mail in html files in the directory specified via the configuration
+ * properties
+ *
+ * - filePath : The directory location to store the mail files
+ * - autoExpand : Defaults to true to do an expandPath() on the incoming filePath
+ */
+component
 	extends="cbmailservices.models.AbstractProtocol"
-	output ="false"
-	hint   ="A mail protocol that sends via cffile"
->
-	<!--- init --->
-	<cffunction
-		name      ="init"
-		access    ="public"
-		returntype="FileProtocol"
-		hint      ="Constructor"
-		output    ="false"
-	>
-		<cfargument
-			name    ="properties"
-			required="false"
-			default ="#structNew()#"
-			hint    ="A map of configuration properties for the protocol"
-		/>
-		<cfscript>
+	singleton
+	accessors="true"
+{
+
+	/**
+	 * Initialize the File protocol
+	 *
+	 * @properties A map of configuration properties for the protocol
+	 */
+	FileProtocol function init( struct properties = {} ){
 		variables.name = "File";
 		super.init( argumentCollection = arguments );
 
@@ -37,7 +30,7 @@ Properties:
 		if ( NOT propertyExists( "filePath" ) ) {
 			// No API key was found, so throw an exception.
 			throw(
-				message = "filePath property is Required",
+				message = "(filePath) property is required",
 				type    = "FileProtocol.PropertyNotFound"
 			);
 		}
@@ -57,35 +50,34 @@ Properties:
 		}
 
 		return this;
-		</cfscript>
-	</cffunction>
+	}
 
-	<!------------------------------------------- PUBLIC ------------------------------------------>
-
-	<cffunction
-		name      ="send"
-		access    ="public"
-		returntype="struct"
-		hint      ="I send a payload via the cfmail protocol."
-	>
-		<cfargument
-			name       ="payload"
-			required   ="true"
-			type       ="any"
-			hint       ="I'm the payload to delivery"
-			doc_generic="cbmailservices.models.Mail"
-		/>
-		<cfscript>
+	/**
+	 * Send mails to html files on disk
+	 *
+	 * The return is a struct with two keys
+	 * - `error` - A boolean flag if the message was sent or not
+	 * - `errorArray` - An array of error messages the protocol stored if any
+	 *
+	 * @payload The paylod object to send the message with
+	 * @payload.doc_generic cbmailservices.models.Mail
+	 *
+	 * @return struct of { "error" : boolean, "errorArray" : [] }
+	 */
+	struct function send( required cbmailservices.models.Mail payload ){
 		// The return structure
-		var rtnStruct = { error : true, errorArray : [] };
+		var rtnStruct = { "error" : true, "errorArray" : [] };
 		var content   = "";
 		var filePath  = getProperty( "filePath" ) & "/mail.#dateFormat( now(), "mm-dd-yyyy" )#.#timeFormat( now(), "HH-mm-ss-L" )#.html";
 
 		// Just mail the darned thing!!
 		try {
 			// write it out
-			fileWrite( filePath, getMailContent( arguments.payload ) );
-
+			fileWrite(
+				filePath,
+				getMailContent( arguments.payload ),
+				"UTF-8"
+			);
 			// send success
 			rtnStruct.error = false;
 		} catch ( Any e ) {
@@ -97,55 +89,48 @@ Properties:
 
 		// Return the return structure.
 		return rtnStruct;
-		</cfscript>
-	</cffunction>
+	}
 
-	<!------------------------------------------- PRIVATE ------------------------------------------>
-
-	<!--- getMailContent --->
-	<cffunction
-		name      ="getMailContent"
-		output    ="false"
-		access    ="private"
-		returntype="any"
-		hint      ="Generate Mail content"
-	>
-		<cfargument
-			name       ="mail"
-			required   ="true"
-			type       ="any"
-			hint       ="The mail payload"
-			doc_generic="cbmailservices.models.Mail"
-		/>
-		<cfset var thisMail = "">
-
-		<cfsavecontent variable="thisMail">
-			<cfoutput>
+	/**
+	 * Generate the mail content to store in the file
+	 */
+	private function getMailContent( required mail ){
+		// cfformat-ignore-start
+		savecontent variable="local.thisMail"{
+			writeOutput( "
 				Sent at: #dateTimeFormat( now(), "full" )#<br/>
 				<hr/>
 				Mail Attributes
 				<hr/>
-				<cfdump var="#arguments.mail.getConfig()#">
+			");
+			writeDump( var=arguments.mail.getConfig() );
+			writeOutput( "
 				<hr/>
 				Mail Params
 				<hr/>
-				<cfdump var="#arguments.mail.getMailParams()#">
+			" );
+			writeDump( var=arguments.mail.getMailParams() );
+			writeOutput( "
 				<hr/>
 				Mail Parts
 				<hr/>
-				<cfdump var="#arguments.mail.getMailParts()#">
+			" );
+			writeDump( var=arguments.mail.getMailParts() );
+			writeOutput( "
 				<hr/>
 				Mail Body
 				<hr/>
-				<cfif structKeyExists( arguments.mail.getConfig(), "type" ) AND
-				arguments.mail.getConfig().type eq "text">
-					<pre>#htmlCodeFormat( arguments.mail.getBody() )#</pre>
-				<cfelse>
-					#arguments.mail.getBody()#
-				</cfif>
-			</cfoutput>
-		</cfsavecontent>
+			" );
+			// Text or HTML Type
+			if( arguments.mail.getProperty( "type", "text" ) eq "text" ){
+				writeOutput( "<pre>#htmlCodeFormat( arguments.mail.getBody() )#</pre>" );
+			} else {
+				writeOutput( "#arguments.mail.getBody()#" );
+			}
+		}
+		// cfformat-ignore-end
 
-		<cfreturn thisMail>
-	</cffunction>
-</cfcomponent>
+		return local.thisMail;
+	}
+
+}
