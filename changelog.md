@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `COMPATIBILITY` : Changed all arguments called `default` to `defaultValue` to avoid ACF issues with the parser
 * `Mail` object `config()` renamed to `configure()`
 * The return results structure from the protocols `errorArray` has been renamed to just `messages` as it can contain warnings, information messages as well as error messages
+* PostmarkAPI result returns `MessageID` instead of `message_id` now.
 
 ### Added
 
