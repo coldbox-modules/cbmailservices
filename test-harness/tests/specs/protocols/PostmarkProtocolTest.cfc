@@ -49,7 +49,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 
 				debug( results );
 
-				expect( results.error ).toBeFalse();
+				expect( results.error ).toBeFalse( results.toString() );
 				expect( results.messageID ).notToBeEmpty();
 			} );
 		} );
