@@ -19,15 +19,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* `Mail` object now can send itself via the new `send()` method which delegates to the service, but provides a nice sending DSL
-* `Mail` object now has dynamic getters and setters for ALL configuration objects
-* Each protocol get's a `name` property now for a numan readable name
+* In order to run and validate SMPT tests, we now use FakeSMTP as a container located in /test-harnes/tests/resources/docker-compose.yml.  This will send mail to disk for us when testing smtp. If you want to run the tests on your machine, you will need to startup the container.
+* Every protocol now has a `log` LogBox logger configured object thanks to the `AbstractProtocol`.
+* Every protocol gets a `name` property now for a numan readable name thanks to the `AbstractProtocol`.
+* `Mail` object now can send itself via the new `send()` method which delegates to the service, but provides a nice sending DSL.
+* `Mail` object now has dynamic getters and setters for ALL configuration objects.
 * You can now use aliases to build out any of the core protocols: `CFMail, File, InMemory, Null or Postmark` instead of the full path.
 * You can now use a wirebox id or class path as the protocol class apart from the core protocols.
-* Added ability for the `getProperty( property, defaultValue )` method on the abstract protocol to have a default value
-* Migration to script of all core items
-* Migration to github actions
-* Adobe 2021 Support
+* Added ability for the `getProperty( property, defaultValue )` method on the abstract protocol to have a default value.
+* Migration to script of all core items.
+* Migration to github actions.
+* Adobe 2021 Support.
 * Modernization of all source code.
 
 ----
