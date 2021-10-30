@@ -12,6 +12,26 @@ component extends="coldbox.system.testing.BaseTestCase" {
 		super.beforeAll();
 		setup();
 		variables.mailservice = getInstance( "MailService@cbmailservices" );
+		variables.tmpPath     = expandPath( "/tests/resources/mail" );
+		cleanup();
+		if ( !directoryExists( variables.tmpPath ) ) {
+			directoryCreate( variables.tmpPath );
+		}
+	}
+
+	function cleanup(){
+		if ( directoryExists( variables.tmpPath ) ) {
+			directoryDelete( variables.tmpPath, true );
+		}
+	}
+
+	function getFileMailListing(){
+		return directoryList(
+			expandPath( variables.tmpPath ),
+			false,
+			"Name",
+			"*.eml"
+		);
 	}
 
 	/*********************************** BDD SUITES ***********************************/
@@ -42,6 +62,8 @@ component extends="coldbox.system.testing.BaseTestCase" {
 
 				debug( results );
 				expect( results.error ).toBeFalse();
+				sleep( 1000 );
+				expect( getFileMailListing().len() ).toBe( 1 );
 			} );
 
 
@@ -63,6 +85,8 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				var results = protocol.send( payload );
 				debug( results );
 				expect( results.error ).toBeFalse();
+				sleep( 1000 );
+				expect( getFileMailListing().len() ).toBe( 2 );
 			} );
 
 
@@ -83,6 +107,8 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				var results = protocol.send( payload );
 				debug( results );
 				expect( results.error ).toBeFalse();
+				sleep( 1000 );
+				expect( getFileMailListing().len() ).toBe( 3 );
 			} );
 
 			it( "can send multi-part with params", function(){
@@ -106,6 +132,8 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				var results = protocol.send( payload );
 				debug( results );
 				expect( results.error ).toBeFalse();
+				sleep( 1000 );
+				expect( getFileMailListing().len() ).toBe( 4 );
 			} );
 		} );
 	}
