@@ -80,7 +80,7 @@ component accessors="true" {
 	/**
 	 * Implemented by concrete protocols to send a message.
 	 *
-	 * The return is a struct with two keys
+	 * The return is a struct with a minimum of the following two keys
 	 * - `error` - A boolean flag if the message was sent or not
 	 * - `messages` - An array of messages the protocol stored if any when sending the payload
 	 *

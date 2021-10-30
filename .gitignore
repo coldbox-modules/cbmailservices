@@ -11,6 +11,7 @@ test-harness/testbox/**
 test-harness/logs/**
 test-harness/modules/**
 test-harness/tests/tmp/**
+test-harness/tests/resources/mail/**
 
 # log files
 logs/**
