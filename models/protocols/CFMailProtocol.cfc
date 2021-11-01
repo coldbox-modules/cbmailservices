@@ -65,30 +65,20 @@ component
 			writeOutput( "#arguments.payload.getBody()#" );
 
 			// Process mail params
-			arguments.payload
-				.getMailParams()
-				.each( function( thisParam ){
-					if ( structKeyExists( arguments.thisParam, "name" ) ) {
-						cfmailparam(
-							name                = "#arguments.thisParam.name#",
-							attributeCollection = "#arguments.thisParam#"
-						);
-					} else if ( structKeyExists( arguments.thisParam, "file" ) ) {
-						cfmailparam(
-							file                = "#arguments.thisParam.file#",
-							attributeCollection = "#arguments.thisParam#"
-						);
-					}
-				} );
+			for ( var thisParam in arguments.payload.getMailParams() ) {
+				if ( structKeyExists( thisParam, "name" ) ) {
+					cfmailparam( name = "#thisParam.name#", attributeCollection = "#thisParam#" );
+				} else if ( structKeyExists( thisParam, "file" ) ) {
+					cfmailparam( file = "#thisParam.file#", attributeCollection = "#thisParam#" );
+				}
+			}
 
 			// Process mail parts
-			arguments.payload
-				.getMailParts()
-				.each( function( thisPart ){
-					cfmailpart( attributeCollection = "#arguments.thisPart#" ) {
-						writeOutput( "#arguments.thisPart.body#" );
-					}
-				} );
+			for ( var thisPart in arguments.payload.getMailParts() ) {
+				cfmailpart( attributeCollection = "#thisPart#" ) {
+					writeOutput( "#thisPart.body#" );
+				}
+			}
 		}
 	}
 
