@@ -48,20 +48,23 @@ jobs:
         run: |
           box install
 
-      # Startup Fake SMTP
-      - uses: isbang/compose-action@v1.0.0
-        with:
-          compose-file: './test-harness/tests/resources/docker-compose.yml'
-
       - name: Start ${{ matrix.cfengine }} Server
         working-directory: ./test-harness
         run: |
+          # Create Fake SMTP Folders
+          mkdir -p test-harness/tests/resources/mail
+          # Startup Server
           box server start serverConfigFile="server-${{ matrix.cfengine }}.json" --noSaveSettings --debug
           # Install Adobe 2021 cfpm modules
           if [[ "${{ matrix.cfengine }}" == "adobe@2021" ]] ; then
             box run-script install:2021
           fi
           curl http://127.0.0.1:60299
+
+       # Startup Fake SMTP
+      - uses: isbang/compose-action@v1.0.0
+        with:
+          compose-file: './test-harness/tests/resources/docker-compose.yml'
 
       - name: Run Tests
         working-directory: ./test-harness
@@ -84,6 +87,8 @@ jobs:
           name: test-results-${{ matrix.cfengine }}
           path: |
             test-harness/tests/results/**/*
+            test-harness/testbox/test-visualizer/index.html
+            test-harness/testbox/test-visualizer/main.css
 
       - name: Slack Notification
         if: failure()
