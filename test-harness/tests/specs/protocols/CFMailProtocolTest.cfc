@@ -62,8 +62,6 @@ component extends="coldbox.system.testing.BaseTestCase" {
 
 				debug( results );
 				expect( results.error ).toBeFalse( results.messages.toString() );
-				sleep( 1000 );
-				expect( getFileMailListing().len() ).toBe( 1, getFileMailListing().toString() );
 			} );
 
 
@@ -85,8 +83,6 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				var results = protocol.send( payload );
 				debug( results );
 				expect( results.error ).toBeFalse( results.messages.toString() );
-				sleep( 1000 );
-				expect( getFileMailListing().len() ).toBe( 2, getFileMailListing().toString() );
 			} );
 
 
@@ -107,8 +103,6 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				var results = protocol.send( payload );
 				debug( results );
 				expect( results.error ).toBeFalse( results.messages.toString() );
-				sleep( 1000 );
-				expect( getFileMailListing().len() ).toBe( 3, getFileMailListing().toString() );
 			} );
 
 			it( "can send multi-part with params", function(){
@@ -132,8 +126,6 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				var results = protocol.send( payload );
 				debug( results );
 				expect( results.error ).toBeFalse( results.messages.toString() );
-				sleep( 1000 );
-				expect( getFileMailListing().len() ).toBe( 4, getFileMailListing().toString() );
 			} );
 		} );
 	}
