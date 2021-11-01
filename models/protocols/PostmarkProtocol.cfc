@@ -144,7 +144,17 @@ component
 			if ( postmarkResults.message eq "OK" ) {
 				results.error     = false;
 				results.messageID = postmarkResults[ "MessageID" ]
-			} else {
+			}
+			// Test Messages
+			else if (
+				findNoCase( "Test job", postmarkResults.message ) and postmarkResults.errorCode eq 0
+			) {
+				results.error     = false;
+				results.messageID = postmarkResults[ "MessageID" ]
+				results.messages  = [ "Test job accepted" ];
+			}
+			// Exceptions
+			else {
 				results.messages = [
 					"#postmarkResults[ "ErrorCode" ]# - #postmarkResults[ "Message" ]#",
 					postmarkResults
