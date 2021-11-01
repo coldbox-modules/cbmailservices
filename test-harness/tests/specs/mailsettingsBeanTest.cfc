@@ -39,7 +39,6 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				);
 			} );
 
-
 			it( "can build out with defaults", function(){
 				expect( mailSettings.getTransit() ).toBeComponent();
 			} );
@@ -63,7 +62,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				expect( function(){
 					mailSettings.registerProtocol(
 						class: "cbmailservices.models.protocols.SomeUnknownProtocol"
-					)
+					);
 				} ).toThrow();
 			} );
 
