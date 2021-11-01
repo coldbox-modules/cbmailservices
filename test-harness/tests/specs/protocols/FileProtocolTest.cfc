@@ -14,12 +14,19 @@ component extends="coldbox.system.testing.BaseTestCase" {
 		variables.mailservice = getInstance( "MailService@cbmailservices" );
 		variables.tmpPath     = expandPath( "/tests/tmp" );
 		cleanup();
+		if ( !directoryExists( variables.tmpPath ) ) {
+			directoryCreate( variables.tmpPath );
+		}
 	}
 
 	function cleanup(){
 		if ( directoryExists( variables.tmpPath ) ) {
 			directoryDelete( variables.tmpPath, true );
 		}
+	}
+
+	function getFileMailListing(){
+		return directoryList( variables.tmpPath, false, "Name", "*.html" );
 	}
 
 	/*********************************** BDD SUITES ***********************************/
@@ -52,12 +59,8 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				payload.setSubject( "Mail NO Params-Hello Luis" );
 				var results = protocol.send( payload );
 
-				var fileListing = directoryList(
-					expandPath( variables.tmpPath ),
-					false,
-					"Name",
-					"*.html"
-				);
+				var fileListing = getFileMailListing();
+
 				debug( fileListing );
 				expect( fileListing.len() ).toBeGT( 0 );
 			} );
@@ -79,12 +82,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				payload.addMailParam( name = "Importance", value = "High" );
 				var results = protocol.send( payload );
 				debug( results );
-				var fileListing = directoryList(
-					expandPath( variables.tmpPath ),
-					false,
-					"Name",
-					"*.html"
-				);
+				var fileListing = getFileMailListing();
 				debug( fileListing );
 				expect( fileListing.len() ).toBeGT( 1 );
 			} );
