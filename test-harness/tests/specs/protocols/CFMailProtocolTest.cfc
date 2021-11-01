@@ -26,12 +26,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 	}
 
 	function getFileMailListing(){
-		return directoryList(
-			expandPath( variables.tmpPath ),
-			false,
-			"Name",
-			"*.eml"
-		);
+		return directoryList( variables.tmpPath, false, "Name", "*.eml" );
 	}
 
 	/*********************************** BDD SUITES ***********************************/
