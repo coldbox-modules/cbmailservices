@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        cfengine: [ "lucee@5", "adobe@2016", "adobe@2018", "adobe@2021" ]
+        cfengine: [ "lucee@5", "adobe@2018", "adobe@2021" ]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -36,16 +36,18 @@ jobs:
         run: |
           box install
 
+      - name: Start ${{ matrix.cfengine }} Server
+        working-directory: ./test-harness
+        run: |
+          # Create Fake SMTP Folders
+          mkdir -p test-harness/tests/resources/mail
+          box server start serverConfigFile="server-${{ matrix.cfengine }}.json" --noSaveSettings --debug
+          curl http://127.0.0.1:60299
+
       # Startup Fake SMTP
       - uses: isbang/compose-action@v1.0.0
         with:
           compose-file: './test-harness/tests/resources/docker-compose.yml'
-
-      - name: Start ${{ matrix.cfengine }} Server
-        working-directory: ./test-harness
-        run: |
-          box server start serverConfigFile="server-${{ matrix.cfengine }}.json" --noSaveSettings --debug
-          curl http://127.0.0.1:60299
 
       - name: Run Tests
         working-directory: ./test-harness
