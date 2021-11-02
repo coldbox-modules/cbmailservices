@@ -29,6 +29,11 @@ component accessors="true" {
 	property name="results" type="struct";
 
 	/**
+	 * The mailer to use when sending the payload. It defaults to `default`
+	 */
+	property name="mailer" type="string";
+
+	/**
 	 * Constructor
 	 */
 	function init(){
@@ -42,7 +47,10 @@ component accessors="true" {
 			"fromName"       : "",
 			"to"             : "",
 			"additionalInfo" : {}
-		}
+		};
+
+		variables.mailer  = "default";
+		variables.results = {};
 
 		return this.configure( argumentCollection = arguments );
 	}
@@ -337,13 +345,48 @@ component accessors="true" {
 	}
 
 	/**
-	 * Send this mail payload!
-	 * Returns a struct: [error:boolean, messages:array]
-	 *
-	 * @return { error:boolean, messages:array }
+	 * Send this mail payload and return itself
 	 */
-	struct function send(){
+	Mail function send(){
 		return variables.wirebox.getInstance( "MailService@cbmailservices" ).send( this );
+	}
+
+	/**
+	 * Callback that if there is an error in the sending of the mail it will be called for you.
+	 *
+	 * The callback will receive the results struct and the mail object itself
+	 */
+	function onError( required callback ){
+		if ( structCount( variables.results ) && hasErrors() ) {
+			arguments.callback( variables.results, this );
+		}
+		return this;
+	}
+
+	/**
+	 * Callback that if there is NO error in the sending of the mail it will be called for you.
+	 *
+	 * The callback will receive the results struct and the mail object itself
+	 */
+	function onSuccess( required callback ){
+		if ( structCount( variables.results ) && !hasErrors() ) {
+			arguments.callback( variables.results, this );
+		}
+		return this;
+	}
+
+	/**
+	 * Check if the sending had errors or not
+	 */
+	boolean function hasErrors(){
+		return variables.results.error ?: false;
+	}
+
+	/**
+	 * Get the result messages
+	 */
+	array function getResultMessages(){
+		return variables.results.messages ?: [];
 	}
 
 	/**

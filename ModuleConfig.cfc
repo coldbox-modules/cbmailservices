@@ -10,14 +10,14 @@
 component {
 
 	// Module Properties
-	this.title              = "ColdBox Mail Services";
-	this.author             = "Ortus Solutions";
-	this.webURL             = "https://www.ortussolutions.com";
-	this.description        = "A module that allows you to leverage many mail service protocols in a nice abstracted API";
+	this.title          = "ColdBox Mail Services";
+	this.author         = "Ortus Solutions";
+	this.webURL         = "https://www.ortussolutions.com";
+	this.description    = "A module that allows you to leverage many mail service protocols in a nice abstracted API";
 	// Model Namespace
-	this.modelNamespace     = "cbmailservices";
+	this.modelNamespace = "cbmailservices";
 	// CF Mapping
-	this.cfmapping          = "cbmailservices";
+	this.cfmapping      = "cbmailservices";
 
 	/**
 	 * Configure the module
@@ -26,9 +26,13 @@ component {
 		// Module Settings
 		settings = {
 			// The default token Marker Symbol
-			tokenMarker : "@",
-			// Default protocol is to use cfmail
-			protocol    : { class : "CFMail", properties : {} }
+			tokenMarker     : "@",
+			// Default protocol to use, it must be defined in the mailers configuration
+			defaultProtocol : "default",
+			// Here you can register one or many mailers by name
+			mailers         : { "default" : { class : "CFMail" } },
+			// The defaults for all mail config payloads and protocols
+			defaults        : {}
 		};
 
 		// Listeners
