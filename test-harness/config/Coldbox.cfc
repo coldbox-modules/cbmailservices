@@ -63,7 +63,26 @@
 
 		// Module Settings
 		moduleSettings = {
-
+			cbmailservices : {
+				// The default token Marker Symbol
+				tokenMarker     : "@",
+				// Default protocol to use, it must be defined in the mailers configuration
+				defaultProtocol : "default",
+				// Here you can register one or many mailers by name
+				mailers         : {
+					"cfmail" : { class : "CFMail" },
+					"files" : { class : "File", properties : {
+						filePath = "/root/logs"
+					}},
+					"default" : { class : "InMemory" }
+				},
+				// The defaults for all mail config payloads and protocols
+				defaults        : {
+					to : "info@ortussolutions.com",
+					from : "info@ortussolutions.com",
+					cc : "lmajano@ortussolutions.com"
+				}
+			}
 		};
 	}
 
