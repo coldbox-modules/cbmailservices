@@ -352,6 +352,13 @@ component accessors="true" {
 	}
 
 	/**
+	 * Send this mail payload asynchronously and return a Future
+	 */
+	function sendAsync(){
+		return variables.wirebox.getInstance( "MailService@cbmailservices" ).sendAsync( this );
+	}
+
+	/**
 	 * Callback that if there is an error in the sending of the mail it will be called for you.
 	 *
 	 * The callback will receive the results struct and the mail object itself

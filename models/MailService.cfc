@@ -13,6 +13,7 @@ component accessors="true" singleton threadsafe {
 	property name="inteceptorService" inject="coldbox:interceptorService";
 	property name="settings" inject="coldbox:moduleSettings:cbmailservices";
 	property name="wirebox" inject="wirebox";
+	property name="asyncManager" inject="coldbox:asyncManager";
 	property name="log" inject="logbox:logger:{this}";
 
 	/**
@@ -298,6 +299,19 @@ component accessors="true" singleton threadsafe {
 		}
 
 		return arguments.mail;
+	}
+
+	/**
+	 * Send an email payload asynchronously and return a ColdBox Future
+	 *
+	 * @mail The mail payload to send.
+	 *
+	 * @return ColdBox Future object: coldbox.system.async.tasks.Future
+	 */
+	function sendAsync( required mail ){
+		return variables.asyncManager.newFuture( function(){
+			return this.send( mail );
+		} );
 	}
 
 	/**
