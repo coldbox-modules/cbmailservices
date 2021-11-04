@@ -123,6 +123,30 @@
 						} );
 				} );
 
+
+				it( "can send mail asynchronusly", function(){
+					mailService
+						.newMail()
+						.configure( subject = "Mail With Params - Hello Luis" )
+						.setBody( "Hello This is my great unit test" )
+						.sendAsync()
+						.then( function( mail ){
+							debug( mail.getResults() );
+							return mail;
+						} )
+						.get()
+						.onSuccess( function( results, mail ){
+							debug( mailService.getDefaultMailer().transit.getMail() );
+							expect( mailService.getDefaultMailer().transit.getMail() ).notToBeEmpty();
+							expect( mail.hasErrors() ).toBeFalse(
+								mail.getResultMessages().toString()
+							);
+						} )
+						.onError( function( results, mail ){
+							fail( "The mailing failed! #results.toString()#" );
+						} );
+				} );
+
 				it( "can send mail with params", function(){
 					var results = mailService
 						.newMail()
