@@ -19,9 +19,6 @@
 				mailService = prepareMock( getInstance( "MailService@cbmailservices" ) );
 			} );
 
-			afterEach( function( currentSpec ){
-			} );
-
 			it( "can be built with app defaults", function(){
 				expect( mailService.getTokenMarker() ).toBe( "@" );
 				expect( mailService.getDefaultSetting( "to" ) ).toBe( "info@ortussolutions.com" );
@@ -89,125 +86,147 @@
 				);
 			} );
 
-			it( "can send mail with no params", function(){
-				var mail = mailService
-					.newMail()
-					.configure(
-						from = "info@coldbox.org",
-						to   = "automation@coldbox.org",
-						type = "html"
+			describe( "Send mail with multiple params and attachments", function(){
+				afterEach( function( currentSpec ){
+					mailService.getDefaultMailer().transit.reset();
+				} );
+
+				it( "can send mail with no params", function(){
+					var mail = mailService
+						.newMail()
+						.configure(
+							from = "info@coldbox.org",
+							to   = "automation@coldbox.org",
+							type = "html"
+						);
+
+					var tokens = { name : "Luis Majano", time : dateFormat( now(), "full" ) };
+					mail.setBodyTokens( tokens );
+					mail.setBody(
+						"<h1>Hello @name@, how are you today?</h1>  <p>Today is the <b>@time@</b>.</p> <br/><br/><a href=""http://www.coldbox.org"">ColdBox Rules!</a>"
 					);
-
-				var tokens = { name : "Luis Majano", time : dateFormat( now(), "full" ) };
-				mail.setBodyTokens( tokens );
-				mail.setBody(
-					"<h1>Hello @name@, how are you today?</h1>  <p>Today is the <b>@time@</b>.</p> <br/><br/><a href=""http://www.coldbox.org"">ColdBox Rules!</a>"
-				);
-				mail.setSubject( "Mail NO Params-Hello Luis" );
-				mailService
-					.send( mail )
-					.onSuccess( function( results, mail ){
-						expect( mailService.getDefaultMailer().transit.getMail() ).notToBeEmpty();
-						expect( mail.hasErrors() ).toBeFalse( mail.getResultMessages().toString() );
-					} )
-					.onError( function( results, mail ){
-						fail( "The mailing failed! #results.toString()#" );
-					} );
-			} );
-
-			xit( "can send mail with params", function(){
-				var results = mailService
-					.newMail()
-					.configure(
-						from    = "info@coldbox.org",
-						to      = "automation@coldbox.org",
-						subject = "Mail With Params - Hello Luis"
-					)
-					.setBody( "Hello This is my great unit test" )
-					.addMailParam(
-						name  = "Disposition-Notification-To",
-						value = "info@coldbox.org"
-					)
-					.addMailParam( name = "Importance", value = "High" )
-					.send();
-
-				expect(
+					mail.setSubject( "Mail NO Params-Hello Luis" );
 					mailService
-						.getMailSettings()
-						.getTransit()
-						.getMail()
-				).notToBeEmpty();
-				expect( results.error ).toBeFalse();
-			} );
+						.send( mail )
+						.onSuccess( function( results, mail ){
+							debug( mailService.getDefaultMailer().transit.getMail() );
+							expect( mailService.getDefaultMailer().transit.getMail() ).notToBeEmpty();
+							expect( mailService.getDefaultMailer().transit.getMail()[ 1 ].cc ).toBe(
+								"lmajano@ortussolutions.com"
+							);
+							expect( mail.hasErrors() ).toBeFalse(
+								mail.getResultMessages().toString()
+							);
+						} )
+						.onError( function( results, mail ){
+							fail( "The mailing failed! #results.toString()#" );
+						} );
+				} );
 
-			xit( "can send mail with multi-part no params", function(){
-				var mail = mailService
-					.newMail()
-					.configure(
-						from    = "info@coldbox.org",
-						to      = "automation@coldbox.org",
-						subject = "Mail MultiPart No Params - Hello Luis"
-					);
-				mail.addMailPart(
-					type = "text",
-					body = "You are reading this message as plain text, because your mail reader does not handle it."
-				);
-				mail.addMailPart( type = "html", body = "This is the body of the message." );
-				var results = mailService.send( mail );
-				expect(
-					mailService
-						.getMailSettings()
-						.getTransit()
-						.getMail()
-				).notToBeEmpty();
-				expect( results.error ).toBeFalse();
-			} );
+				it( "can send mail with params", function(){
+					var results = mailService
+						.newMail()
+						.configure(
+							from    = "info@coldbox.org",
+							to      = "automation@coldbox.org",
+							subject = "Mail With Params - Hello Luis"
+						)
+						.setBody( "Hello This is my great unit test" )
+						.addMailParam(
+							name  = "Disposition-Notification-To",
+							value = "info@coldbox.org"
+						)
+						.addMailParam( name = "Importance", value = "High" )
+						.send()
+						.onSuccess( function( results, mail ){
+							debug( mailService.getDefaultMailer().transit.getMail() );
+							expect( mailService.getDefaultMailer().transit.getMail() ).notToBeEmpty();
+							expect( mail.hasErrors() ).toBeFalse(
+								mail.getResultMessages().toString()
+							);
+						} )
+						.onError( function( results, mail ){
+							fail( "The mailing failed! #results.toString()#" );
+						} );
+				} );
 
-			xit( "can send mail with multi-part with params", function(){
-				var mail = mailService
-					.newMail()
-					.configure(
-						from    = "info@coldbox.org",
-						to      = "automation@coldbox.org",
-						subject = "Mail MultiPart With Params - Hello Luis"
-					);
-				mail.addMailPart(
-					type = "text",
-					body = "You are reading this message as plain text, because your mail reader does not handle it."
-				);
-				mail.addMailPart( type = "html", body = "This is the body of the message." );
-				mail.addMailParam(
-					name  = "Disposition-Notification-To",
-					value = "info@coldbox.org"
-				);
-				var results = mailService.send( mail );
-				expect(
-					mailService
-						.getMailSettings()
-						.getTransit()
-						.getMail()
-				).notToBeEmpty();
-				expect( results.error ).toBeFalse();
-			} );
+				it( "can send mail with multi-part no params", function(){
+					var mail = mailService
+						.newMail()
+						.configure(
+							from    = "info@coldbox.org",
+							to      = "automation@coldbox.org",
+							subject = "Mail MultiPart No Params - Hello Luis"
+						)
+						.addMailPart(
+							type = "text",
+							body = "You are reading this message as plain text, because your mail reader does not handle it."
+						)
+						.addMailPart( type = "html", body = "This is the body of the message." )
+						.send()
+						.onSuccess( function( results, mail ){
+							debug( mailService.getDefaultMailer().transit.getMail() );
+							expect( mailService.getDefaultMailer().transit.getMail() ).notToBeEmpty();
+							expect( mail.hasErrors() ).toBeFalse(
+								mail.getResultMessages().toString()
+							);
+						} )
+						.onError( function( results, mail ){
+							fail( "The mailing failed! #results.toString()#" );
+						} );
+				} );
 
-			xit( "can send mail with custom settings", function(){
-				var results = mailService
-					.newMail(
-						from    = "info@coldbox.org",
-						to      = "automation@coldbox.org",
-						type    = "html",
-						body    = "TestMailWithSettings",
-						subject = "TestMailWithSettings"
-					)
-					.send();
+				it( "can send mail with multi-part with params", function(){
+					var mail = mailService
+						.newMail()
+						.configure(
+							from    = "info@coldbox.org",
+							to      = "automation@coldbox.org",
+							subject = "Mail MultiPart With Params - Hello Luis"
+						)
+						.addMailPart(
+							type = "text",
+							body = "You are reading this message as plain text, because your mail reader does not handle it."
+						)
+						.addMailPart( type = "html", body = "This is the body of the message." )
+						.addMailParam(
+							name  = "Disposition-Notification-To",
+							value = "info@coldbox.org"
+						)
+						.send()
+						.onSuccess( function( results, mail ){
+							debug( mailService.getDefaultMailer().transit.getMail() );
+							expect( mailService.getDefaultMailer().transit.getMail() ).notToBeEmpty();
+							expect( mail.hasErrors() ).toBeFalse(
+								mail.getResultMessages().toString()
+							);
+						} )
+						.onError( function( results, mail ){
+							fail( "The mailing failed! #results.toString()#" );
+						} );
+				} );
 
-				expect(
-					mailService
-						.getMailSettings()
-						.getTransit()
-						.getMail()
-				).notToBeEmpty();
-				expect( results.error ).toBeFalse();
+				it( "can send mail with custom settings", function(){
+					var results = mailService
+						.newMail(
+							from    = "info@coldbox.org",
+							to      = "automation@coldbox.org",
+							type    = "html",
+							body    = "TestMailWithSettings",
+							subject = "TestMailWithSettings"
+						)
+						.send()
+						.onSuccess( function( results, mail ){
+							debug( mailService.getDefaultMailer().transit.getMail() );
+							expect( mailService.getDefaultMailer().transit.getMail() ).notToBeEmpty();
+							expect( mail.hasErrors() ).toBeFalse(
+								mail.getResultMessages().toString()
+							);
+						} )
+						.onError( function( results, mail ){
+							fail( "The mailing failed! #results.toString()#" );
+						} );
+				} );
 			} );
 		} );
 	}
