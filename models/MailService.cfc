@@ -37,6 +37,11 @@ component accessors="true" singleton threadsafe {
 	property name="mailers" type="struct";
 
 	/**
+	 * The concurrent mail queue used by our scheduler to send asynchronous queued mail tasks
+	 */
+	property name="mailQueue";
+
+	/**
 	 * Constructor
 	 */
 	MailService function init(){
@@ -45,6 +50,7 @@ component accessors="true" singleton threadsafe {
 		variables.defaultSettings = {};
 		variables.defaultProtocol = "default";
 		variables.mailers         = { "default" : { class : "CFMail" } };
+		variables.mailQueue       = new ConcurrentLinkedQueue();
 
 		// Protocols Path
 		variables.protocolsPath       = getDirectoryFromPath( getMetadata( this ).path ) & "protocols";
@@ -312,6 +318,56 @@ component accessors="true" singleton threadsafe {
 		return variables.asyncManager.newFuture( function(){
 			return this.send( mail );
 		} );
+	}
+
+	/**
+	 * Queue the mail payload into our asynchronous work queue
+	 *
+	 * @mail The mail payload to send.
+	 *
+	 * @return A unique identifier for the task that was registered for you.
+	 */
+	string function queue( required mail ){
+		var taskId = createUUID();
+		variables.mailQueue.offer( {
+			"id"       : taskId,
+			"mail"     : arguments.mail,
+			"created"  : now(),
+			"ran"      : "",
+			"errors"   : false,
+			"messages" : []
+		} );
+		return taskId;
+	}
+
+	/**
+	 * This method is called by our scheduling services or can be called manually to process the queue for
+	 * mail sending
+	 */
+	function processQueue(){
+		// Only work on the current size as we can allow more data to be let in after starting the dequeuing process.
+		var size = variables.mailQueue.size();
+
+		log.debug( "Starting to process mail queue of (#size#) elements" );
+
+		for ( var x = 1; x lte size; x++ ) {
+			// take the payload head and remove it (FIFO)
+			var payload = variables.mailQueue.poll();
+			// Send it
+			this.send( payload.mail )
+				.onSuccess( function( results, mail ){
+					log.info(
+						"Mail payload id (#payload.id#) to (#arguments.mail.getTo()#) with subject (#arguments.mail.getSubject()#) sent successfully!"
+					);
+				} )
+				.onError( function( results, mail ){
+					log.error(
+						"Mail payload id (#payload.id#) to (#arguments.mail.getTo()#) with subject (#arguments.mail.getSubject()#) failed to send (#results.messages.toString()#)!"
+					);
+				} );
+		}
+
+		log.debug( "Finished processing mail queue" );
 	}
 
 	/**
