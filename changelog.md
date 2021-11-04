@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* New ability to queue mail for sending using the async scheduler for the module and the new `queue()` method
 * New asynchronous mail sending via `sendAsync()` which returns a ColdBox Future
 * New mixin helper: `newMail()` so you can get access to send mails easily in handlers and interceptors.
 * In order to run and validate SMPT tests, we now use FakeSMTP as a container located in /test-harnes/tests/resources/docker-compose.yml.  This will send mail to disk for us when testing smtp. If you want to run the tests on your machine, you will need to startup the container.
