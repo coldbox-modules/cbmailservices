@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* New mixin helper: `newMail()` so you can get access to send mails easily in handlers and interceptors.
 * In order to run and validate SMPT tests, we now use FakeSMTP as a container located in /test-harnes/tests/resources/docker-compose.yml.  This will send mail to disk for us when testing smtp. If you want to run the tests on your machine, you will need to startup the container.
 * Every protocol now has a `log` LogBox logger configured object thanks to the `AbstractProtocol`.
 * Every protocol gets a `name` property now for a numan readable name thanks to the `AbstractProtocol`.
@@ -34,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+* `MailSettingsBean` removed in favor of a more cohesive `MailService`
+* `protocol` setting removed in favor of multiple mailers approach and `defaultProtocol` usage. Please see docs.
 * Adobe ColdFusion 2016 Support.
 
 ----

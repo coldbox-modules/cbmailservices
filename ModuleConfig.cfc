@@ -10,14 +10,16 @@
 component {
 
 	// Module Properties
-	this.title          = "ColdBox Mail Services";
-	this.author         = "Ortus Solutions";
-	this.webURL         = "https://www.ortussolutions.com";
-	this.description    = "A module that allows you to leverage many mail service protocols in a nice abstracted API";
+	this.title             = "ColdBox Mail Services";
+	this.author            = "Ortus Solutions";
+	this.webURL            = "https://www.ortussolutions.com";
+	this.description       = "A module that allows you to leverage many mail service protocols in a nice abstracted API";
 	// Model Namespace
-	this.modelNamespace = "cbmailservices";
+	this.modelNamespace    = "cbmailservices";
 	// CF Mapping
-	this.cfmapping      = "cbmailservices";
+	this.cfmapping         = "cbmailservices";
+	// Mixin Helpers
+	this.applicationHelper = [ "helpers/mixins.cfm" ];
 
 	/**
 	 * Configure the module
