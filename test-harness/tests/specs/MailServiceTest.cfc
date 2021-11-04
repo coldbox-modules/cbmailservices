@@ -24,7 +24,7 @@
 				expect( mailService.getDefaultSetting( "to" ) ).toBe( "info@ortussolutions.com" );
 				expect( mailService.getDefaultSetting( "from" ) ).toBe( "info@ortussolutions.com" );
 				expect( mailService.getDefaultSetting( "cc" ) ).toBe( "lmajano@ortussolutions.com" );
-				expect( mailService.getMailers().len() ).toBe( 3 );
+				expect( mailService.getMailers() ).toHaveLength( 3 );
 				expect( mailService.getDefaultMailer().class ).toInclude( "InMemory" );
 				expect( mailService.getMailer( "files" ).class ).toInclude( "File" );
 				expect( mailService.getMailer( "default" ).class ).toInclude( "InMemory" );
