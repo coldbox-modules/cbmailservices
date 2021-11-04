@@ -359,6 +359,15 @@ component accessors="true" {
 	}
 
 	/**
+	 * Queue the mail payload into our asynchronous work queue
+	 *
+	 * @return A unique identifier for the task that was registered for you.
+	 */
+	string function queue(){
+		return variables.wirebox.getInstance( "MailService@cbmailservices" ).queue( this );
+	}
+
+	/**
 	 * Callback that if there is an error in the sending of the mail it will be called for you.
 	 *
 	 * The callback will receive the results struct and the mail object itself
