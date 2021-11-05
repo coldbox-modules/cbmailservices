@@ -16,6 +16,10 @@ component accessors="true" {
 	 */
 	property name="jQueue";
 
+	// Stupid ACF compiler bug.
+	variables[ "contains" ] = variables.has;
+	this[ "contains" ]      = variables.has;
+
 	/**
 	 * Constructor
 	 *
@@ -71,10 +75,9 @@ component accessors="true" {
 	/**
 	 * Returns true if this queue contains the specified element.
 	 */
-	boolean function contains( required element ){
+	boolean function has( required element ){
 		return variables.jQueue.contains( arguments.element );
 	}
-
 
 	/**
 	 * Returns true if this collection contains all of the elements in the specified collection.
