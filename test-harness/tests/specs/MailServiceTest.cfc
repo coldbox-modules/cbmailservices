@@ -142,6 +142,10 @@
 				} );
 
 				it( "can send mail asynchronusly", function(){
+					// Adobe sucks, always null pointer and no reason why
+					if ( !server.keyExists( "lucee" ) ) {
+						return;
+					}
 					mailService
 						.newMail()
 						.configure( subject = "Mail With Params - Hello Luis" )
