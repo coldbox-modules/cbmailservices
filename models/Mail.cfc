@@ -414,4 +414,52 @@ component accessors="true" {
 		return variables.config;
 	}
 
+	/**
+	 * Render or a view layout combination as the body for this email.  If you use this, the `type`
+	 * of the email will be set to `html` as well.  You can also bind the view/layout with
+	 * the args struct and use them accordingly.  You can also use body tokens that the service will
+	 * replace for you at runtime.
+	 *
+	 * @view The view to render as the body
+	 * @args The structure of arguments to bind the view/layout with
+	 * @module Optional, the module the view is located in
+	 * @layout Optional, If passed, we will render the view in this layout
+	 * @layoutModule Optional, If passed, the module the layout is in
+	 */
+	Mail function setView(
+		required view,
+		struct args = {},
+		module      = "",
+		layout,
+		layoutModule = ""
+	){
+		// Set the type to be HTML
+		variables.config.type = "html";
+
+		// Do we have a layout?
+		if ( !isNull( arguments.layout ) ) {
+			variables.config.body = variables.wirebox
+				.getInstance( "Renderer@coldbox" )
+				.layout(
+					layout    : arguments.layout,
+					module    : arguments.layoutModule,
+					view      : arguments.view,
+					args      : arguments.args,
+					viewModule: arguments.module
+				);
+		}
+		// Else, plain view rendering
+		else {
+			variables.config.body = variables.wirebox
+				.getInstance( "Renderer@coldbox" )
+				.view(
+					view  : arguments.view,
+					args  : arguments.args,
+					module: arguments.module
+				);
+		}
+
+		return this;
+	}
+
 }
