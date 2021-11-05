@@ -30,9 +30,11 @@ component accessors="true" {
 			arguments.list = listToArray( arguments.list );
 		}
 
-		variables.jQueue = createObject( "java", "java.util.concurrent.ConcurrentLinkedQueue" ).init(
-			arguments.list
-		);
+		variables.jQueue = createObject( "java", "java.util.concurrent.ConcurrentLinkedQueue" ).init();
+
+		if ( arrayLen( arguments.list ) ) {
+			variables.jQueue.addAll( arguments.list );
+		}
 
 		return this;
 	}
@@ -69,7 +71,7 @@ component accessors="true" {
 	 * Creates and returns a copy of this object.
 	 */
 	ConcurrentLinkedQueue function clone(){
-		return new ConcurrentLinkedQueue( variables.jQueue.toArray() );
+		return new ConcurrentLinkedQueue( this.toArray() );
 	}
 
 	/**
@@ -197,12 +199,17 @@ component accessors="true" {
 
 	/**
 	 * Returns an array containing all of the elements in this queue, in proper sequence.
+	 *
+	 * @native If true, then it returns a native CFML array, else a Java Array Collection
 	 */
-	array function toArray(){
+	array function toArray( boolean native = true ){
 		var javaArray = variables.jQueue.toArray();
-		var cfArray   = [];
-		cfArray.append( javaArray, true );
-		return cfArray;
+		if ( arguments.native ) {
+			var cfArray = [];
+			cfArray.append( javaArray, true );
+			return cfArray;
+		}
+		return javaArray;
 	}
 
 	/**

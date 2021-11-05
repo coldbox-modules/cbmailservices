@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Ability for the mail payload to render the body from a view or a view/layout combination using the `setView()` method.
 * New ability to queue mail for sending using the async scheduler for the module and the new `queue()` method
 * New asynchronous mail sending via `sendAsync()` which returns a ColdBox Future
 * New mixin helper: `newMail()` so you can get access to send mails easily in handlers and interceptors.

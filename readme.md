@@ -278,6 +278,57 @@ newMail(
 .send()
 ```
 
+### Rendering Views
+
+You can also set the body of the email to be a view or a layout+view combination using the `setView()` method. Here is the method signature:
+
+```js
+/**
+ * Render or a view layout combination as the body for this email.  If you use this, the `type`
+ * of the email will be set to `html` as well.  You can also bind the view/layout with
+ * the args struct and use them accordingly.  You can also use body tokens that the service will
+ * replace for you at runtime.
+ *
+ * @view The view to render as the body
+ * @args The structure of arguments to bind the view/layout with
+ * @module Optional, the module the view is located in
+ * @layout Optional, If passed, we will render the view in this layout
+ * @layoutModule Optional, If passed, the module the layout is in
+ */
+Mail function setView(
+	required view,
+	struct args = {},
+	module      = "",
+	layout,
+	layoutModule = ""
+)
+```
+
+Please note that you can bind your views and layotus with the `args` structure as well.  You can also use the `bodyTokens` in your views.  Then you can use it in your mail sending goodness:
+
+```js
+newMail( 
+	to         : "email@email.com",
+	subject    : "Mail Services Rock",
+	type       : "html",
+)
+.setBodyTokens( { 
+	user    : "Luis", 
+	product : "ColdBox", 
+	link    : event.buildLink( 'home' )
+})
+.setView( view : "emails/newUser" )
+.send()
+
+newMail( 
+	to         : "email@email.com",
+	subject    : "Mail Services Rock",
+	type       : "html",
+)
+.setView( view : "emails/newUser", layout : "emails" )
+.send()
+```
+
 ### Mail Attachments
 
 You can easily add mail attachments using mail params (next section) directly or our fancy helper method called `addAttachments()`.  Here is our method signature:

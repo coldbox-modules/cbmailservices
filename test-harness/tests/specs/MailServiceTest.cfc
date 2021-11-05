@@ -91,6 +91,24 @@
 					mailService.getDefaultMailer().transit.reset();
 				} );
 
+				it( "can send mail with a rendered view", function(){
+					var mail = mailService
+						.newMail(
+							from       = "info@coldbox.org",
+							to         = "automation@coldbox.org",
+							type       = "html",
+							subject    = "Here is a rendered view",
+							bodyTokens = {
+								name : "Luis Majano",
+								time : dateFormat( now(), "full" )
+							}
+						)
+						.setView( view: "emails/newUser" )
+						.send();
+
+					debug( mail.getBody() );
+				} );
+
 				it( "can send mail with no params", function(){
 					var mail = mailService
 						.newMail()
@@ -123,7 +141,6 @@
 						} );
 				} );
 
-
 				it( "can send mail asynchronusly", function(){
 					mailService
 						.newMail()
@@ -131,7 +148,6 @@
 						.setBody( "Hello This is my great unit test" )
 						.sendAsync()
 						.then( function( mail ){
-							debug( mail.getResults() );
 							return mail;
 						} )
 						.get()
