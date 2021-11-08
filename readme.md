@@ -1,6 +1,6 @@
 # Welcome to the ColdBox Mail Services => (cbmailservices)
 
-Sending email doesn't have to be compicated or archaic.  The ColdBox Mail Services (`cbmailservices`) module will allow you to send email the OO way in multiple protocols for many environments. The supported protocols are:
+Sending email doesn't have to be complicated or archaic. The ColdBox Mail Services (cbmailservices) module will allow you to send email in a fluent and abstracted way in multiple protocols for many environments in a single cohesive API. The supported protocols are:
 
 * **CFMail** - Traditional `cfmail` sending
 * **File** - Write emails to disk
@@ -8,7 +8,17 @@ Sending email doesn't have to be compicated or archaic.  The ColdBox Mail Servic
 * **Null** - Ignores emails sent to it.
 * **Postmark** - Send via the PostMark API Service (https://postmarkapp.com/)
 
-You can easily add your own mail protocols by building upon our standards.
+It also sports tons of useful features for mail sending:
+
+* Async Mail
+* Mail Queues
+* Mail merging of variables
+* Mail attachments, headers and parameters
+* View and Layout+View rendering for mail
+* Mail tracking
+* Multiple mailers
+* Success and Error callbacks
+* So Much More!
 
 ## LICENSE
 
