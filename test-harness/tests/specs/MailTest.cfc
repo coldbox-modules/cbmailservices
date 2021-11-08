@@ -1,157 +1,152 @@
-﻿<cfcomponent name="configBeanTest" extends="coldbox.system.testing.BaseTestCase">
+﻿component extends="coldbox.system.testing.BaseTestCase" {
 
-	<cfset this.loadColdBox = false>
+	/*********************************** LIFE CYCLE Methods ***********************************/
 
-	<cffunction name="setUp" returntype="void" access="public">
-		<cfscript>
-			mail = createObject("component","cbmailservices.models.Mail").init();
-		</cfscript>
-	</cffunction>
+	/**
+	 * executes before all suites+specs in the run() method
+	 */
+	function beforeAll(){
+		super.setup();
+	}
 
-	<!--- Begin specific tests --->
-	<cffunction name="testConfig" access="public" returnType="void">
-		<cfscript>
-			mail.config(from="lmajano@mail.com");
+	/**
+	 * executes after all suites+specs in the run() method
+	 */
+	function afterAll(){
+	}
 
-			assertEquals( "lmajano@mail.com", mail.getFrom() );
-		</cfscript>
-	</cffunction>
+	/*********************************** BDD SUITES ***********************************/
 
-	<cffunction name="testBodyTokens" access="public" returnType="void">
-		<cfscript>
-			assertTrue( structisEmpty(mail.getBodyTokens()) );
-		</cfscript>
-	</cffunction>
+	function run( testResults, testBox ){
+		describe( "Mail payload", function(){
+			beforeEach( function( currentSpec ){
+				mail = getInstance( "Mail@cbmailServices" );
+			} );
 
-	<cffunction name="testMailParts" access="public" returnType="void">
-		<cfscript>
-			assertFalse( arrayLen(mail.getMailParts()) );
+			it( "can be configured", function(){
+				mail.configure( from = "lmajano@gmail.com" );
+				expect( mail.getFrom() ).toBe( "lmajano@gmail.com" );
+			} );
 
-			mail.addmailPart(type="mypart",body="this is my body");
+			it( "can work with body tokens", function(){
+				expect( mail.getBodyTokens() ).toBeEmpty();
+				mail.configure( bodyTokens = { name : "luis" } );
+				expect( mail.getBodyTokens() ).notToBeEmpty();
+			} );
 
-			assertTrue( arrayLen(mail.getMailParts()) );
+			it( "can work with mail parts", function(){
+				expect( mail.getMailParts() ).toBeEmpty();
+				mail.addMailpart( type = "mypart", body = "this is my body" );
+				expect( mail.getMailParts() ).notToBeEmpty();
+			} );
 
-		</cfscript>
-	</cffunction>
+			it( "can work with mail params", function(){
+				expect( mail.getMailParams() ).toBeEmpty();
+				mail.addMailParam(
+					contentId = "123",
+					type      = "file",
+					file      = "c:\test.temp"
+				);
+				expect( mail.getMailParams() ).notToBeEmpty();
+			} );
 
-	<cffunction name="testMailParams" access="public" returnType="void">
-		<cfscript>
-			assertFalse( arrayLen(mail.getMailParams()) );
+			it( "can validate a mail payload", function(){
+				expect( mail.validate() ).toBeFalse();
+				mail.configure(
+					subject = "Hello",
+					from    = "lmajano@mail.com",
+					to      = "lmajano@mail.com",
+					body    = "Hello"
+				);
+				expect( mail.validate() ).toBeTrue();
+			} );
 
-			mail.addMailParam(contentid="123",type="file",file="c:\test.tmp");
+			it( "can set html types", function(){
+				mail.configure(
+						subject = "Hello",
+						from    = "lmajano@mail.com",
+						to      = "lmajano@mail.com",
+						body    = "Hello"
+					)
+					.setHTML( "What up Dude" );
 
-			assertTrue( arrayLen(mail.getMailParams()) );
+				debug( mail.getMailParts() );
 
-		</cfscript>
-	</cffunction>
+				expect( mail.getMailParts() ).notToBeEmpty();
+				var parts = mail.getMailParts();
+				expect( parts[ 1 ].type ).toInclude( "text/html" );
+			} );
 
-	<cffunction name="testValidate" access="public" returnType="void">
-		<cfscript>
+			it( "can set text types", function(){
+				mail.configure(
+						subject = "Hello",
+						from    = "lmajano@mail.com",
+						to      = "lmajano@mail.com",
+						body    = "Hello"
+					)
+					.setText( "What up Dude" );
 
-			assertFalse( mail.validate() );
+				debug( mail.getMailParts() );
 
-			mail.config(subject="Hello",from='lmajano@mail.com',to="lmajano@mail.com",body="Hello");
+				expect( mail.getMailParts() ).notToBeEmpty();
+				var parts = mail.getMailParts();
+				expect( parts[ 1 ].type ).toInclude( "text/plain" );
+			} );
 
-			assertTrue( mail.validate() );
+			it( "can set send/read receipts", function(){
+				mail.configure(
+						subject = "Hello",
+						from    = "lmajano@mail.com",
+						to      = "lmajano@mail.com",
+						body    = "Hello"
+					)
+					.setSendReceipt( "lmajano@coldbox.org" )
+					.setReadReceipt( "test@coldbox.org" );
 
-		</cfscript>
-	</cffunction>
+				debug( mail.getMailParams() );
+				expect( mail.getMailParams() ).notToBeEmpty();
+				var params = mail.getMailParams();
+				expect( params[ 1 ].name ).toInclude( "return-receipt-to" );
+				expect( params[ 2 ].name ).toInclude( "read-receipt-to" );
+			} );
 
-	<cffunction name="testSetHTML" access="public" returnType="void">
-		<cfscript>
+			it( "can add attachments", function(){
+				mail.configure(
+					subject = "Hello",
+					from    = "lmajano@mail.com",
+					to      = "lmajano@mail.com",
+					body    = "Hello"
+				);
+				var files = [ "file1", "file2" ];
+				mail.addAttachments( files, true );
 
-			mail.config(subject="Hello",from='lmajano@mail.com',to="lmajano@mail.com",body="Hello");
-			mail.setHTML('What up Dude');
+				debug( mail.getMailParams() );
+				assertTrue( arrayLen( mail.getMailParams() ) );
 
-			//debug( mail.getMailParts() );
-			assertTrue( arrayLen(mail.getMailParts()) );
-			parts = mail.getMailParts();
-			assertEquals( 'text/html', parts[1].type );
+				var params = mail.getMailParams();
+				debug( params );
+				assertEquals( files[ 1 ], params[ 1 ].file );
+				assertEquals( true, params[ 1 ].remove );
+				assertEquals( files[ 2 ], params[ 2 ].file );
+				assertEquals( true, params[ 2 ].remove );
+			} );
 
-		</cfscript>
-	</cffunction>
+			it( "can work with additional info via the configure method", function(){
+				mail.configure( additionalInfo = { "categories" : "Spam" } );
+				assertEquals( { "categories" : "Spam" }, mail.getAdditionalInfo() );
+			} );
 
-	<cffunction name="testSetText" access="public" returnType="void">
-		<cfscript>
+			it( "can work with additional info via the setter method", function(){
+				mail.setAdditionalInfo( { "categories" : "Spam2" } );
+				assertEquals( { "categories" : "Spam2" }, mail.getAdditionalInfo() );
+			} );
 
-			mail.config(subject="Hello",from='lmajano@mail.com',to="lmajano@mail.com",body="Hello");
-			mail.setText('What up Dude');
+			it( "can work with additional info via item setter method", function(){
+				mail.setAdditionalInfoItem( "categories", "Spam3" );
+				assertEquals( { "categories" : "Spam3" }, mail.getAdditionalInfo() );
+				assertEquals( "Spam3", mail.getAdditionalInfoItem( "categories" ) );
+			} );
+		} );
+	}
 
-			//debug( mail.getMailParts() );
-			assertTrue( arrayLen(mail.getMailParts()) );
-			parts = mail.getMailParts();
-			assertEquals( 'text/plain', parts[1].type );
-
-		</cfscript>
-	</cffunction>
-
-	<cffunction name="testSetReceipts" access="public" returnType="void">
-		<cfscript>
-
-			mail.config(subject="Hello",from='lmajano@mail.com',to="lmajano@mail.com",body="Hello");
-			mail.setSendReceipt('lmajano@coldbox.org').setReadReceipt('lmajano@coldbox.org');
-
-			//debug( mail.getMailParts() );
-			assertTrue( arrayLen(mail.getMailParams()) );
-			params = mail.getMailParams();
-			assertEquals( 'Return-Receipt-To', params[1].name );
-			assertEquals( 'Read-Receipt-To', params[2].name );
-
-		</cfscript>
-	</cffunction>
-
-	<cffunction name="testAddAttachements" access="public" returnType="void">
-		<cfscript>
-
-			mail.config(subject="Hello",from='lmajano@mail.com',to="lmajano@mail.com",body="Hello");
-			files = ['file1','file2'];
-			mail.addAttachments(files, true);
-
-			debug( mail.getMailParams() );
-			assertTrue( arrayLen(mail.getMailParams()) );
-			params = mail.getMailParams();
-			debug( params );
-			assertEquals( files[1], params[1].file );
-			assertEquals( true, params[1].remove );
-			assertEquals( files[2], params[2].file );
-			assertEquals( true, params[2].remove );
-
-
-		</cfscript>
-	</cffunction>
-
-	<cffunction name="testAdditionalInfoConfig" access="public" returnType="void">
-		<cfscript>
-			mail.config(additionalInfo= { "categories":"Spam" } );
-
-			assertEquals( { "categories":"Spam" }, mail.getAdditionalInfo( ) );
-		</cfscript>
-	</cffunction>
-
-	<cffunction name="testAdditionalInfoSetter" access="public" returnType="void">
-		<cfscript>
-			mail.setAdditionalInfo( { "categories":"Spam2" } );
-
-			assertEquals( { "categories":"Spam2" }, mail.getAdditionalInfo( ) );
-		</cfscript>
-	</cffunction>
-
-	<cffunction name="testAdditionalInfoItemSetter" access="public" returnType="void">
-		<cfscript>
-			mail.setAdditionalInfoItem( "categories", "Spam3" );
-
-			assertEquals( { "categories":"Spam3" }, mail.getAdditionalInfo( ) );
-		</cfscript>
-	</cffunction>
-
-	<cffunction name="testAdditionalInfoItemGetter" access="public" returnType="void">
-		<cfscript>
-			mail.setAdditionalInfoItem( "categories", "Spam4" );
-
-			assertEquals( { "categories":"Spam4" }, mail.getAdditionalInfo( ) );
-			assertEquals( "Spam4", mail.getAdditionalInfoItem( "categories" ) );
-		</cfscript>
-	</cffunction>
-
-</cfcomponent>
-
+}

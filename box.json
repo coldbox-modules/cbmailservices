@@ -1,7 +1,7 @@
 {
     "name":"ColdBox Mail Services",
-    "version":"1.6.0",
-    "location":"http://downloads.ortussolutions.com/ortussolutions/coldbox-modules/cbmailservices/@build.version@/cbmailservices-@build.version@.zip",
+    "version":"2.0.0",
+    "location":"https://downloads.ortussolutions.com/ortussolutions/coldbox-modules/cbmailservices/@build.version@/cbmailservices-@build.version@.zip",
     "author":"Ortus Solutions.com <info@ortussolutions.com",
     "slug":"cbmailservices",
     "type":"modules",
@@ -25,13 +25,14 @@
     ],
     "ignore":[
         "**/.*",
-        "tests",
+        "test-harness/**",
+        "modules/**",
         "*/.md"
     ],
     "scripts":{
         "release":"recipe build/release.boxr",
-        "format":"cfformat models/**.cfc,test-harness/tests --overwrite",
-        "format:watch":"cfformat models/**.cfc,test-harness/tests --watch",
-        "format:check":"cfformat models/**.cfc,test-harness/tests --check"
+        "format":"cfformat run handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc",
+        "format:watch":"cfformat watch handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc ./.cfformat.json",
+        "format:check":"cfformat check handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc"
     }
 }

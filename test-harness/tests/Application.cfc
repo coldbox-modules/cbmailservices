@@ -13,6 +13,10 @@ component {
 	this.applicationTimeout = createTimespan( 0, 0, 15, 0 );
 	this.setClientCookies = true;
 
+	this.smtpServerSettings = {
+		server : "localhost"
+	};
+
 	// Create testing mapping
 	this.mappings[ "/tests" ] = getDirectoryFromPath( getCurrentTemplatePath() );
 
