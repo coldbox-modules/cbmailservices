@@ -17,7 +17,6 @@ component {
 			})
 			.everyMinute()
 			.withNoOverlaps()
-			.onOneServer()
 			.onFailure( function( task, exception ){
 				log.error( "Error running mail services queue processing: #exception.message & exception.detail#", exception.stacktrace );
 			} )
