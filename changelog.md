@@ -2,8 +2,45 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+The format is based on [Keep a Changelog](https://keepachangel#og.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+----
+
+## [v2.0.0] => 2021-NOV-08
+
+### Changed
+
+* `COMPATIBILITY` : Settings are now using ColdBox 5 module approach of `moduleSettings.cbmailservices` instead of a root key element called `cbmailservices`.  Make sure you update your settings and move them to `modulesettings.cbmailservices`
+* `COMPATIBILITY` : Changed all arguments called `default` to `defaultValue` to avoid ACF issues with the parser
+* `Mail` object `config()` renamed to `configure()`
+* The return results structure from the protocols `errorArray` has been renamed to just `messages` as it can contain warnings, information messages as well as error messages
+* PostmarkAPI result returns `MessageID` instead of `message_id` now.
+
+### Added
+
+* Ability for the mail payload to render the body from a view or a view/layout combination using the `setView()` method.
+* New ability to queue mail for sending using the async scheduler for the module and the new `queue()` method
+* New asynchronous mail sending via `sendAsync()` which returns a ColdBox Future
+* New mixin helper: `newMail()` so you can get access to send mails easily in handlers and interceptors.
+* In order to run and validate SMPT tests, we now use FakeSMTP as a container located in /test-harnes/tests/resources/docker-compose.yml.  This will send mail to disk for us when testing smtp. If you want to run the tests on your machine, you will need to startup the container.
+* Every protocol now has a `log` LogBox logger configured object thanks to the `AbstractProtocol`.
+* Every protocol gets a `name` property now for a numan readable name thanks to the `AbstractProtocol`.
+* `Mail` object now can send itself via the new `send()` method which delegates to the service, but provides a nice sending DSL.
+* `Mail` object now has dynamic getters and setters for ALL configuration objects.
+* You can now use aliases to build out any of the core protocols: `CFMail, File, InMemory, Null or Postmark` instead of the full path.
+* You can now use a wirebox id or class path as the protocol class apart from the core protocols.
+* Added ability for the `getProperty( property, defaultValue )` method on the abstract protocol to have a default value.
+* Migration to script of all core items.
+* Migration to github actions.
+* Adobe 2021 Support.
+* Modernization of all source code.
+
+### Removed
+
+* `MailSettingsBean` removed in favor of a more cohesive `MailService`
+* `protocol` setting removed in favor of multiple mailers approach and `defaultProtocol` usage. Please see docs.
+* Adobe ColdFusion 2016 Support.
 
 ----
 

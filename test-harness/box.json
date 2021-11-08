@@ -8,7 +8,7 @@
         "coldbox":"^6.0.0"
     },
     "devDependencies":{
-		"testbox":"^4.0.0"
+        "testbox":"^4.0.0"
     },
     "installPaths":{
         "coldbox":"coldbox/",
@@ -18,8 +18,8 @@
         "runner":"http://localhost:60299/tests/runner.cfm"
     },
     "scripts":{
-        "format":"cfformat config/**.cfc,handlers/**.cfc,models/**.cfc,modules_app/**.cfc,tests/specs/**/*.cfc --overwrite",
-        "format:watch":"cfformat config/**.cfc,handlers/**.cfc,models/**.cfc,modules_app/**.cfc,tests/specs/**/*.cfc --watch",
-        "format:check":"cfformat config/**.cfc,handlers/**.cfc,models/**.cfc,modules_app/**.cfc,tests/specs/**/*.cfc --check"
+        "cfpm":"echo '\".engine/adobe2021/WEB-INF/cfusion/bin/cfpm.sh\"' | run",
+        "cfpm:install":"echo '\".engine/adobe2021/WEB-INF/cfusion/bin/cfpm.sh\" install ${1}' | run",
+        "install:2021":"run-script cfpm:install zip,mail,debugger"
     }
 }

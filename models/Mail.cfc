@@ -1,557 +1,465 @@
-<!-----------------------------------------------------------------------
-********************************************************************************
-Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
-www.ortussolutions.com
-********************************************************************************
-Author 	 :	Luis Majano
-Date     :	May 8, 2009
-Description :
-	I model a mail payload object
+/**
+ ********************************************************************************
+ * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
+ * www.ortussolutions.com
+ ********************************************************************************
+ * @author Luis Majano <lmajano@ortussolutions.com>
+ * ----
+ * A mail payload object used by the developer to send mail via the mail services.
+ * You can use our dynamic getters and setters to set any property in the configuration structure
+ * that can be used by the sending transit protocol.  Example: If we use the CFMail protocol
+ * then we can set ANY of the attributes that the cfmail tag uses into this configuration
+ * object.  Then the transit object will use it accordingly.
+ */
+component accessors="true" {
 
------------------------------------------------------------------------>
-<cfcomponent output="false" hint="I model a cfmail object with extra pizzazz">
+	// DI
+	property name="wirebox" inject="wirebox";
 
-<!------------------------------------------- CONSTRUCTOR ------------------------------------------->
+	/**
+	 * The config struct representing the mail payload which is sent to the configured protocol in the mail service
+	 */
+	property name="config" type="struct";
 
-	<!--- init --->
-	<cffunction name="init" access="public" output="false" returntype="Mail" hint="Initialize the Mail object">
-		<cfscript>
-			instance = structnew();
-			// Internal Properties
-			instance.bodyTokens = structnew();
-			instance.mailParams = ArrayNew(1);
-			instance.mailParts = ArrayNew(1);
-			instance.body = "";
-			instance.from = "";
-			instance.fromName = "";
-			instance.to = "";
-			instance.additionalInfo = structnew();
+	/**
+	 * The structure of results of sending the mail via the protocol. At most it will contain the following keys:
+	 * - error : boolean
+	 * - messages : array of messages
+	 */
+	property name="results" type="struct";
 
-			return config(argumentCollection=arguments);
-		</cfscript>
-	</cffunction>
+	/**
+	 * The mailer to use when sending the payload. It defaults to `default`
+	 */
+	property name="mailer" type="string";
 
-	<!--- propertyExists --->
-	<cffunction name="propertyExists" output="false" access="public" returntype="boolean" hint="Checks if a mail property exists">
-		<cfargument name="property" type="string" required="true" hint="The property to check"/>
-		<cfreturn structKeyExists(instance,arguments.property)>
-	</cffunction>
+	/**
+	 * Constructor
+	 */
+	function init(){
+		// Basic config with default settings
+		variables.config = {
+			"bodyTokens"     : {},
+			"mailParams"     : [],
+			"mailParts"      : [],
+			"body"           : "",
+			"from"           : "",
+			"fromName"       : "",
+			"to"             : "",
+			"additionalInfo" : {}
+		};
 
-	<!--- config --->
-	<cffunction name="config" access="public" output="false" returntype="Mail" 	hint="Configure the Mail object">
-		<cfargument name="from" 			required="false" type="string" 		hint="Initial value for the from property." />
-		<cfargument name="to" 				required="false" type="string" 		hint="Initial value for the to property." />
-		<cfargument name="body" 			required="false" type="string" 		hint="Initial value for the email body." />
-		<cfargument name="bcc" 				required="false" type="string" 		hint="Initial value for the bcc property." />
-		<cfargument name="cc" 				required="false" type="string" 		hint="Initial value for the cc property." />
-		<cfargument name="charset" 			required="false" type="string" 		hint="Initial value for the charset property." />
-		<cfargument name="debug" 			required="false" type="boolean" 	hint="Initial value for the debug property." />
-		<cfargument name="failto" 			required="false" type="string" 		hint="Initial value for the failto property." />
-		<cfargument name="group"			required="false" type="string" 		hint="Initial value for the group property." />
-		<cfargument name="groupcasesensitive" required="false" type="boolean" 	hint="Initial value for the groupcasesensitive property." />
-		<cfargument name="mailerid" 		required="false" type="string" 		hint="Initial value for the mailerid property." />
-		<cfargument name="maxrows" 			required="false" type="numeric" 	hint="Initial value for the maxrows property." />
-		<cfargument name="mimeattach" 		required="false" type="string" 		hint="Initial value for the mimeattach property." />
-		<cfargument name="password" 		required="false" type="string" 		hint="Initial value for the password property." />
-		<cfargument name="port" 			required="false" type="numeric" 	hint="Initial value for the port property." />
-		<cfargument name="priority" 		required="false" type="string" 		hint="Initial value for the priority property." />
-		<cfargument name="query" 			required="false" type="string" 		hint="Initial value for the query property." />
-		<cfargument name="replyto" 			required="false" type="string" 		hint="Initial value for the replyto property." />
-		<cfargument name="server" 			required="false" type="string" 		hint="Initial value for the server property." />
-		<cfargument name="spoolenable" 		required="false" type="boolean" 	hint="Initial value for the spoolenable property." />
-		<cfargument name="startrow" 		required="false" type="numeric" 	hint="Initial value for the startrow property." />
-		<cfargument name="subject" 			required="false" type="string" 		hint="Initial value for the subject property." />
-		<cfargument name="timeout" 			required="false" type="numeric" 	hint="Initial value for the timeout property." />
-		<cfargument name="type" 			required="false" type="string" 		hint="Initial value for the type property." />
-		<cfargument name="username" 		required="false" type="string" 		hint="Initial value for the username property." />
-		<cfargument name="useSSL" 			required="false" type="boolean" 	hint="Initial value for the useSSL property." />
-		<cfargument name="useTLS" 			required="false" type="boolean" 	hint="Initial value for the useTLS property." />
-		<cfargument name="wraptext" 		required="false" type="numeric" 	hint="Initial value for the wraptext property." />
-		<cfargument name="additionalInfo" 	required="false" type="struct" 	hint="Initial value for the additional info property." />
-		<cfargument name="fromName"     	required="false" type="string" 	hint="Initial value for the additional info property." />
-		<cfscript>
-			var key = 0;
+		variables.mailer  = "default";
+		variables.results = {};
 
-			// populate mail keys
-			for(key in arguments){
-				if( structKeyExists(arguments,key) ){
-					instance[key] = arguments[key];
-				}
+		return this.configure( argumentCollection = arguments );
+	}
+
+	/**
+	 * Get a config property, throws an exception if not found.
+	 *
+	 * @property The property to get
+	 * @defaultValue The default value to retrieve if property doesn't exist
+	 *
+	 * @throws PropertyNotFoundException if the property doesn't exist
+	 */
+	function getProperty( required property, defaultValue ){
+		if ( structKeyExists( variables.config, arguments.property ) ) {
+			return variables.config[ arguments.property ];
+		}
+		if ( !isNull( arguments.defaultValue ) ) {
+			return arguments.defaultValue;
+		}
+		throw(
+			type   : "PropertyNotFoundException",
+			message: "The property (#arguments.property#) doesn't exist. Valid properties are #variables.config.keyList()#"
+		)
+	}
+
+	/**
+	 * Set a config property with a value
+	 *
+	 * @property The property key
+	 * @value The property value
+	 */
+	Mail function setProperty( required property, required value ){
+		variables.config[ arguments.property ] = arguments.value;
+		return this;
+	}
+
+	/**
+	 * Verifies if a config property exists or not
+	 *
+	 * @property The property key
+	 */
+	boolean function propertyExists( required property ){
+		return structKeyExists( variables.config, arguments.property );
+	}
+
+	/**
+	 * Place holder for `configure()` as a compatibility shim
+	 * @deprecated This will be removed
+	 */
+	Mail function config(){
+		return this.configure( argumentCollection = arguments );
+	}
+
+	/**
+	 * Seed the configuration of this object
+	 */
+	Mail function configure(
+		from,
+		to,
+		body,
+		bcc,
+		cc,
+		charset,
+		boolean debug,
+		failto,
+		group,
+		boolean groupcasesensitive,
+		mailerid,
+		numeric maxrows,
+		mimeattach,
+		password,
+		numeric port,
+		priority,
+		query,
+		replyto,
+		server,
+		boolean spoolenable,
+		numeric startrow,
+		subject,
+		numeric timeout,
+		type,
+		username,
+		boolean useSSL,
+		boolean useTLS,
+		numeric wraptext,
+		struct additionalInfo = {},
+		fromName
+	){
+		// populate mail keys
+		for ( var key in arguments ) {
+			if ( structKeyExists( arguments, key ) ) {
+				variables.config[ key ] = arguments[ key ];
 			}
+		}
 
-			// server exception
-			if( structKeyExists(arguments, "server") AND NOT len( arguments.server ) ){
-				structDelete( instance, "server" );
+		// server exception
+		if ( !isNull( arguments.server ) AND NOT len( arguments.server ) ) {
+			structDelete( variables.config, "server" );
+		}
+
+		return this;
+	}
+
+	/**
+	 * Listen to dynamic getters and setters for any configuration setting:
+	 * <pre>
+	 * getFrom()
+	 * getFrom( "defaultValue" )
+	 * setFrom( "luis@ortussolutions.com" )
+	 * setFrom() => empty value, same as setFrom( "" )
+	 * </pre>
+	 */
+	function onMissingMethod( missingMethodName, missingMethodArguments = {} ){
+		// Dynamic Getter: getServer(), getUsername(), getFrom( "default" )
+		if ( left( arguments.missingMethodName, 3 ) == "get" ) {
+			return this.getProperty(
+				property    : arguments.missingMethodName.replaceNoCase( "get", "" ),
+				defaultValue: structCount( missingMethodArguments ) ? missingMethodArguments[ 1 ] : javacast(
+					"null",
+					""
+				)
+			);
+		}
+
+		// Dynamic Setter: setFrom( "value" ), setFrom() same as setFrom( "" )
+		if ( left( arguments.missingMethodName, 3 ) == "set" ) {
+			return this.setProperty(
+				property: arguments.missingMethodName.replaceNoCase( "set", "" ),
+				value   : structCount( missingMethodArguments ) ? missingMethodArguments[ 1 ] : ""
+			);
+		}
+
+		throw(
+			type   : "InvalidMethodException",
+			message: "Only dynamic getters and setters are allowed",
+			detail : "You requested the following function: #arguments.missingMethodName#"
+		);
+	}
+
+	/**
+	 * Validate that the basic fields of from, to, and body are set for sending mail
+	 */
+	boolean function validate(){
+		if (
+			variables.config.from.length() eq 0 OR
+			variables.config.to.length() eq 0 OR
+			variables.config.subject.length() eq 0 OR
+			( variables.config.body.length() eq 0 AND arrayLen( variables.config.mailParts ) EQ 0 )
+		) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * Get the additional info stored by key
+	 *
+	 * @key The key to get
+	 * @defaultValue The default value if not found, defaults to empty string
+	 */
+	any function getAdditionalInfoItem( required key, defaultValue = "" ){
+		return structKeyExists( variables.config.additionalInfo, arguments.key ) ? variables.config.additionalInfo[
+			arguments.key
+		] : arguments.defaultValue;
+	}
+
+	/**
+	 * Store additional info items
+	 *
+	 * @key The key to store
+	 * @value The value to store
+	 */
+	Mail function setAdditionalInfoItem( required key, required value ){
+		variables.config.additionalInfo[ arguments.key ] = arguments.value;
+		return this;
+	}
+
+	/**
+	 * Set the email address that will receive read receipts. I just place the appropriate mail headers
+	 *
+	 * @email The email to send the read recipt to
+	 */
+	Mail function setReadReceipt( required email ){
+		addMailParam( name = "Read-Receipt-To", value = arguments.email );
+		addMailParam( name = "Disposition-Notification-To", value = arguments.email );
+		return this;
+	}
+
+	/**
+	 * Sets the email that get's notified once the email is delivered by setting the appropriate mail headers
+	 *
+	 * @email The email to send the send recipt to
+	 */
+	Mail function setSendReceipt( required email ){
+		addMailParam( name = "Return-Receipt-To", value = arguments.email );
+		return this;
+	}
+
+	/**
+	 * Sets up a mail part that is HTML using utf8 for you by calling addMailpart()
+	 *
+	 * @body The body content to set the mail part on
+	 */
+	Mail function setHtml( required body ){
+		addMailPart(
+			charset = "utf8",
+			type    = "text/html",
+			body    = arguments.body
+		);
+		return this;
+	}
+
+	/**
+	 * Sets up a mail part that is TEXT using utf8 for you by calling addMailpart()
+	 *
+	 * @body The body content to set the mail part on
+	 */
+	Mail function setText( required body ){
+		addMailPart(
+			charset = "utf8",
+			type    = "text/plain",
+			body    = arguments.body
+		);
+		return this;
+	}
+
+	/**
+	 * Add attachment(s) to this payload using a list or array of file locations
+	 *
+	 * @files A list or array of files to attach to this payload
+	 * @remove If true, ColdFusion removes attachment files (if any) after the mail is successfully delivered.
+	 */
+	Mail function addAttachments( required files, boolean remove = false ){
+		if ( isSimpleValue( arguments.files ) ) {
+			arguments.files = listToArray( arguments.files );
+		}
+		for ( var x = 1; x lte arrayLen( arguments.files ); x = x + 1 ) {
+			addMailParam( file = arguments.files[ x ], remove = arguments.remove );
+		}
+
+		return this;
+	}
+
+	/**
+	 * Add a new mail part to this mail payload
+	 */
+	Mail function addMailPart(
+		charset = "utf-8",
+		type,
+		numeric wraptext,
+		body
+	){
+		// Add new mail part
+		var mailpart = {};
+		for ( var key in arguments ) {
+			if ( structKeyExists( arguments, key ) ) {
+				mailpart[ key ] = arguments[ key ];
 			}
-
-			return this;
-		</cfscript>
-	</cffunction>
-
-
-<!------------------------------------------- GETTERS ------------------------------------------->
-
-	<cffunction name="getFrom" access="public" output="false" returntype="any" hint="Gets the from property">
-		<cfreturn instance.from />
-    </cffunction>
-
-    <cffunction name="getFromName" access="public" output="false" returntype="any" hint="Gets the fromName property">
-        <cfreturn instance.fromName />
-    </cffunction>
-
-	<cffunction name="getTo" access="public" output="false" returntype="any" hint="Gets the to property">
-		<cfreturn instance.to />
-	</cffunction>
-
-	<cffunction name="getBcc" access="public" output="false" returntype="any" hint="Gets the bcc property">
-		<cfreturn instance.bcc />
-	</cffunction>
-
-	<cffunction name="getCc" access="public" output="false" returntype="any" hint="Gets the cc property">
-		<cfreturn instance.cc />
-	</cffunction>
-
-	<cffunction name="getCharset" access="public" output="false" returntype="any" hint="Gets the charset property">
-		<cfreturn instance.charset />
-	</cffunction>
-
-	<cffunction name="getDebug" access="public" output="false" returntype="any" hint="Gets the debug property">
-		<cfreturn instance.debug />
-	</cffunction>
-
-	<cffunction name="getFailto" access="public" output="false" returntype="any" hint="Gets the failto property">
-		<cfreturn instance.failto />
-	</cffunction>
-
-	<cffunction name="getGroup" access="public" output="false" returntype="any" hint="Gets the group property">
-		<cfreturn instance.group />
-	</cffunction>
-
-	<cffunction name="getGroupcasesensitive" access="public" output="false" returntype="any" hint="Gets the groupcasesensitive property">
-		<cfreturn instance.groupcasesensitive />
-	</cffunction>
-
-	<cffunction name="getMailerid" access="public" output="false" returntype="any" hint="Gets the mailerid property">
-		<cfreturn instance.mailerid />
-	</cffunction>
-
-	<cffunction name="getMaxrows" access="public" output="false" returntype="any" hint="Gets the maxrows property">
-		<cfreturn instance.maxrows />
-	</cffunction>
-
-	<cffunction name="getMimeattach" access="public" output="false" returntype="any" hint="Gets the mimeattach property">
-		<cfreturn instance.mimeattach />
-	</cffunction>
-
-	<cffunction name="getPassword" access="public" output="false" returntype="any" hint="Gets the password property">
-		<cfreturn instance.password />
-	</cffunction>
-
-	<cffunction name="getPort" access="public" output="false" returntype="any" hint="Gets the port property">
-		<cfreturn instance.port />
-	</cffunction>
-
-	<cffunction name="getPriority" access="public" output="false" returntype="any" hint="Gets the priority property">
-		<cfreturn instance.priority />
-	</cffunction>
-
-	<cffunction name="getQuery" access="public" output="false" returntype="any" hint="Gets the query property">
-		<cfreturn instance.query />
-	</cffunction>
-
-	<cffunction name="getReplyto" access="public" output="false" returntype="any" hint="Gets the replyto property">
-		<cfreturn instance.replyto />
-	</cffunction>
-
-	<cffunction name="getServer" access="public" output="false" returntype="any" hint="Gets the server property">
-		<cfreturn instance.server />
-	</cffunction>
-
-	<cffunction name="getSpoolenable" access="public" output="false" returntype="any" hint="Gets the spoolenable property">
-		<cfreturn instance.spoolenable />
-	</cffunction>
-
-	<cffunction name="getStartrow" access="public" output="false" returntype="any" hint="Gets the startrow property">
-		<cfreturn instance.startrow />
-	</cffunction>
-
-	<cffunction name="getSubject" access="public" output="false" returntype="any" hint="Gets the subject property">
-		<cfreturn instance.subject />
-	</cffunction>
-
-	<cffunction name="getTimeout" access="public" output="false" returntype="any" hint="Gets the timeout property">
-		<cfreturn instance.timeout />
-	</cffunction>
-
-	<cffunction name="getType" access="public" output="false" returntype="any" hint="Gets the type property">
-		<cfreturn instance.type />
-	</cffunction>
-
-	<cffunction name="getUsername" access="public" output="false" returntype="any" hint="Gets the username property">
-		<cfreturn instance.username />
-	</cffunction>
-
-	<cffunction name="getUseSSL" access="public" output="false" returntype="any" hint="Gets the useSSL property">
-		<cfreturn instance.useSSL />
-	</cffunction>
-
-	<cffunction name="getUseTLS" access="public" output="false" returntype="any" hint="Gets the useTLS property">
-		<cfreturn instance.useTLS />
-	</cffunction>
-
-	<cffunction name="getWraptext" access="public" output="false" returntype="any" hint="Gets the wraptext property">
-		<cfreturn instance.wraptext />
-	</cffunction>
-
-	<cffunction name="getBodyTokens" access="public" output="false" returntype="any" hint="Gets the bodyTokens property">
-		<cfreturn instance.bodyTokens />
-	</cffunction>
-
-	<cffunction name="getMailParams" access="public" output="false" returntype="Array" hint="Gets the mailParams property">
-		<cfreturn instance.mailParams />
-	</cffunction>
-
-	<cffunction name="getMailParts" access="public" output="false" returntype="Array" hint="Gets the mailParts defined in this Mail object">
-		<cfreturn instance.mailParts />
-	</cffunction>
-
-	<cffunction name="getBody" access="public" output="false" returntype="string" hint="Get body">
-		<cfreturn instance.body/>
-	</cffunction>
-
-	<cffunction name="getAdditionalInfo" access="public" output="false" returntype="struct" hint="Get Additional Info">
-		<cfreturn instance.additionalInfo/>
-	</cffunction>
-
-<!------------------------------------------- SETTERS ------------------------------------------->
-
-	<cffunction name="setBody" access="public" output="false" returntype="any" hint="Set Body">
-		<cfargument name="Body" type="string" required="true"/>
-		<cfset instance.Body = arguments.Body/>
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setFrom" access="public" output="false" returntype="any" hint="Sets a new value for the from property">
-		<cfargument name="newFrom" type="string" required="yes" />
-		<cfset instance.from = arguments.newFrom />
-		<cfreturn this>
-    </cffunction>
-
-    <cffunction name="setFromName" access="public" output="false" returntype="any" hint="Sets a new value for the fromName property">
-        <cfargument name="newFromName" type="string" required="yes" />
-        <cfset instance.fromName = arguments.newFromName />
-        <cfreturn this>
-    </cffunction>
-
-	<cffunction name="setTo" access="public" output="false" returntype="any" hint="Sets a new value for the to property">
-		<cfargument name="newTo" type="string" required="yes" />
-		<cfset instance.to = arguments.newTo />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setBcc" access="public" output="false" returntype="any" hint="Sets a new value for the bcc property">
-		<cfargument name="newBcc" type="string" required="yes" />
-		<cfset instance.bcc = arguments.newBcc />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setCc" access="public" output="false" returntype="any" hint="Sets a new value for the cc property">
-		<cfargument name="newCc" type="string" required="yes" />
-		<cfset instance.cc = arguments.newCc />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setCharset" access="public" output="false" returntype="any" hint="Sets a new value for the charset property">
-		<cfargument name="newCharset" type="string" required="yes" />
-		<cfset instance.charset = arguments.newCharset />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setDebug" access="public" output="false" returntype="any" hint="Sets a new value for the debug property">
-		<cfargument name="newDebug" type="boolean" required="yes" />
-		<cfset instance.debug = arguments.newDebug />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setFailto" access="public" output="false" returntype="any" hint="Sets a new value for the failto property">
-		<cfargument name="newFailto" type="string" required="yes" />
-		<cfset instance.failto = arguments.newFailto />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setGroup" access="public" output="false" returntype="any" hint="Sets a new value for the group property">
-		<cfargument name="newGroup" type="string" required="yes" />
-		<cfset instance.group = arguments.newGroup />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setGroupcasesensitive" access="public" output="false" returntype="any" hint="Sets a new value for the groupcasesensitive property">
-		<cfargument name="newGroupcasesensitive" type="boolean" required="yes" />
-		<cfset instance.groupcasesensitive = arguments.newGroupcasesensitive />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setMailerid" access="public" output="false" returntype="any" hint="Sets a new value for the mailerid property">
-		<cfargument name="newMailerid" type="string" required="yes" />
-		<cfset instance.mailerid = arguments.newMailerid />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setMaxrows" access="public" output="false" returntype="any" hint="Sets a new value for the maxrows property">
-		<cfargument name="newMaxrows" type="numeric" required="yes" />
-		<cfset instance.maxrows = arguments.newMaxrows />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setMimeattach" access="public" output="false" returntype="any" hint="Sets a new value for the mimeattach property">
-		<cfargument name="newMimeattach" type="string" required="yes" />
-		<cfset instance.mimeattach = arguments.newMimeattach />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setPassword" access="public" output="false" returntype="any" hint="Sets a new value for the password property">
-		<cfargument name="newPassword" type="string" required="yes" />
-		<cfset instance.password = arguments.newPassword />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setPort" access="public" output="false" returntype="any" hint="Sets a new value for the port property">
-		<cfargument name="newPort" type="numeric" required="yes" />
-		<cfset instance.port = arguments.newPort />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setPriority" access="public" output="false" returntype="any" hint="Sets a new value for the priority property">
-		<cfargument name="newPriority" type="string" required="yes" />
-		<cfset instance.priority = arguments.newPriority />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setQuery" access="public" output="false" returntype="any" hint="Sets a new value for the query property">
-		<cfargument name="newQuery" type="string" required="yes" />
-		<cfset instance.query = arguments.newQuery />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setReplyto" access="public" output="false" returntype="any" hint="Sets a new value for the replyto property">
-		<cfargument name="newReplyto" type="string" required="yes" />
-		<cfset instance.replyto = arguments.newReplyto />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setServer" access="public" output="false" returntype="any" hint="Sets a new value for the server property">
-		<cfargument name="newServer" type="string" required="yes" />
-		<cfset instance.server = arguments.newServer />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setSpoolenable" access="public" output="false" returntype="any" hint="Sets a new value for the spoolenable property">
-		<cfargument name="newSpoolenable" type="boolean" required="yes" />
-		<cfset instance.spoolenable = arguments.newSpoolenable />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setStartrow" access="public" output="false" returntype="any" hint="Sets a new value for the startrow property">
-		<cfargument name="newStartrow" type="numeric" required="yes" />
-		<cfset instance.startrow = arguments.newStartrow />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setSubject" access="public" output="false" returntype="any" hint="Sets a new value for the subject property">
-		<cfargument name="newSubject" type="string" required="yes" />
-		<cfset instance.subject = arguments.newSubject />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setTimeout" access="public" output="false" returntype="any" hint="Sets a new value for the timeout property">
-		<cfargument name="newTimeout" type="numeric" required="yes" />
-		<cfset instance.timeout = arguments.newTimeout />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setType" access="public" output="false" returntype="any" hint="Sets a new value for the type property">
-		<cfargument name="newType" type="string" required="yes" />
-		<cfset instance.type = arguments.newType />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setUsername" access="public" output="false" returntype="any" hint="Sets a new value for the username property">
-		<cfargument name="newUsername" type="string" required="yes" />
-		<cfset instance.username = arguments.newUsername />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setUseSSL" access="public" output="false" returntype="any" hint="Sets a new value for the useSSL property">
-		<cfargument name="newUseSSL" type="boolean" required="yes" />
-		<cfset instance.useSSL = arguments.newUseSSL />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setUseTLS" access="public" output="false" returntype="any" hint="Sets a new value for the useTLS property">
-		<cfargument name="newUseTLS" type="boolean" required="yes" />
-		<cfset instance.useTLS = arguments.newUseTLS />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setWraptext" access="public" output="false" returntype="any" hint="Sets a new value for the wraptext property">
-		<cfargument name="newWraptext" type="numeric" required="yes" />
-		<cfset instance.wraptext = arguments.newWraptext />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="setAdditionalInfo" access="public" output="false" returntype="any" hint="Set Additional Info">
-		<cfargument name="additionalInfo" type="struct" required="yes" />
-		<cfset instance.additionalInfo = arguments.additionalInfo />
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="validate" access="public" returntype="boolean" hint="validates the basic fields of To, From and Body" output="false" >
-		<cfscript>
-			if( getFrom().length() eq 0 OR
-				getTO().length() eq 0 OR
-				getSubject().length() eq 0 OR
-				( getBody().length() eq 0 AND arrayLen(getMailParts()) EQ 0 )
-
-			){
-				return false;
+		}
+
+		arrayAppend( this.getMailParts(), mailpart );
+
+		return this;
+	}
+
+	/**
+	 * Add mail params to this payload
+	 */
+	Mail function addMailParam(
+		contentID,
+		disposition,
+		file,
+		type,
+		name,
+		value,
+		boolean remove,
+		content
+	){
+		// Add new mail Param
+		var mailparams = {};
+
+		for ( var key in arguments ) {
+			if ( structKeyExists( arguments, key ) ) {
+				mailparams[ key ] = arguments[ key ];
 			}
-			else{
-				return true;
-			}
-		</cfscript>
-	</cffunction>
+		}
 
-<!------------------------------------------- PUBLIC HELPER METHODS ------------------------------------------->
+		arrayAppend( this.getMailParams(), mailparams );
 
-	<cffunction name="getAdditionalInfoItem" access="public" output="false" returntype="any" hint="Set Additional Info">
-		<cfargument name="key" type="string" required="yes" />
-		<cfif structKeyExists( instance.additionalInfo, arguments.key )>
-			<cfreturn instance.additionalInfo[ arguments.key ] >
-		<cfelse>
-			<cfreturn "">
-		</cfif>
-	</cffunction>
+		return this;
+	}
 
-	<cffunction name="setAdditionalInfoItem" access="public" output="false" returntype="any" hint="Set Additional Info">
-		<cfargument name="key" type="string" required="yes" />
-		<cfargument name="value" required="yes" />
-		<cfset instance.additionalInfo[ arguments.key ] = arguments.value />
-		<cfreturn this>
-	</cffunction>
+	/**
+	 * Send this mail payload and return itself
+	 */
+	Mail function send(){
+		return variables.wirebox.getInstance( "MailService@cbmailservices" ).send( this );
+	}
 
+	/**
+	 * Send this mail payload asynchronously and return a Future
+	 */
+	function sendAsync(){
+		return variables.wirebox.getInstance( "MailService@cbmailservices" ).sendAsync( this );
+	}
 
+	/**
+	 * Queue the mail payload into our asynchronous work queue
+	 *
+	 * @return A unique identifier for the task that was registered for you.
+	 */
+	string function queue(){
+		return variables.wirebox.getInstance( "MailService@cbmailservices" ).queue( this );
+	}
 
-	<!--- setReadReceipt --->
-    <cffunction name="setReadReceipt" output="false" access="public" returntype="any" hint="Set the email address that will receive read receipts. I just place the appropriate mail headers">
-    	<cfargument name="email"/>
-    	<cfscript>
-    		addMailParam(name="Read-Receipt-To",value=arguments.email);
-			addMailParam(name="Disposition-Notification-To",value=arguments.email);
-    		return this;
-		</cfscript>
-    </cffunction>
+	/**
+	 * Callback that if there is an error in the sending of the mail it will be called for you.
+	 *
+	 * The callback will receive the results struct and the mail object itself
+	 */
+	function onError( required callback ){
+		if ( structCount( variables.results ) && hasErrors() ) {
+			arguments.callback( variables.results, this );
+		}
+		return this;
+	}
 
-	<!--- setSendReceipt --->
-    <cffunction name="setSendReceipt" output="false" access="public" returntype="any" hint="Sets the email that get's notified once the email is delivered by setting the appropriate mail headers">
-    	<cfargument name="email"/>
-    	<cfscript>
-    		addMailParam(name="Return-Receipt-To",value=arguments.email);
-    		return this;
-		</cfscript>
-    </cffunction>
+	/**
+	 * Callback that if there is NO error in the sending of the mail it will be called for you.
+	 *
+	 * The callback will receive the results struct and the mail object itself
+	 */
+	function onSuccess( required callback ){
+		if ( structCount( variables.results ) && !hasErrors() ) {
+			arguments.callback( variables.results, this );
+		}
+		return this;
+	}
 
-	<!--- setHTML --->
-    <cffunction name="setHTML" output="false" access="public" returntype="any" hint="Sets up a mail part that is HTML using utf8 for you by calling addMailpart()">
-    	<cfargument name="body" hint="The HTML content to set in the mail part"/>
-		<cfset addMailPart(charset='utf8',type='text/html',body=arguments.body)>
-		<cfreturn this>
-    </cffunction>
+	/**
+	 * Check if the sending had errors or not
+	 */
+	boolean function hasErrors(){
+		return variables.results.error ?: false;
+	}
 
-	<!--- setText --->
-    <cffunction name="setText" output="false" access="public" returntype="any" hint="Sets up a mail part that is TEXT using utf8 for you by calling addMailpart()">
-    	<cfargument name="body" hint="The HTML content to set in the mail part"/>
-		<cfset addMailPart(charset='utf8',type='text/plain',body=arguments.body)>
-		<cfreturn this>
-    </cffunction>
+	/**
+	 * Get the result messages
+	 */
+	array function getResultMessages(){
+		return variables.results.messages ?: [];
+	}
 
-	<!--- addAttachments --->
-    <cffunction name="addAttachments" output="false" access="public" returntype="any" hint="Add attachment(s) to this payload using a list or array of file locations">
-    	<cfargument name="files"  type="any" 		required="true" hint="A list or array of files to attach to this payload"/>
-		<cfargument name="remove" type="boolean" 	required="false" default="false" hint="If true, ColdFusion removes attachment files (if any) after the mail is successfully delivered.">
-		<cfscript>
-			var x =1;
+	/**
+	 * Return the configuration structure
+	 *
+	 * @deprecated This will be dropped do not use anymore, use getConfig()
+	 */
+	struct function getMemento(){
+		return variables.config;
+	}
 
-			if ( isSimpleValue(arguments.files) ){
-				arguments.files = listToArray(arguments.files);
-			}
-			for(x=1; x lte arrayLen(arguments.files); x=x+1){
-				addMailParam(file=arguments.files[x], remove=arguments.remove);
-			}
+	/**
+	 * Render or a view layout combination as the body for this email.  If you use this, the `type`
+	 * of the email will be set to `html` as well.  You can also bind the view/layout with
+	 * the args struct and use them accordingly.  You can also use body tokens that the service will
+	 * replace for you at runtime.
+	 *
+	 * @view The view to render as the body
+	 * @args The structure of arguments to bind the view/layout with
+	 * @module Optional, the module the view is located in
+	 * @layout Optional, If passed, we will render the view in this layout
+	 * @layoutModule Optional, If passed, the module the layout is in
+	 */
+	Mail function setView(
+		required view,
+		struct args = {},
+		module      = "",
+		layout,
+		layoutModule = ""
+	){
+		// Set the type to be HTML
+		variables.config.type = "html";
 
-			return this;
-		</cfscript>
-    </cffunction>
+		// Do we have a layout?
+		if ( !isNull( arguments.layout ) ) {
+			variables.config.body = variables.wirebox
+				.getInstance( "Renderer@coldbox" )
+				.layout(
+					layout    : arguments.layout,
+					module    : arguments.layoutModule,
+					view      : arguments.view,
+					args      : arguments.args,
+					viewModule: arguments.module
+				);
+		}
+		// Else, plain view rendering
+		else {
+			variables.config.body = variables.wirebox
+				.getInstance( "Renderer@coldbox" )
+				.view(
+					view  : arguments.view,
+					args  : arguments.args,
+					module: arguments.module
+				);
+		}
 
-	<!--- setBodyTokens --->
-	<cffunction name="setBodyTokens" access="public" output="false" returntype="any" hint="Sets a new struct of body tokens that can be used for replacement when the mail is sent. The tokens are replaced in the body content ast @token@ delimmitted.">
-		<cfargument name="tokenMap" type="struct" required="yes" />
-		<cfset instance.bodyTokens = arguments.tokenMap />
-		<cfreturn this>
-	</cffunction>
+		return this;
+	}
 
-	<!--- addMailPart --->
-	<cffunction name="addMailPart" access="public" returntype="any" output="false" hint="Add a new mail part to this mail payload">
-		<cfargument name="charset" 		required="false" type="string" 	hint="Initial value for the charset property." />
-		<cfargument name="type" 		required="false" type="string" 	hint="Initial value for the type property." />
-		<cfargument name="wraptext" 	required="false" type="numeric" hint="Initial value for the wraptext property." />
-		<cfargument name="body" 		required="false" type="string" 	hint="Initial value for the body property." />
-		<cfscript>
-			// Add new mail part
-			var mailpart = structnew();
-			var key = 0;
-
-			for( key in arguments ){
-				if( structKeyExists(arguments, key) ){ mailpart[key] = arguments[key]; }
-			}
-
-			arrayAppend(getMailParts(), mailpart);
-
-			return this;
-		</cfscript>
-	</cffunction>
-
-	<!--- addMailParam --->
-	<cffunction name="addMailParam" access="public" returntype="any" output="false" hint="Add mail params to this payload">
-		<cfargument name="contentID" 	required="false" type="any" 	hint="Initial value for the contentID property." />
-		<cfargument name="disposition" 	required="false" type="any" 	hint="Initial value for the dispositio nproperty." />
-		<cfargument name="file" 		required="false" type="any" 	hint="Initial value for the file property." />
-		<cfargument name="type" 		required="false" type="any" 	hint="Initial value for the type property." />
-		<cfargument name="name" 		required="false" type="any" 	hint="Initial value for the name property." />
-		<cfargument name="value" 		required="false" type="any" 	hint="Initial value for the value property." />
-		<cfargument name="remove" 		required="false" type="boolean" hint="If true, ColdFusion removes attachment files (if any) after the mail is successfully delivered.">
-		<cfargument name="content" 		required="false" type="any" 	hint="Lets you send the contents of a ColdFusion variable as an attachment." />
-		<cfscript>
-			// Add new mail Param
-			var mailparams = structnew();
-			var key = 0;
-
-			for( key in arguments ){
-				if( structKeyExists(arguments, key) ){ mailparams[key] = arguments[key]; }
-			}
-
-			arrayAppend(getMailParams(), mailparams);
-
-			return this;
-		</cfscript>
-	</cffunction>
-
-	<!--- get/set Memento --->
-	<cffunction name="getMemento" access="public" returntype="struct" output="false">
-		<cfreturn instance>
-	</cffunction>
-	<cffunction name="setMemento" access="public" returntype="void" output="false">
-		<cfargument name="memento" required="false" type="struct" />
-		<cfset instance = arguments.memento>
-	</cffunction>
-
-</cfcomponent>
+}
