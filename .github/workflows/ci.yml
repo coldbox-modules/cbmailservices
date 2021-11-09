@@ -59,7 +59,7 @@ jobs:
           if [[ "${{ matrix.cfengine }}" == "adobe@2021" ]] ; then
             box run-script install:2021
           fi
-          curl http://127.0.0.1:60299
+          #curl http://127.0.0.1:60299
 
        # Startup Fake SMTP
       - uses: isbang/compose-action@v1.0.0
