@@ -27,7 +27,7 @@
 				expect( mailService.getMailers() ).toHaveLength( 3 );
 				expect( mailService.getDefaultMailer().class ).toInclude( "InMemory" );
 				expect( mailService.getMailer( "files" ).class ).toInclude( "File" );
-				expect( mailService.getMailer( "default" ).class ).toInclude( "InMemory" );
+				expect( mailService.getMailer( "memory" ).class ).toInclude( "InMemory" );
 				expect( mailService.getMailer( "cfmail" ).class ).toInclude( "CFMail" );
 				expect( mailService.getRegisteredMailers() ).toBeArray().notToBeEmpty();
 			} );
@@ -51,6 +51,7 @@
 
 			it( "can create a new mail object", function(){
 				expect( mailService.newMail() ).toBeComponent();
+				expect( mailService.newMail().getMailer() ).toBe( "memory" );
 			} );
 
 			it( "can parse tokens", function(){
