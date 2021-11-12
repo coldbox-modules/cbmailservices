@@ -250,10 +250,10 @@ component accessors="true" singleton threadsafe {
 			initArguments = arguments
 		);
 
-		// Do we have a specific mailer to set?
-		if ( !isNull( arguments.mailer ) ) {
-			oMail.setMailer( arguments.mailer );
-		}
+		// Set the right mailer
+		oMail.setMailer(
+			isNull( arguments.mailer ) ? variables.defaultProtocol : arguments.mailer
+		);
 
 		return oMail;
 	}
