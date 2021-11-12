@@ -67,14 +67,14 @@
 				// The default token Marker Symbol
 				tokenMarker     : "@",
 				// Default protocol to use, it must be defined in the mailers configuration
-				defaultProtocol : "default",
+				defaultProtocol : "memory",
 				// Here you can register one or many mailers by name
 				mailers         : {
 					"cfmail" : { class : "CFMail" },
 					"files" : { class : "File", properties : {
 						filePath = "/root/logs"
 					}},
-					"default" : { class : "InMemory" }
+					"memory" : { class : "InMemory" }
 				},
 				// The defaults for all mail config payloads and protocols
 				defaults        : {

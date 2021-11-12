@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
+## [v2.0.1] => 2021-NOV-12
+
+### Fixed
+
+* BOX-119 CBMailService - Setting the defaultProtocol in moduleSettings to something other than default gets ignored
+
+----
+
 ## [v2.0.0] => 2021-NOV-08
 
 ### Changed
