@@ -15,7 +15,7 @@ jobs:
     name: Tests
     runs-on: ubuntu-20.04
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         cfengine: [ "lucee@5", "adobe@2018", "adobe@2021" ]
     steps:
@@ -42,7 +42,15 @@ jobs:
           # Create Fake SMTP Folders
           mkdir -p test-harness/tests/resources/mail
           box server start serverConfigFile="server-${{ matrix.cfengine }}.json" --noSaveSettings --debug
-          curl http://127.0.0.1:60299
+
+      - name: CFPM Setup
+        if: ${{ matrix.cfengine == 'adobe@2021' }}
+        working-directory: ./test-harness
+        run: box run-script install:2021
+
+      - name: Prime ${{ matrix.cfengine }} server
+        working-directory: ./test-harness
+        run: curl http://127.0.0.1:60299
 
       # Startup Fake SMTP
       - uses: isbang/compose-action@v1.0.0
