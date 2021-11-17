@@ -188,7 +188,7 @@ component
 	 * @filePath The target file path
 	 */
 	private function getFileMimeType( required filePath ){
-		return getPageContext().getServletContext().getMimeType( arguments.filePath );
+		return fileGetMimeType( arguments.filePath );
 	}
 
 }
