@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
+## [v2.0.2] => 2021-NOV-17
+
+### Fixed
+
+* Fixed `getFileMimeType()` so postmark attachments can work. Thanks to @garciadev
+
+----
+
 ## [v2.0.1] => 2021-NOV-12
 
 ### Fixed
