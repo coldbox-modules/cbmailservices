@@ -36,6 +36,12 @@ Apache License, Version 2.0.
 * Lucee 5+
 * ColdFusion 2018+
 
+## Upgrading to v2
+
+- Move to `moduleSettings`
+- `send` returns the `Mail` not a struct. Use `mail.getResults()` to get a similar struct (with `error` and `messages`).
+- Make sure `onError` and `onSuccess` are only called after calling `send` (should this be the case?)
+
 ## INSTRUCTIONS
 
 Just drop into your modules folder or use the box-cli to install
