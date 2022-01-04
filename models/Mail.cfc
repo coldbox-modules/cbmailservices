@@ -191,7 +191,7 @@ component accessors="true" {
 	}
 
 	/**
-	 * Validate that the basic fields of from, to, and body are set for sending mail
+	 * Validate that the basic fields of from, to, subject, and body are set for sending mail
 	 */
 	boolean function validate(){
 		if (
