@@ -1,12 +1,20 @@
-.settings
-logs/*.log
-settings.xml
-.netbeans
-tests/results/*
-modules/cbvalidation/*
-coldbox/*
-testbox/*
-artifacts/*
-apidocs/docbox/*
-workbench/*
-build/*
+.vscode
+
+.artifacts/**
+.tmp/**
+
+test-harness/.env
+test-harness/.engine/**
+test-harness/coldbox/**
+test-harness/docbox/**
+test-harness/testbox/**
+test-harness/logs/**
+test-harness/modules/**
+test-harness/tests/tmp/**
+test-harness/tests/resources/mail/*.eml
+
+# log files
+logs/**
+
+# Dependencies
+modules/**
