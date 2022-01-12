@@ -21,9 +21,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 		describe( "Null Protocol", function(){
 			beforeEach( function( currentSpec ){
 				// Create a mock instance of the protocol.
-				variables.protocol = createMock(
-					"cbmailservices.models.protocols.InMemoryProtocol"
-				).init( {} );
+				variables.protocol = createMock( "cbmailservices.models.protocols.InMemoryProtocol" ).init( {} );
 			} );
 
 			it( "can send mail to the in memory db", function(){

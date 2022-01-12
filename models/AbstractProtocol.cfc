@@ -1,13 +1,14 @@
 ﻿/**
- ********************************************************************************
+ * *******************************************************************************
  * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
  * www.ortussolutions.com
- ********************************************************************************
- * @author Luis Majano <lmajano@ortussolutions.com>
+ * *******************************************************************************
  * ----
  * An abstract class that gives identity to mail protocols when building custom or extending mail protocols the Mail Service uses.
  *
  * The `send()` function is the one you want to implement in your protocols
+ *
+ * @author Luis Majano <lmajano@ortussolutions.com>
  */
 component accessors="true" {
 
@@ -37,7 +38,7 @@ component accessors="true" {
 	/**
 	 * Get a property, throws an exception if not found.
 	 *
-	 * @property The property to get
+	 * @property     The property to get
 	 * @defaultValue The default value to retrieve if property doesn't exist
 	 *
 	 * @throws PropertyNotFoundException if the property doesn't exist
@@ -59,7 +60,7 @@ component accessors="true" {
 	 * Set a property with a value
 	 *
 	 * @property The property key
-	 * @value The property value
+	 * @value    The property value
 	 */
 	AbstractProtocol function setProperty( required property, required value ){
 		variables.properties[ arguments.property ] = arguments.value;
@@ -84,7 +85,7 @@ component accessors="true" {
 	 * - `error` - A boolean flag if the message was sent or not
 	 * - `messages` - An array of messages the protocol stored if any when sending the payload
 	 *
-	 * @payload The paylod object to send the message with
+	 * @payload             The paylod object to send the message with
 	 * @payload.doc_generic cbmailservices.models.Mail
 	 *
 	 * @return struct of { "error" : boolean, "messages" : [] }

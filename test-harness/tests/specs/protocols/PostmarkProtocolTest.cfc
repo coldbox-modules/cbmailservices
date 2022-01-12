@@ -22,9 +22,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 		describe( "Postmark Protocol", function(){
 			beforeEach( function( currentSpec ){
 				// Create a mock instance of the protocol.
-				variables.protocol = createMock(
-					"cbmailservices.models.protocols.PostmarkProtocol"
-				).init( { apiKey : variables.apikey } );
+				variables.protocol = createMock( "cbmailservices.models.protocols.PostmarkProtocol" ).init( { apiKey : variables.apikey } );
 			} );
 
 			it( "can be inited correctly", function(){
