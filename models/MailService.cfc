@@ -243,7 +243,7 @@ component accessors="true" singleton threadsafe {
 	 */
 	Mail function newMail(){
 		// Append defaults to incoming arguments
-		structAppend( arguments, variables.defaultSettings );
+		structAppend( arguments, variables.defaultSettings, false );
 		// Build out a new payload
 		var oMail = variables.wirebox.getInstance(
 			name          = "Mail@cbmailservices",
