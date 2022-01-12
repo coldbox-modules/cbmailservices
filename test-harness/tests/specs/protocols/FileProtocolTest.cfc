@@ -75,10 +75,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 						subject = "Mail With Params - Hello Luis"
 					);
 				payload.setBody( "Hello This is my great unit test" );
-				payload.addMailParam(
-					name  = "Disposition-Notification-To",
-					value = "info@coldbox.org"
-				);
+				payload.addMailParam( name = "Disposition-Notification-To", value = "info@coldbox.org" );
 				payload.addMailParam( name = "Importance", value = "High" );
 				var results = protocol.send( payload );
 				debug( results );

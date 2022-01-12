@@ -1,11 +1,12 @@
 ﻿/**
- ********************************************************************************
+ * *******************************************************************************
  * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
  * www.ortussolutions.com
- ********************************************************************************
- * @author Robert Rawlings, Luis Majano <lmajano@ortussolutions.com>
+ * *******************************************************************************
  * ----
  * This protocol sends mail via the cfmail tag.
+ *
+ * @author Robert Rawlings, Luis Majano <lmajano@ortussolutions.com>
  */
 component
 	extends="cbmailservices.models.AbstractProtocol"
@@ -31,7 +32,7 @@ component
 	 * - `error` - A boolean flag if the message was sent or not
 	 * - `messages` - An array of error messages the protocol stored if any
 	 *
-	 * @payload The paylod object to send the message with
+	 * @payload             The paylod object to send the message with
 	 * @payload.doc_generic cbmailservices.models.Mail
 	 *
 	 * @return struct of { "error" : boolean, "messages" : [] }
@@ -46,10 +47,7 @@ component
 			// send success
 			results.error = false;
 		} catch ( Any e ) {
-			arrayAppend(
-				results.messages,
-				"Error sending mail. #e.message# : #e.detail# : #e.stackTrace#"
-			);
+			arrayAppend( results.messages, "Error sending mail. #e.message# : #e.detail# : #e.stackTrace#" );
 		}
 
 		// Return the return structure.
