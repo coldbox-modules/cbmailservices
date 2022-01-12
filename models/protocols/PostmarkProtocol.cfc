@@ -1,12 +1,13 @@
 ﻿/**
- ********************************************************************************
+ * *******************************************************************************
  * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
  * www.ortussolutions.com
- ********************************************************************************
- * @author Luis Majano <lmajano@ortussolutions.com>
+ * *******************************************************************************
  * ----
  * This protocol sends the mails via the Postmark API.  The required properties are:
  * - apike : The postmark api key
+ *
+ * @author Luis Majano <lmajano@ortussolutions.com>
  */
 component
 	extends="cbmailservices.models.AbstractProtocol"
@@ -43,9 +44,8 @@ component
 	 * - `error` - A boolean flag if the message was sent or not
 	 * - `messages` - An array of error messages the protocol stored if any
 	 *
-	 * @see https://postmarkapp.com/developer/user-guide/send-email-with-api
-	 *
-	 * @payload The paylod object to send the message with
+	 * @see                 https://postmarkapp.com/developer/user-guide/send-email-with-api
+	 * @payload             The paylod object to send the message with
 	 * @payload.doc_generic cbmailservices.models.Mail
 	 *
 	 * @return struct of { "error" : boolean, "messages" : [], "messageID" : "" }
@@ -146,9 +146,7 @@ component
 				results.messageID = postmarkResults[ "MessageID" ]
 			}
 			// Test Messages
-			else if (
-				findNoCase( "Test job", postmarkResults.message ) and postmarkResults.errorCode eq 0
-			) {
+			else if ( findNoCase( "Test job", postmarkResults.message ) and postmarkResults.errorCode eq 0 ) {
 				results.error     = false;
 				results.messageID = postmarkResults[ "MessageID" ]
 				results.messages  = [ "Test job accepted" ];
@@ -176,9 +174,7 @@ component
 		return {
 			"Name"        : getFileFromPath( arguments.mailParam.file ),
 			"Content"     : toBase64( fileReadBinary( arguments.mailParam.file ) ),
-			"ContentType" : isNull( arguments.mailparam.fileType ) ? getFileMimeType(
-				arguments.mailParam.file
-			) : arguments.mailParam.fileType
+			"ContentType" : isNull( arguments.mailparam.fileType ) ? getFileMimeType( arguments.mailParam.file ) : arguments.mailParam.fileType
 		};
 	}
 

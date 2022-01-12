@@ -1,13 +1,13 @@
 /**
- ********************************************************************************
+ * *******************************************************************************
  * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
  * www.ortussolutions.com
- ********************************************************************************
- * @author Luis Majano <lmajano@ortussolutions.com>
+ * *******************************************************************************
  * ----
  * A concurrent non-blocking linked queue (FIFO) modeled after the Java counterpart.
  *
- * @see https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ConcurrentLinkedQueue.html
+ * @author Luis Majano <lmajano@ortussolutions.com>
+ * @see    https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ConcurrentLinkedQueue.html
  */
 component accessors="true" {
 
@@ -140,9 +140,9 @@ component accessors="true" {
 	 *
 	 * @element If passed, it will remove the element.
 	 *
-	 * @throws NoSuchElementException - if this queue is empty
-	 *
 	 * @return The head of this queue
+	 *
+	 * @throws NoSuchElementException - if this queue is empty
 	 */
 	boolean function remove( any element ){
 		if ( isNull( arguments.element ) ) {

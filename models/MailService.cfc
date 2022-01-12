@@ -1,20 +1,21 @@
 ﻿/**
- ********************************************************************************
+ * *******************************************************************************
  * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
  * www.ortussolutions.com
- ********************************************************************************
- * @author Luis Majano <lmajano@ortussolutions.com>
+ * *******************************************************************************
  * ----
  * The ColdBox Mail Service is used to send emails in a fluent and human fashion.
+ *
+ * @author Luis Majano <lmajano@ortussolutions.com>
  */
 component accessors="true" singleton threadsafe {
 
 	// DI
 	property name="inteceptorService" inject="coldbox:interceptorService";
-	property name="settings" inject="coldbox:moduleSettings:cbmailservices";
-	property name="wirebox" inject="wirebox";
-	property name="asyncManager" inject="coldbox:asyncManager";
-	property name="log" inject="logbox:logger:{this}";
+	property name="settings"          inject="coldbox:moduleSettings:cbmailservices";
+	property name="wirebox"           inject="wirebox";
+	property name="asyncManager"      inject="coldbox:asyncManager";
+	property name="log"               inject="logbox:logger:{this}";
 
 	/**
 	 * The token marker used for token replacements, default is `@`
@@ -95,7 +96,7 @@ component accessors="true" singleton threadsafe {
 	/**
 	 * Convenience method to get a mail default setting value
 	 *
-	 * @setting The setting key to get
+	 * @setting      The setting key to get
 	 * @defaultValue The default value to return if the setting key doesn't exist
 	 *
 	 * @throws SettingNotFoundException - if the setting doesn't exist and no default value passed
@@ -117,7 +118,7 @@ component accessors="true" singleton threadsafe {
 	 * Convenience method to set a default setting value
 	 *
 	 * @setting The setting key to set
-	 * @value The setting value to set
+	 * @value   The setting value to set
 	 */
 	MailService function setDefaultSetting( required setting, value ){
 		variables.defaultSettings[ arguments.setting ] = arguments.value;
@@ -133,7 +134,6 @@ component accessors="true" singleton threadsafe {
 	 * @mailers The structure of mailers to register
 	 *
 	 * @throws InvalidDefaultProtocol - If the default protocol was not registered in the mailers structure
-	 *
 	 */
 	MailService function registerMailers( required struct mailers ){
 		// Check the default protocol is in the mailers
@@ -170,8 +170,8 @@ component accessors="true" singleton threadsafe {
 	/**
 	 * Dynamically register a mailer protocol in this mail service
 	 *
-	 * @name The unique name of the protocol
-	 * @class The protocol alias or wirebox id
+	 * @name       The unique name of the protocol
+	 * @class      The protocol alias or wirebox id
 	 * @properties The properties to instantiate the transit protocol with
 	 *
 	 * @return
@@ -216,9 +216,9 @@ component accessors="true" singleton threadsafe {
 	/**
 	 * Get a mailer record by name
 	 *
-	 * @throws UnregisteredMailerException - When an invalid name is sent
-	 *
 	 * @return { class:"", properties : {}, transit : object }
+	 *
+	 * @throws UnregisteredMailerException - When an invalid name is sent
 	 */
 	struct function getMailer( required name ){
 		if ( structKeyExists( variables.mailers, arguments.name ) ) {
@@ -245,10 +245,7 @@ component accessors="true" singleton threadsafe {
 		// Append defaults to incoming arguments
 		structAppend( arguments, variables.defaultSettings, false );
 		// Build out a new payload
-		var oMail = variables.wirebox.getInstance(
-			name          = "Mail@cbmailservices",
-			initArguments = arguments
-		);
+		var oMail = variables.wirebox.getInstance( name = "Mail@cbmailservices", initArguments = arguments );
 
 		// Set the right mailer
 		oMail.setMailer( isNull( arguments.mailer ) ? variables.defaultProtocol : arguments.mailer );
@@ -269,7 +266,7 @@ component accessors="true" singleton threadsafe {
 			arguments.mail.setResults( {
 				"error"    : true,
 				"messages" : [
-					"Please check the basic mail fields of To, From and Body as they are empty. To: #arguments.mail.getTo()#, From: #arguments.mail.getFrom()#, Body Len = #arguments.mail.getBody().length()#."
+					"Please check the basic mail fields of To, From, Subject and Body as they are empty. To: #arguments.mail.getTo()#, From: #arguments.mail.getFrom()#, Subject Len = #arguments.mail.getSubject().length()#, Body Len = #arguments.mail.getBody().length()#."
 				]
 			} )
 			log.error( "Mail object does not validate.", arguments.mail.getConfig() );
@@ -290,10 +287,7 @@ component accessors="true" singleton threadsafe {
 			// Store results
 			arguments.mail.setResults( results );
 			// announce interception point after mail send
-			variables.inteceptorService.processState(
-				"postMailSend",
-				{ mail : arguments.mail, result : results }
-			);
+			variables.inteceptorService.processState( "postMailSend", { mail : arguments.mail, result : results } );
 		} catch ( Any e ) {
 			arguments.mail.setResults( {
 				"error"    : true,
