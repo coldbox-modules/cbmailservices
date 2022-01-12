@@ -99,10 +99,7 @@
 							to         = "automation@coldbox.org",
 							type       = "html",
 							subject    = "Here is a rendered view",
-							bodyTokens = {
-								name : "Luis Majano",
-								time : dateFormat( now(), "full" )
-							}
+							bodyTokens = { name : "Luis Majano", time : dateFormat( now(), "full" ) }
 						)
 						.setView( view: "emails/newUser" )
 						.send();
@@ -133,9 +130,7 @@
 							expect( mailService.getDefaultMailer().transit.getMail()[ 1 ].cc ).toBe(
 								"lmajano@ortussolutions.com"
 							);
-							expect( mail.hasErrors() ).toBeFalse(
-								mail.getResultMessages().toString()
-							);
+							expect( mail.hasErrors() ).toBeFalse( mail.getResultMessages().toString() );
 						} )
 						.onError( function( results, mail ){
 							fail( "The mailing failed! #results.toString()#" );
@@ -159,9 +154,7 @@
 						.onSuccess( function( results, mail ){
 							debug( mailService.getDefaultMailer().transit.getMail() );
 							expect( mailService.getDefaultMailer().transit.getMail() ).notToBeEmpty();
-							expect( mail.hasErrors() ).toBeFalse(
-								mail.getResultMessages().toString()
-							);
+							expect( mail.hasErrors() ).toBeFalse( mail.getResultMessages().toString() );
 						} )
 						.onError( function( results, mail ){
 							fail( "The mailing failed! #results.toString()#" );
@@ -177,18 +170,13 @@
 							subject = "Mail With Params - Hello Luis"
 						)
 						.setBody( "Hello This is my great unit test" )
-						.addMailParam(
-							name  = "Disposition-Notification-To",
-							value = "info@coldbox.org"
-						)
+						.addMailParam( name = "Disposition-Notification-To", value = "info@coldbox.org" )
 						.addMailParam( name = "Importance", value = "High" )
 						.send()
 						.onSuccess( function( results, mail ){
 							debug( mailService.getDefaultMailer().transit.getMail() );
 							expect( mailService.getDefaultMailer().transit.getMail() ).notToBeEmpty();
-							expect( mail.hasErrors() ).toBeFalse(
-								mail.getResultMessages().toString()
-							);
+							expect( mail.hasErrors() ).toBeFalse( mail.getResultMessages().toString() );
 						} )
 						.onError( function( results, mail ){
 							fail( "The mailing failed! #results.toString()#" );
@@ -212,9 +200,7 @@
 						.onSuccess( function( results, mail ){
 							debug( mailService.getDefaultMailer().transit.getMail() );
 							expect( mailService.getDefaultMailer().transit.getMail() ).notToBeEmpty();
-							expect( mail.hasErrors() ).toBeFalse(
-								mail.getResultMessages().toString()
-							);
+							expect( mail.hasErrors() ).toBeFalse( mail.getResultMessages().toString() );
 						} )
 						.onError( function( results, mail ){
 							fail( "The mailing failed! #results.toString()#" );
@@ -234,17 +220,12 @@
 							body = "You are reading this message as plain text, because your mail reader does not handle it."
 						)
 						.addMailPart( type = "html", body = "This is the body of the message." )
-						.addMailParam(
-							name  = "Disposition-Notification-To",
-							value = "info@coldbox.org"
-						)
+						.addMailParam( name = "Disposition-Notification-To", value = "info@coldbox.org" )
 						.send()
 						.onSuccess( function( results, mail ){
 							debug( mailService.getDefaultMailer().transit.getMail() );
 							expect( mailService.getDefaultMailer().transit.getMail() ).notToBeEmpty();
-							expect( mail.hasErrors() ).toBeFalse(
-								mail.getResultMessages().toString()
-							);
+							expect( mail.hasErrors() ).toBeFalse( mail.getResultMessages().toString() );
 						} )
 						.onError( function( results, mail ){
 							fail( "The mailing failed! #results.toString()#" );
@@ -264,9 +245,7 @@
 						.onSuccess( function( results, mail ){
 							debug( mailService.getDefaultMailer().transit.getMail() );
 							expect( mailService.getDefaultMailer().transit.getMail() ).notToBeEmpty();
-							expect( mail.hasErrors() ).toBeFalse(
-								mail.getResultMessages().toString()
-							);
+							expect( mail.hasErrors() ).toBeFalse( mail.getResultMessages().toString() );
 						} )
 						.onError( function( results, mail ){
 							fail( "The mailing failed! #results.toString()#" );

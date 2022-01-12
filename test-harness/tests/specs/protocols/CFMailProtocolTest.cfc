@@ -69,10 +69,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 						subject = "Mail With Params - Hello Luis"
 					)
 					.setBody( "Hello This is my great unit test" )
-					.addMailParam(
-						name  = "Disposition-Notification-To",
-						value = "info@coldbox.org"
-					)
+					.addMailParam( name = "Disposition-Notification-To", value = "info@coldbox.org" )
 					.addMailParam( name = "Importance", value = "High" );
 
 				var results = protocol.send( payload );
@@ -113,10 +110,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 						body = "You are reading this message as plain text, because your mail reader does not handle it."
 					)
 					.addMailPart( type = "html", body = "This is the body of the message." )
-					.addMailParam(
-						name  = "Disposition-Notification-To",
-						value = "info@coldbox.org"
-					);
+					.addMailParam( name = "Disposition-Notification-To", value = "info@coldbox.org" );
 
 				var results = protocol.send( payload );
 				debug( results );

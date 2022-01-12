@@ -1,11 +1,12 @@
 /**
- ********************************************************************************
+ * *******************************************************************************
  * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
  * www.ortussolutions.com
- ********************************************************************************
- * @author Eric Peterson <eric@ortussolutions.com>, Luis Majano <lmajano@ortussolutions.com>
+ * *******************************************************************************
  * ----
  * This protocol stores the mail in the `mail` property file.
+ *
+ * @author Eric Peterson <eric@ortussolutions.com>, Luis Majano <lmajano@ortussolutions.com>
  */
 component
 	extends="cbmailservices.models.AbstractProtocol"
@@ -37,7 +38,7 @@ component
 	 * - `error` - A boolean flag if the message was sent or not
 	 * - `messages` - An array of error messages the protocol stored if any
 	 *
-	 * @payload The paylod object to send the message with
+	 * @payload             The paylod object to send the message with
 	 * @payload.doc_generic cbmailservices.models.Mail
 	 *
 	 * @return struct of { "error" : boolean, "messages" : [] }

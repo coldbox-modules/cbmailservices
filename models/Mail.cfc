@@ -1,15 +1,16 @@
 /**
- ********************************************************************************
+ * *******************************************************************************
  * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
  * www.ortussolutions.com
- ********************************************************************************
- * @author Luis Majano <lmajano@ortussolutions.com>
+ * *******************************************************************************
  * ----
  * A mail payload object used by the developer to send mail via the mail services.
  * You can use our dynamic getters and setters to set any property in the configuration structure
  * that can be used by the sending transit protocol.  Example: If we use the CFMail protocol
  * then we can set ANY of the attributes that the cfmail tag uses into this configuration
  * object.  Then the transit object will use it accordingly.
+ *
+ * @author Luis Majano <lmajano@ortussolutions.com>
  */
 component accessors="true" {
 
@@ -58,7 +59,7 @@ component accessors="true" {
 	/**
 	 * Get a config property, throws an exception if not found.
 	 *
-	 * @property The property to get
+	 * @property     The property to get
 	 * @defaultValue The default value to retrieve if property doesn't exist
 	 *
 	 * @throws PropertyNotFoundException if the property doesn't exist
@@ -80,7 +81,7 @@ component accessors="true" {
 	 * Set a config property with a value
 	 *
 	 * @property The property key
-	 * @value The property value
+	 * @value    The property value
 	 */
 	Mail function setProperty( required property, required value ){
 		variables.config[ arguments.property ] = arguments.value;
@@ -98,6 +99,7 @@ component accessors="true" {
 
 	/**
 	 * Place holder for `configure()` as a compatibility shim
+	 *
 	 * @deprecated This will be removed
 	 */
 	Mail function config(){
@@ -209,7 +211,7 @@ component accessors="true" {
 	/**
 	 * Get the additional info stored by key
 	 *
-	 * @key The key to get
+	 * @key          The key to get
 	 * @defaultValue The default value if not found, defaults to empty string
 	 */
 	any function getAdditionalInfoItem( required key, defaultValue = "" ){
@@ -221,7 +223,7 @@ component accessors="true" {
 	/**
 	 * Store additional info items
 	 *
-	 * @key The key to store
+	 * @key   The key to store
 	 * @value The value to store
 	 */
 	Mail function setAdditionalInfoItem( required key, required value ){
@@ -281,7 +283,7 @@ component accessors="true" {
 	/**
 	 * Add attachment(s) to this payload using a list or array of file locations
 	 *
-	 * @files A list or array of files to attach to this payload
+	 * @files  A list or array of files to attach to this payload
 	 * @remove If true, ColdFusion removes attachment files (if any) after the mail is successfully delivered.
 	 */
 	Mail function addAttachments( required files, boolean remove = false ){
@@ -420,10 +422,10 @@ component accessors="true" {
 	 * the args struct and use them accordingly.  You can also use body tokens that the service will
 	 * replace for you at runtime.
 	 *
-	 * @view The view to render as the body
-	 * @args The structure of arguments to bind the view/layout with
-	 * @module Optional, the module the view is located in
-	 * @layout Optional, If passed, we will render the view in this layout
+	 * @view         The view to render as the body
+	 * @args         The structure of arguments to bind the view/layout with
+	 * @module       Optional, the module the view is located in
+	 * @layout       Optional, If passed, we will render the view in this layout
 	 * @layoutModule Optional, If passed, the module the layout is in
 	 */
 	Mail function setView(

@@ -1,15 +1,16 @@
 ﻿/**
- ********************************************************************************
+ * *******************************************************************************
  * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
  * www.ortussolutions.com
- ********************************************************************************
- * @author Luis Majano <lmajano@ortussolutions.com>
+ * *******************************************************************************
  * ----
  * This protocol stores the mail in html files in the directory specified via the configuration
  * properties
  *
  * - filePath : The directory location to store the mail files
  * - autoExpand : Defaults to true to do an expandPath() on the incoming filePath
+ *
+ * @author Luis Majano <lmajano@ortussolutions.com>
  */
 component
 	extends="cbmailservices.models.AbstractProtocol"
@@ -29,10 +30,7 @@ component
 		// Property Checks
 		if ( NOT propertyExists( "filePath" ) ) {
 			// No API key was found, so throw an exception.
-			throw(
-				message = "(filePath) property is required",
-				type    = "FileProtocol.PropertyNotFound"
-			);
+			throw( message = "(filePath) property is required", type = "FileProtocol.PropertyNotFound" );
 		}
 		// auto expand
 		if ( NOT propertyExists( "autoExpand" ) ) {
@@ -59,7 +57,7 @@ component
 	 * - `error` - A boolean flag if the message was sent or not
 	 * - `messages` - An array of error messages the protocol stored if any
 	 *
-	 * @payload The paylod object to send the message with
+	 * @payload             The paylod object to send the message with
 	 * @payload.doc_generic cbmailservices.models.Mail
 	 *
 	 * @return struct of { "error" : boolean, "messages" : [] }
@@ -81,10 +79,7 @@ component
 			// send success
 			rtnStruct.error = false;
 		} catch ( Any e ) {
-			arrayAppend(
-				rtnStruct.messages,
-				"Error sending mail. #e.message# : #e.detail# : #e.stackTrace#"
-			);
+			arrayAppend( rtnStruct.messages, "Error sending mail. #e.message# : #e.detail# : #e.stackTrace#" );
 		}
 
 		// Return the return structure.
