@@ -20,7 +20,7 @@ It also sports tons of useful features for mail sending:
 * Success and Error callbacks
 * So Much More!
 
-### 🚨 View the documentation at https://coldbox-mailservices.ortusbooks.com 🚨
+## View the documentation at https://coldbox-mailservices.ortusbooks.com
 
 ## LICENSE
 
@@ -52,7 +52,7 @@ Because of His grace, this project exists. If you don't like this, then don't re
 By whom also we have access by faith into this grace wherein we stand, and rejoice in hope of the glory of God.
 And not only so, but we glory in tribulations also: knowing that tribulation worketh patience;
 And patience, experience; and experience, hope:
-And hope maketh not ashamed; because the love of God is shed abroad in our hearts by the 
+And hope maketh not ashamed; because the love of God is shed abroad in our hearts by the
 Holy Ghost which is given unto us. ." Romans 5:5
 
 ### THE DAILY BREAD
