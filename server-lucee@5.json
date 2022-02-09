@@ -11,8 +11,9 @@
         "rewrites":{
             "enable":"true"
         },
+		"webroot": "test-harness",
         "aliases":{
-            "/moduleroot/cbmailservices":"../"
+            "/moduleroot/cbmailservices":"./"
         }
     },
     "openBrowser":"false"

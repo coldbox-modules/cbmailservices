@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
+## [v2.0.4] => 2022-FEB-09
+
+### Fixed
+
+* `-snapshot` left on the box.json
+
+### Added
+
+* Github actions standards via new module template
+* Reusable Workflows
+
+----
+
 ## [v2.0.3] => 2021-NOV-17
 
 ### Fixed
