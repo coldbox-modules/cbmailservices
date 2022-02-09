@@ -44,7 +44,7 @@
         "format:check":"cfformat check handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc",
 		"cfpm":"echo '\".engine/adobe2021/WEB-INF/cfusion/bin/cfpm.sh\"' | run",
         "cfpm:install":"echo '\".engine/adobe2021/WEB-INF/cfusion/bin/cfpm.sh\" install ${1}' | run",
-        "install:2021":"run-script cfpm:install zip,debugger"
+        "install:2021":"run-script cfpm:install zip,mail,debugger"
     },
 	"testbox":{
         "runner":"http://localhost:60299/tests/runner.cfm"
