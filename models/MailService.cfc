@@ -275,13 +275,15 @@ component accessors="true" singleton threadsafe {
 
 		// Parse Body Tokens
 		parseTokens( arguments.mail );
-		// Get mailer
-		var mailerRecord = getMailer( arguments.mail.getMailer() );
 
 		// Just mail the darned thing!!
 		try {
 			// announce interception point before mail send
 			variables.inteceptorService.processState( "preMailSend", { mail : arguments.mail } );
+			
+			// Get mailer
+			var mailerRecord = getMailer( arguments.mail.getMailer() );
+		
 			// We mail it with the mailer of choice
 			var results = mailerRecord.transit.send( arguments.mail );
 			// Store results
