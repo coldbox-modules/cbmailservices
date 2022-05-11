@@ -20,6 +20,20 @@ It also sports tons of useful features for mail sending:
 * Success and Error callbacks
 * So Much More!
 
+Note: One of the features is the ability to queue emails for asynchronous (non-blocking) sending. This is done via a task runner which is on by default. 
+This feature can be turned off, if desired, by these steps:
+1. Open config/coldbox.cfc
+   
+2. In the modulesSettings section, add a key for cbmailServices with the property `runQueueTask` set to `false`. 
+
+```
+moduleSettings = {
+	cbmailServices : {
+		runQueueTask: false
+	}
+}
+```
+
 ## View the documentation at https://coldbox-mailservices.ortusbooks.com
 
 ## LICENSE
