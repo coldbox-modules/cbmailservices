@@ -35,7 +35,9 @@ component {
 			// Here you can register one or many mailers by name
 			mailers         : { "default" : { class : "CFMail" } },
 			// The defaults for all mail config payloads and protocols
-			defaults        : {}
+			defaults        : {},
+			//Whether the scheduled task is running or not
+			runQueueTask	: true
 		};
 
 		// Listeners
