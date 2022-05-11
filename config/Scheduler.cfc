@@ -8,7 +8,7 @@
  * The mail service queue scheduler
  */
 component {
-
+	property name="runQueueTask" inject="coldbox:setting:runQueueTask@cbmailservices";
 	function configure(){
 
 		task( "MailQueue" )
@@ -17,6 +17,7 @@ component {
 			})
 			.everyMinute()
 			.withNoOverlaps()
+			.when( function(){ return runQueueTask; } )
 			.onFailure( function( task, exception ){
 				log.error( "Error running mail services queue processing: #exception.message & exception.detail#", exception.stacktrace );
 			} )
