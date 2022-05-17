@@ -13,8 +13,11 @@
         },
 		"webroot": "test-harness",
         "aliases":{
-            "/moduleroot/cbmailservices":"./"
+            "/moduleroot/cbmailservices":"../"
         }
     },
-    "openBrowser":"false"
+    "openBrowser":"false",
+	"cfconfig": {
+		"file" : ".cfconfig.json"
+	}
 }

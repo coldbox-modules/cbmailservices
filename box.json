@@ -1,6 +1,6 @@
 {
     "name":"ColdBox Mail Services",
-    "version":"2.0.4",
+    "version":"2.1.0",
     "location":"https://downloads.ortussolutions.com/ortussolutions/coldbox-modules/cbmailservices/@build.version@/cbmailservices-@build.version@.zip",
     "author":"Ortus Solutions.com <info@ortussolutions.com",
     "slug":"cbmailservices",
@@ -23,12 +23,12 @@
         "Brad Wood <bdw429s@gmail.com>",
         "Curt Gratz <gratz@computerknowhow.com>"
     ],
-	"devDependencies" 	:{
-		"commandbox-cfformat":"*",
+    "devDependencies":{
+        "commandbox-cfformat":"*",
         "commandbox-docbox":"*",
-		"commandbox-dotenv":"*",
+        "commandbox-dotenv":"*",
         "commandbox-cfconfig":"*"
-	},
+    },
     "ignore":[
         "**/.*",
         "test-harness/**",
@@ -37,16 +37,16 @@
     ],
     "scripts":{
         "release":"recipe build/release.boxr",
-		"build:module":"task run taskFile=build/Build.cfc :projectName=`package show slug` :version=`package show version`",
-		"build:docs":"task run taskFile=build/Build.cfc target=docs :projectName=`package show slug` :version=`package show version`",
+        "build:module":"task run taskFile=build/Build.cfc :projectName=`package show slug` :version=`package show version`",
+        "build:docs":"task run taskFile=build/Build.cfc target=docs :projectName=`package show slug` :version=`package show version`",
         "format":"cfformat run handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc --overwrite",
         "format:watch":"cfformat watch handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc ./.cfformat.json",
         "format:check":"cfformat check handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc",
-		"cfpm":"echo '\".engine/adobe2021/WEB-INF/cfusion/bin/cfpm.sh\"' | run",
+        "cfpm":"echo '\".engine/adobe2021/WEB-INF/cfusion/bin/cfpm.sh\"' | run",
         "cfpm:install":"echo '\".engine/adobe2021/WEB-INF/cfusion/bin/cfpm.sh\" install ${1}' | run",
         "install:2021":"run-script cfpm:install zip,mail,debugger"
     },
-	"testbox":{
+    "testbox":{
         "runner":"http://localhost:60299/tests/runner.cfm"
     }
 }
