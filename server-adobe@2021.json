@@ -1,5 +1,5 @@
 {
-    "name":"cbsecurity-adobe@2021",
+    "name":"cbmailservices-adobe@2021",
     "app":{
         "serverHomeDirectory":".engine/adobe2021",
         "cfengine":"adobe@2021"
@@ -13,8 +13,11 @@
         },
 		"webroot": "test-harness",
         "aliases":{
-            "/moduleroot/cbsecurity":"./"
+            "/moduleroot/cbmailservices":"../"
         }
     },
-    "openBrowser":"false"
+    "openBrowser":"false",
+	"cfconfig": {
+		"file" : ".cfconfig.json"
+	}
 }

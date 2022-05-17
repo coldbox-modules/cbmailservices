@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
+## [v2.1.0] => 2022-MAY-17
+
+### Added
+
+* Ability for the `preMailSend` event to influence the `mail` record thanks to @gpickin
+* Getters only work if there is a `variables.config` key in existence. Add reasonable defaults for commonly accessed mail fields
+* New module setting: `runQueueTask` which is defaulted to `true`.  If `false` it will not run the mail queue task in the background
+
+----
+
 ## [v2.0.4] => 2022-FEB-09
 
 ### Fixed
