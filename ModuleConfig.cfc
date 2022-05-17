@@ -36,7 +36,7 @@ component {
 			mailers         : { "default" : { class : "CFMail" } },
 			// The defaults for all mail config payloads and protocols
 			defaults        : {},
-			//Whether the scheduled task is running or not
+			// Whether the scheduled task is running or not
 			runQueueTask	: true
 		};
 
