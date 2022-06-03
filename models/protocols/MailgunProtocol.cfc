@@ -24,10 +24,10 @@ component
 	MailgunProtocol function init( struct properties = {} ){
 		variables.name            = "Mailgun";
 		variables.DEFAULT_TIMEOUT = 30; // in seconds
-		variables.MAILGUN_APIURL = "https://api.mailgun.net/v3/";
+		variables.MAILGUN_APIURL  = "https://api.mailgun.net/v3/";
 		// super size it
 		super.init( argumentCollection = arguments );
-		
+
 		// Property Checks
 		if ( NOT propertyExists( "domain" ) ) {
 			// No API key was found, so throw an exception.
@@ -50,7 +50,6 @@ component
 	 * - `error` - A boolean flag if the message was sent or not
 	 * - `messages` - An array of error messages the protocol stored if any
 	 *
-	 * 
 	 * @see                 https://documentation.mailgun.com/en/latest/api-sending.html
 	 * @payload             The paylod object to send the message with
 	 * @payload.doc_generic cbmailservices.models.Mail
@@ -62,16 +61,16 @@ component
 		// The mail config data
 		var data    = arguments.payload.getConfig();
 
-		//Special attribute for Reply To
-		if(data.keyExists('replyto')){
-			data['h:Reply-To'] = data['replyto'];
-			data.delete('replyto');
+		// Special attribute for Reply To
+		if ( data.keyExists( "replyto" ) ) {
+			data[ "h:Reply-To" ] = data[ "replyto" ];
+			data.delete( "replyto" );
 		}
-		
-		//Special attribute for Testing
-		if(data.keyExists('test')){
-			data['o:testmode'] = data['test'];
-			data.delete('test');
+
+		// Special attribute for Testing
+		if ( data.keyExists( "test" ) ) {
+			data[ "o:testmode" ] = data[ "test" ];
+			data.delete( "test" );
 		}
 
 		// Process the mail headers
@@ -79,34 +78,35 @@ component
 			.getMailParams()
 			.filter( function( thisParam ){
 				return structKeyExists( arguments.thisParam, "name" );
-			} ).each(function(header){
-			var key = header.name;
-			if(!['v:','o:','h:'].find(left(key,2))) key = 'h:' & key;
-			data[key] = header.value;
-		})
-		
+			} )
+			.each( function( header ){
+				var key = header.name;
+				if ( ![ "v:", "o:", "h:" ].find( left( key, 2 ) ) ) key = "h:" & key;
+				data[ key ] = header.value;
+			} )
 
-		data[ "additionalInfo" ].each(function(infoKey, infoValue){
-			data[infoKey] = infoValue;
-		})
 
-		data.delete('additionalInfo'); //cleanup payload
-		
+		data[ "additionalInfo" ].each( function( infoKey, infoValue ){
+			data[ infoKey ] = infoValue;
+		} )
 
-		data[ "bodyTokens" ].each(function(tokenKey, tokenValue){
-			data['v:' & tokenKey] = tokenValue;
-		})
+		data.delete( "additionalInfo" ); // cleanup payload
 
-		data.delete('bodyTokens'); //cleanup payload
-		
+
+		data[ "bodyTokens" ].each( function( tokenKey, tokenValue ){
+			data[ "v:" & tokenKey ] = tokenValue;
+		} )
+
+		data.delete( "bodyTokens" ); // cleanup payload
+
 		// Process the mail attachments and encode them how mailgun likes them
 		attachments = arguments.payload
 			.getMailParams()
 			.filter( function( thisParam ){
 				return structKeyExists( arguments.thisParam, "file" );
 			} )
-		
-			
+
+
 		// Process the body of the email according to Mailgun Rules If it was set directly.
 		// https://mailgunapp.com/developer/user-guide/send-email-with-api
 		if ( structKeyExists( data, "type" ) and data.type eq "html" ) {
@@ -125,14 +125,14 @@ component
 					data[ "text" ] = arguments.mailpart.body;
 				}
 			} );
-		
-		
-		//clean up unnecessary keys in payload
-		data.delete('mailParams');
-		data.delete('mailParts');
+
+
+		// clean up unnecessary keys in payload
+		data.delete( "mailParams" );
+		data.delete( "mailParts" );
 
 		// send to mailgun
-		return sendToMailgun(data, attachments);
+		return sendToMailgun( data, attachments );
 	}
 
 	/**
@@ -140,57 +140,57 @@ component
 	 *
 	 * @jsonPayload The json payload to send
 	 */
-	private function sendToMailgun( required messageParams, attachments=[] ){
+	private function sendToMailgun( required messageParams, attachments = [] ){
 		var results = { "error" : true, "messages" : [], "messageID" : "" };
-		
+
 		try {
 			var httpResults = "";
-			var apiURL = variables.MAILGUN_APIURL & getProperty( "domain" ) & "/messages";
+			var apiURL      = variables.MAILGUN_APIURL & getProperty( "domain" ) & "/messages";
 
 			cfhttp(
 				method       = "post",
-				url          = apiURL ,
+				url          = apiURL,
 				charset      = "utf-8",
 				result       = "httpResults",
 				redirect     = true,
 				throwOnError = false,
 				timeout      = variables.DEFAULT_TIMEOUT,
 				useragent    = "ColdFusion-cbMailServices",
-				username	 =	"api",
-				password	 =	getProperty( "apiKey" )
+				username     = "api",
+				password     = getProperty( "apiKey" )
 			) {
 				cfhttpparam(
 					type  = "header",
 					name  = "Accept",
 					value = "application/json"
 				);
-				arguments.messageParams.each(function(paramName,paramValue){
+				arguments.messageParams.each( function( paramName, paramValue ){
 					cfhttpparam(
 						type    = "formfield",
 						encoded = "no",
-						name = paramName,
+						name    = paramName,
 						value   = paramValue
 					);
-				});
+				} );
 
-				arguments.attachments.each(function(attachment){
+				arguments.attachments.each( function( attachment ){
 					cfhttpparam(
 						type    = "file",
 						encoded = "no",
-						name = "attachment",
-						file   = expandPath(attachment.file)
+						name    = "attachment",
+						file    = expandPath( attachment.file )
 					);
-				});
+				} );
 			}
 
-		 	// Inflate HTTP Results
-		 	var mailgunResults = deserializeJSON( httpResults.fileContent.toString() );
-		 		// Process Mailgun Results
+			// Inflate HTTP Results
+			var mailgunResults = deserializeJSON( httpResults.fileContent.toString() );
+			// Process Mailgun Results
 			if ( mailgunResults.message eq "Queued. Thank you." ) {
 				results.error     = false;
 				results.messageID = mailgunResults[ "id" ]
-				if(arguments.messageParams.keyExists("o:testmode") && arguments.messageParams["o:testmode"]){
-					results.messages  = [ "Test message sent" ];
+				if ( arguments.messageParams.keyExists( "o:testmode" ) && arguments.messageParams[ "o:testmode" ] ) {
+					results.messages = [ "Test message sent" ];
 				}
 			}
 			// Exceptions
@@ -206,6 +206,5 @@ component
 
 		return results;
 	}
-
 
 }

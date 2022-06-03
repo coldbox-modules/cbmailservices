@@ -37,7 +37,7 @@ component {
 			// The defaults for all mail config payloads and protocols
 			defaults        : {},
 			// Whether the scheduled task is running or not
-			runQueueTask	: true
+			runQueueTask    : true
 		};
 
 		// Listeners
