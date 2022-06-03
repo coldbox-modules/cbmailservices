@@ -105,9 +105,6 @@ component
 			.filter( function( thisParam ){
 				return structKeyExists( arguments.thisParam, "file" );
 			} )
-			// .map( function( thisParam ){
-			// 	return encodeAttachment( arguments.thisParam );
-			// } );
 		
 			
 		// Process the body of the email according to Mailgun Rules If it was set directly.
