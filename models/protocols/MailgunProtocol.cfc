@@ -196,7 +196,7 @@ component
 			// Exceptions
 			else {
 				results.messages = [
-					"#mailgunResults[ "ErrorCode" ]# - #mailgunResults[ "Message" ]#",
+					mailgunResults[ "Message" ],
 					mailgunResults
 				];
 			}
