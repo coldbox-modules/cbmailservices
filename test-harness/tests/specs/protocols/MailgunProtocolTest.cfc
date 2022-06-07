@@ -12,8 +12,8 @@ component extends="coldbox.system.testing.BaseTestCase" {
 		super.beforeAll();
 		setup();
 		variables.mailservice = getInstance( "MailService@cbmailservices" );
-		variables.apikey      = getUtil().getSystemSetting( "MAILGUN_API_KEY", "key-3ax6xnjp29jd6fds4gc373sgvjxteol0" );
-		variables.domain      = getUtil().getSystemSetting( "MAILGUN_DOMAIN", "" );
+		variables.apikey      = getUtil().getSystemSetting( "MAILGUN_API_KEY", "MAILGUN_API_KEY" );
+		variables.domain      = getUtil().getSystemSetting( "MAILGUN_DOMAIN", "MAILGUN_DOMAIN" );
 	}
 
 	/*********************************** BDD SUITES ***********************************/
