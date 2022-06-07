@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
+## [v2.2.0] => 2022-JUN-6
+
+### Added
+
+* Added mailgun protocol to available mail protocols @scottsteinbeck
+----
+
 ## [v2.1.0] => 2022-MAY-17
 
 ### Added
