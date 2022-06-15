@@ -48,8 +48,8 @@ component accessors="true" {
 			"fromName"       : "",
 			"to"             : "",
 			"cc"             : "",
-			"bcc"             : "",
-			"subject"             : "",
+			"bcc"            : "",
+			"subject"        : "",
 			"additionalInfo" : {}
 		};
 
