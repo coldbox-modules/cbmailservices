@@ -29,13 +29,13 @@ component
 		super.init( argumentCollection = arguments );
 
 		// Property Checks
-		if ( NOT propertyExists( "domain" ) ) {
+		if ( !propertyExists( "domain" ) ) {
 			// No API key was found, so throw an exception.
 			throw( message = "Domain is Required", type = "MailgunProtocol.PropertyNotFound" );
 		}
 
 		// Property Checks
-		if ( NOT propertyExists( "APIKey" ) ) {
+		if ( !propertyExists( "APIKey" ) ) {
 			// No API key was found, so throw an exception.
 			throw( message = "ApiKey is Required", type = "MailgunProtocol.PropertyNotFound" );
 		}
@@ -60,6 +60,7 @@ component
 		var results = { "error" : true, "messages" : [], "messageID" : "" };
 		// The mail config data
 		var data    = arguments.payload.getConfig();
+		var headerKeys = [ "v:", "o:", "h:" ];
 
 		// Special attribute for Reply To
 		if ( data.keyExists( "replyto" ) ) {
@@ -81,21 +82,21 @@ component
 			} )
 			.each( function( header ){
 				var key = header.name;
-				if ( ![ "v:", "o:", "h:" ].find( left( key, 2 ) ) ) key = "h:" & key;
+				if ( !headerKeys.find( left( key, 2 ) ) ) key = "h:" & key;
 				data[ key ] = header.value;
-			} )
+			} );
 
 
 		data[ "additionalInfo" ].each( function( infoKey, infoValue ){
 			data[ infoKey ] = infoValue;
-		} )
+		} );
 
 		data.delete( "additionalInfo" ); // cleanup payload
 
 
 		data[ "bodyTokens" ].each( function( tokenKey, tokenValue ){
 			data[ "v:" & tokenKey ] = tokenValue;
-		} )
+		} );
 
 		data.delete( "bodyTokens" ); // cleanup payload
 
@@ -104,7 +105,7 @@ component
 			.getMailParams()
 			.filter( function( thisParam ){
 				return structKeyExists( arguments.thisParam, "file" );
-			} )
+			} );
 
 
 		// Process the body of the email according to Mailgun Rules If it was set directly.
