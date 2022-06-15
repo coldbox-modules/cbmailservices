@@ -1,12 +1,15 @@
-# Welcome to the ColdBox Mail Services => (cbmailservices)
+# Welcome to the ColdBox Mail Services => (`cbmailservices`)
 
-Sending email doesn't have to be complicated or archaic. The ColdBox Mail Services (cbmailservices) module will allow you to send email in a fluent and abstracted way in multiple protocols for many environments in a single cohesive API. The supported protocols are:
+Sending email doesn't have to be complicated or archaic or sad 😭. The ColdBox Mail Services (`cbmailservices`) module will allow you to send email in a fluent and abstracted way in multiple protocols for many environments in a single cohesive API, which will bring you smiles 😍, rainbows 🌈 and unicorns 🦄!. The supported protocols are:
 
-* **CFMail** - Traditional `cfmail` sending
-* **File** - Write emails to disk
-* **InMemory** - Store email mementos in an array. Perfect for testing.
-* **Null** - Ignores emails sent to it.
-* **Postmark** - Send via the PostMark API Service (https://postmarkapp.com/)
+| Protocol     	| Description |
+|---------------|-------------|
+| `CFMail` 		| Traditional sending via the `cfmail` tag. |
+| `File`      	| Sends mails to a location on disk as `.html` files. |
+| `InMemory` 	| Store email mementos in an array. Perfect for testing. |
+| `Null` 		| Ignores emails send to it! |
+| `MailGun` 	| Sends mail via the Mailgun API Services (https://www.mailgun.com) |
+|`Postmark`		| Send via the PostMark API Service (https://postmarkapp.com/) |
 
 It also sports tons of useful features for mail sending:
 
@@ -20,11 +23,12 @@ It also sports tons of useful features for mail sending:
 * Success and Error callbacks
 * So Much More!
 
-Note: One of the features is the ability to queue emails for asynchronous (non-blocking) sending. This is done via a task runner which is on by default. 
+Note: One of the features is the ability to queue emails for asynchronous (non-blocking) sending. This is done via a task runner which is on by default.
 This feature can be turned off, if desired, by these steps:
+
 1. Open config/coldbox.cfc
-   
-2. In the modulesSettings section, add a key for cbmailServices with the property `runQueueTask` set to `false`. 
+
+2. In the modulesSettings section, add a key for cbmailServices with the property `runQueueTask` set to `false`.
 
 ```
 moduleSettings = {
@@ -58,7 +62,7 @@ Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
 www.ortussolutions.com
 ********************************************************************************
 
-#### HONOR GOES TO GOD ABOVE ALL
+## HONOR GOES TO GOD ABOVE ALL
 
 Because of His grace, this project exists. If you don't like this, then don't read it, its not for you.
 
