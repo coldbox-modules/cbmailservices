@@ -269,7 +269,7 @@ component accessors="true" singleton threadsafe {
 					"Please check the basic mail fields of To, From, Subject and Body as they are empty. To: #arguments.mail.getTo()#, From: #arguments.mail.getFrom()#, Subject Len = #arguments.mail.getSubject().length()#, Body Len = #arguments.mail.getBody().length()#."
 				]
 			} )
-			log.error( "Mail object does not validate.", arguments.mail.getConfig() );
+			log.error( "Mail object does not validate.", cleanBinary( arguments.mail.getConfig() ) );
 			return arguments.mail;
 		}
 
@@ -450,6 +450,20 @@ component accessors="true" singleton threadsafe {
 		}
 
 		return this;
+	}
+	
+	/**
+	 * cleanBinary
+	 * Replaces binary content in the email params for safe logbox parsing
+	 */ 
+	private function cleanBinary( required struct mailConfig ) {
+		if ( mailConfig.keyExists( "mailParams" ) && isArray( mailConfig.mailParams ) ) {
+			mailConfig.mailParams.each( function( item ) {
+				if ( isBinary( item.content ) ) {
+					item.content = "[Binary Content]";
+				}
+			} );
+		}
 	}
 
 }
