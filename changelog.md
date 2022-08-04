@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
-## [v2.2.0] => 2022-JUN-6
+## [v2.3.0] => 2022-AUG-04
+
+### Fixed
+
+* Fixed build process so it doesn't include `box.bin` in the final artifact.
+
+----
+
+## [v2.2.0] => 2022-JUN-06
 
 ### Added
 
