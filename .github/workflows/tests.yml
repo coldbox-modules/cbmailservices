@@ -29,7 +29,7 @@ jobs:
           java-version: "11"
 
       - name: Setup CommandBox CLI
-        uses: Ortus-Solutions/setup-commandbox@2.0.1
+        uses: Ortus-Solutions/setup-commandbox@v2.0.1
 
       - name: Cache CommandBox Dependencies
         uses: actions/cache@v1
