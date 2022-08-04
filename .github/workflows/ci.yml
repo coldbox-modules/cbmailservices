@@ -47,8 +47,8 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-commandbox-cache-${{ hashFiles( 'box.json' ) }}-${{ hashFiles( 'test-harness/box.json' ) }}
 
-      - name: Setup CommandBox
-        uses: Ortus-Solutions/setup-commandbox
+      - name: Setup CommandBox CLI
+        uses: Ortus-Solutions/setup-commandbox@v2.0.1
         with:
           forgeboxAPIKey: ${{ secrets.FORGEBOX_TOKEN }}
 
