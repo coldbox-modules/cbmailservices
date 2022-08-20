@@ -11,10 +11,10 @@
 component accessors="true" singleton threadsafe {
 
 	// DI
-	property name="inteceptorService" inject="coldbox:interceptorService";
-	property name="settings"          inject="coldbox:moduleSettings:cbmailservices";
+	property name="inteceptorService" inject="box:interceptorService";
+	property name="settings"          inject="box:moduleSettings:cbmailservices";
 	property name="wirebox"           inject="wirebox";
-	property name="asyncManager"      inject="coldbox:asyncManager";
+	property name="asyncManager"      inject="box:asyncManager";
 	property name="log"               inject="logbox:logger:{this}";
 
 	/**
