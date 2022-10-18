@@ -8,7 +8,7 @@
  * The mail service queue scheduler
  */
 component {
-	property name="runQueueTask" inject="coldbox:setting:runQueueTask@cbmailservices";
+	property name="runQueueTask" inject="box:setting:runQueueTask@cbmailservices";
 	function configure(){
 
 		task( "MailQueue" )
