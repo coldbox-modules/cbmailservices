@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
+## [v2.5.0] => 2022-OCT-19
+
+### Modified
+
+* More updates of injections to generic `box` instead of `coldbox`.
+
+----
+
 ## [v2.4.0] => 2022-AUG-20
 
 ### Modified
