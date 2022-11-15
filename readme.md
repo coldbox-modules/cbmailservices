@@ -21,6 +21,7 @@ It also sports tons of useful features for mail sending:
 * Mail tracking
 * Multiple mailers
 * Success and Error callbacks
+* `Mailable@cbmailservices` delegate for adding mailing traits to objects.
 * So Much More!
 
 Note: One of the features is the ability to queue emails for asynchronous (non-blocking) sending. This is done via a task runner which is on by default.

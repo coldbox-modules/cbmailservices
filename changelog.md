@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
+## [v2.6.0] => 2022-NOV-15
+
+### Added
+
+* New ColdBox 7 delegate `Mailable@cbmailservices` so you can easily add mailing capabilities to objects
+
+----
+
 ## [v2.5.1] => 2022-NOV-1
 
 ### Fixed
