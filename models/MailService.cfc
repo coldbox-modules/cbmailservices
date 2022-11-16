@@ -279,17 +279,17 @@ component accessors="true" singleton threadsafe {
 		// Just mail the darned thing!!
 		try {
 			// announce interception point before mail send
-			variables.inteceptorService.processState( "preMailSend", { mail : arguments.mail } );
-			
+			variables.inteceptorService.announce( "preMailSend", { mail : arguments.mail } );
+
 			// Get mailer
 			var mailerRecord = getMailer( arguments.mail.getMailer() );
-		
+
 			// We mail it with the mailer of choice
 			var results = mailerRecord.transit.send( arguments.mail );
 			// Store results
 			arguments.mail.setResults( results );
 			// announce interception point after mail send
-			variables.inteceptorService.processState( "postMailSend", { mail : arguments.mail, result : results } );
+			variables.inteceptorService.announce( "postMailSend", { mail : arguments.mail, result : results } );
 		} catch ( Any e ) {
 			arguments.mail.setResults( {
 				"error"    : true,
