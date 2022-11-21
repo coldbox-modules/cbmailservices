@@ -22,7 +22,7 @@ component {
 				log.error( "Error running mail services queue processing: #exception.message & exception.detail#", exception.stacktrace );
 			} )
 			.onSuccess( function( task, results ){
-				log.info( "Mail queue finished processing successfully: #task.getStats().toString()#" );
+				log.debug( "Mail queue finished processing successfully: #task.getStats().toString()#" );
 			} );
 	}
 
