@@ -196,6 +196,20 @@ component accessors="true" {
 	}
 
 	/**
+	 * Run email validation and throw an InvalidMailException if required params are missing.
+	 */
+	Mail function validateOrFail(){
+		if ( NOT this.validate() ){
+			throw(
+				type   : "InvalidMailException",
+				message: "One or more required fields are missing.",
+				detail : "Please check the basic mail fields of To, From, Subject and Body as they are empty. To: #variables.config.to#, From: #variables.config.from#, Subject Len = #variables.config.subject.length()#, Body Len = #variables.config.body.length()#."
+			);
+		}
+		return this;
+	}
+
+	/**
 	 * Validate that the basic fields of from, to, subject, and body are set for sending mail
 	 */
 	boolean function validate(){
@@ -442,7 +456,7 @@ component accessors="true" {
 		variables.config.type = "html";
 
 		// Do we have a layout?
-		if ( !isNull( arguments.layout ) ) {
+		if ( !isNull( arguments.layout ) && len( arguments.layout ) ) {
 			variables.config.body = variables.wirebox
 				.getInstance( "Renderer@coldbox" )
 				.layout(

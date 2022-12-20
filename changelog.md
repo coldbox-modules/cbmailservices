@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
+
+## [v2.6.2] => 2022-DEC-20
+
+### Fixed
+
+* If the incoming `layout` arugment for the `setView()` method in the mail is empty, it should ignore it.
+
+----
+
 ## [v2.6.1] => 2022-NOV-21
 
 ### Changed
