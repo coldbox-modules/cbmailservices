@@ -456,7 +456,7 @@ component accessors="true" {
 		variables.config.type = "html";
 
 		// Do we have a layout?
-		if ( !isNull( arguments.layout ) ) {
+		if ( !isNull( arguments.layout ) && len( arguments.layout ) ) {
 			variables.config.body = variables.wirebox
 				.getInstance( "Renderer@coldbox" )
 				.layout(
