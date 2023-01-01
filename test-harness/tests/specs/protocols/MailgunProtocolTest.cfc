@@ -14,6 +14,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 		variables.mailservice = getInstance( "MailService@cbmailservices" );
 		variables.apikey      = getUtil().getSystemSetting( "MAILGUN_API_KEY", "MAILGUN_API_KEY" );
 		variables.domain      = getUtil().getSystemSetting( "MAILGUN_DOMAIN", "MAILGUN_DOMAIN" );
+		variables.baseURL     = getUtil().getSystemSetting( "MAILGUN_BASEURL", "MAILGUN_BASEURL" );
 	}
 
 	/*********************************** BDD SUITES ***********************************/
@@ -23,15 +24,17 @@ component extends="coldbox.system.testing.BaseTestCase" {
 		describe( "Mailgun Protocol", function(){
 			beforeEach( function( currentSpec ){
 				// Create a mock instance of the protocol.
-				variables.protocol = createMock( "cbmailservices.models.protocols.MailgunProtocol" ).init( { 
-					apiKey : variables.apikey, 
-					domain : variables.domain 
+				variables.protocol = createMock( "cbmailservices.models.protocols.MailgunProtocol" ).init( {
+					apiKey : variables.apikey,
+					domain : variables.domain,
+					baseURL : variables.baseURL
 				} );
 			} );
 
 			it( "can be inited correctly", function(){
 				expect( variables.protocol.propertyExists( "apiKey" ) ).toBeTrue();
 				expect( variables.protocol.propertyExists( "domain" ) ).toBeTrue();
+				expect( variables.protocol.propertyExists( "baseURL" ) ).toBeTrue();
 			} );
 
 			it( "data is formatted for sending to mailgun", function(){
