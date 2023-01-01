@@ -7,10 +7,10 @@
  * This protocol sends the mails via the Mailgun API.  The required properties are:
  * - apikey : The mailgun secret api key
  * - domain : The mailgun domain to send the email through
-  *
+ *
  * An optional property, "baseURL" is required when using an EU region
  * - baseURL : The mailgun region where the Mailgun domain was created
-*
+ *
  * @author Scott Steinbeck <ssteinbeck@agritrackingsystems.com>
  */
 component
@@ -195,7 +195,14 @@ component
 			}
 
 			// Inflate HTTP Results
-			var mailgunResults = deserializeJSON( httpResults.fileContent.toString() );
+			if( isJSON( httpResults.fileContent.toString() ) ) {
+				var mailgunResults = deserializeJSON( httpResults.fileContent.toString() );
+			} else {
+				results.messages = [ 'Error sending mail. Mailgun returned "#httpResults.fileContent.toString()#".' ];
+
+				return results;
+			}
+
 			// Process Mailgun Results
 			if ( mailgunResults.message eq "Queued. Thank you." ) {
 				results.error     = false;
