@@ -101,7 +101,7 @@ component
 		data.delete( "bodyTokens" ); // cleanup payload
 
 		// Process the mail attachments and encode them how mailgun likes them
-		attachments = arguments.payload
+		var attachments = arguments.payload
 			.getMailParams()
 			.filter( function( thisParam ){
 				return structKeyExists( arguments.thisParam, "file" );
