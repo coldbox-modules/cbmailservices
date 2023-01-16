@@ -24,6 +24,9 @@ A big thanks to @richardherbert for all the updates in this release.
 * Updated to make MAILGUN_APIURL optional
 * Added support for Mailgun EU region by making MAILGUN_APIURL an optional property with https://api.mailgun.net/v3/ as the default.
 
+### Changed
+
+* Updated all GHA actions to latest versions and moved to use `temurin` Java distributions from adopt due to deprecation of the service.
 
 ----
 
