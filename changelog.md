@@ -8,6 +8,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ----
 
 
+## [v2.7.0] => 2023-JAN-16
+
+A big thanks to @richardherbert for all the updates in this release.
+
+### Fixed
+
+* FIXED var scoping of attachments variable
+* Updated to handle a response that is not JSON
+* 🐛 FIX: Update GHA to avoid deprecated syntax
+
+### Added
+
+* Added test for MAILGUN_BASEURL property
+* Updated to make MAILGUN_APIURL optional
+* Added support for Mailgun EU region by making MAILGUN_APIURL an optional property with https://api.mailgun.net/v3/ as the default.
+
+### Changed
+
+* Updated all GHA actions to latest versions and moved to use `temurin` Java distributions from adopt due to deprecation of the service.
+
+----
+
+
 ## [v2.6.2] => 2022-DEC-20
 
 ### Fixed
