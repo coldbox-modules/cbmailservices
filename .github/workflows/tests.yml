@@ -32,7 +32,7 @@ jobs:
         uses: Ortus-Solutions/setup-commandbox@v2.0.1
 
       - name: Cache CommandBox Dependencies
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         if: ${{ true }}
         with:
           path: ~/.CommandBox/artifacts
