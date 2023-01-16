@@ -8,6 +8,9 @@
  * - apikey : The mailgun secret api key
  * - domain : The mailgun domain to send the email through
  *
+ * An optional property, "baseURL" is required when using an EU region
+ * - baseURL : The mailgun region where the Mailgun domain was created
+ *
  * @author Scott Steinbeck <ssteinbeck@agritrackingsystems.com>
  */
 component
@@ -24,7 +27,6 @@ component
 	MailgunProtocol function init( struct properties = {} ){
 		variables.name            = "Mailgun";
 		variables.DEFAULT_TIMEOUT = 30; // in seconds
-		variables.MAILGUN_APIURL  = "https://api.mailgun.net/v3/";
 		// super size it
 		super.init( argumentCollection = arguments );
 
@@ -38,6 +40,14 @@ component
 		if ( !propertyExists( "APIKey" ) ) {
 			// No API key was found, so throw an exception.
 			throw( message = "ApiKey is Required", type = "MailgunProtocol.PropertyNotFound" );
+		}
+
+		// Check for Base URL property
+		if ( !propertyExists( "baseURL" ) ) {
+			// No baseURL key was found, so use the US default.
+			variables.MAILGUN_APIURL  = "https://api.mailgun.net/v3/";
+		} else {
+			variables.MAILGUN_APIURL = getProperty( "baseURL" );
 		}
 
 		return this;
@@ -101,7 +111,7 @@ component
 		data.delete( "bodyTokens" ); // cleanup payload
 
 		// Process the mail attachments and encode them how mailgun likes them
-		attachments = arguments.payload
+		var attachments = arguments.payload
 			.getMailParams()
 			.filter( function( thisParam ){
 				return structKeyExists( arguments.thisParam, "file" );
@@ -185,7 +195,14 @@ component
 			}
 
 			// Inflate HTTP Results
-			var mailgunResults = deserializeJSON( httpResults.fileContent.toString() );
+			if( isJSON( httpResults.fileContent.toString() ) ) {
+				var mailgunResults = deserializeJSON( httpResults.fileContent.toString() );
+			} else {
+				results.messages = [ 'Error sending mail. Mailgun returned "#httpResults.fileContent.toString()#".' ];
+
+				return results;
+			}
+
 			// Process Mailgun Results
 			if ( mailgunResults.message eq "Queued. Thank you." ) {
 				results.error     = false;
