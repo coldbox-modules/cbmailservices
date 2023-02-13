@@ -203,7 +203,7 @@ component accessors="true" {
 			throw(
 				type   : "InvalidMailException",
 				message: "One or more required fields are missing.",
-				detail : "Please check the basic mail fields of To, From, Subject and Body as they are empty. To: #variables.config.to#, From: #variables.config.from#, Subject Len = #variables.config.subject.length()#, Body Len = #variables.config.body.length()#."
+				detail : "Please check the basic mail fields of To, From, Subject and Body as they are empty. To: #variables.config.to#, From: #variables.config.from#, Subject Len = #variables.config.subject.len()#, Body Len = #variables.config.body.len()#."
 			);
 		}
 		return this;
@@ -214,10 +214,10 @@ component accessors="true" {
 	 */
 	boolean function validate(){
 		if (
-			variables.config.from.length() eq 0 OR
-			variables.config.to.length() eq 0 OR
-			variables.config.subject.length() eq 0 OR
-			( variables.config.body.length() eq 0 AND arrayLen( variables.config.mailParts ) EQ 0 )
+			variables.config.from.len() eq 0 OR
+			variables.config.to.len() eq 0 OR
+			variables.config.subject.len() eq 0 OR
+			( variables.config.body.len() eq 0 AND arrayLen( variables.config.mailParts ) EQ 0 )
 		) {
 			return false;
 		} else {
