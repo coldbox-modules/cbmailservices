@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ----
 
 
+## [v2.7.1] => 2023-FEB-14
+
+### Fixed
+
+* Fix usage of invalid named member function #33 (https://github.com/coldbox-modules/cbmailservices/pull/33)
+
+----
+
+
 ## [v2.7.0] => 2023-JAN-16
 
 A big thanks to @richardherbert for all the updates in this release.
