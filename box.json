@@ -1,6 +1,6 @@
 {
     "name":"ColdBox Mail Services",
-    "version":"2.8.0",
+    "version":"2.7.1",
     "location":"https://downloads.ortussolutions.com/ortussolutions/coldbox-modules/cbmailservices/@build.version@/cbmailservices-@build.version@.zip",
     "author":"Ortus Solutions.com <info@ortussolutions.com",
     "slug":"cbmailservices",
