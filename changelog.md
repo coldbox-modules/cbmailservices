@@ -7,15 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
+## [Unreleased]
+
+### Added
+
+- Github Support Files
+- Github Action Updates
+- ColdBox 7 Auto Testing
 
 ## [v2.7.1] => 2023-FEB-14
 
 ### Fixed
 
 * Fix usage of invalid named member function #33 (https://github.com/coldbox-modules/cbmailservices/pull/33)
-
-----
-
 
 ## [v2.7.0] => 2023-JAN-16
 
@@ -37,16 +41,11 @@ A big thanks to @richardherbert for all the updates in this release.
 
 * Updated all GHA actions to latest versions and moved to use `temurin` Java distributions from adopt due to deprecation of the service.
 
-----
-
-
 ## [v2.6.2] => 2022-DEC-20
 
 ### Fixed
 
 * If the incoming `layout` arugment for the `setView()` method in the mail is empty, it should ignore it.
-
-----
 
 ## [v2.6.1] => 2022-NOV-21
 
@@ -54,15 +53,11 @@ A big thanks to @richardherbert for all the updates in this release.
 
 * Less verbosity for the mail queue log
 
-----
-
 ## [v2.6.0] => 2022-NOV-15
 
 ### Added
 
 * New ColdBox 7 delegate `Mailable@cbmailservices` so you can easily add mailing capabilities to objects
-
-----
 
 ## [v2.5.1] => 2022-NOV-1
 
@@ -70,15 +65,11 @@ A big thanks to @richardherbert for all the updates in this release.
 
 * Fixing asset version
 
-----
-
 ## [v2.5.0] => 2022-OCT-19
 
 ### Modified
 
 * More updates of injections to generic `box` instead of `coldbox`.
-
-----
 
 ## [v2.4.0] => 2022-AUG-20
 
@@ -86,16 +77,11 @@ A big thanks to @richardherbert for all the updates in this release.
 
 * Updated injections to generic `box` instead of `coldbox`.
 
-
-----
-
 ## [v2.3.1] => 2022-AUG-04
 
 ### Fixed
 
 * Fix github action
-
-----
 
 ## [v2.3.0] => 2022-AUG-04
 
@@ -103,14 +89,11 @@ A big thanks to @richardherbert for all the updates in this release.
 
 * Fixed build process so it doesn't include `box.bin` in the final artifact.
 
-----
-
 ## [v2.2.0] => 2022-JUN-06
 
 ### Added
 
 * Added mailgun protocol to available mail protocols @scottsteinbeck
-----
 
 ## [v2.1.0] => 2022-MAY-17
 
@@ -119,8 +102,6 @@ A big thanks to @richardherbert for all the updates in this release.
 * Ability for the `preMailSend` event to influence the `mail` record thanks to @gpickin
 * Getters only work if there is a `variables.config` key in existence. Add reasonable defaults for commonly accessed mail fields
 * New module setting: `runQueueTask` which is defaulted to `true`.  If `false` it will not run the mail queue task in the background
-
-----
 
 ## [v2.0.4] => 2022-FEB-09
 
@@ -133,15 +114,11 @@ A big thanks to @richardherbert for all the updates in this release.
 * Github actions standards via new module template
 * Reusable Workflows
 
-----
-
 ## [v2.0.3] => 2021-NOV-17
 
 ### Fixed
 
 * Fix for Default-Settings overwrites Mail-Bean Payload
-
-----
 
 ## [v2.0.2] => 2021-NOV-17
 
@@ -149,15 +126,11 @@ A big thanks to @richardherbert for all the updates in this release.
 
 * Fixed `getFileMimeType()` so postmark attachments can work. Thanks to @garciadev
 
-----
-
 ## [v2.0.1] => 2021-NOV-12
 
 ### Fixed
 
 * BOX-119 CBMailService - Setting the defaultProtocol in moduleSettings to something other than default gets ignored
-
-----
 
 ## [v2.0.0] => 2021-NOV-08
 
@@ -194,8 +167,6 @@ A big thanks to @richardherbert for all the updates in this release.
 * `protocol` setting removed in favor of multiple mailers approach and `defaultProtocol` usage. Please see docs.
 * Adobe ColdFusion 2016 Support.
 
-----
-
 ## [v1.6.0] => 2021-FEB-22
 
 ### Addded
@@ -205,8 +176,6 @@ A big thanks to @richardherbert for all the updates in this release.
   * The `InMemoryProtocol` stores mail mementos in an internal array. This can be useful for testing to check that mail was sent. It also includes a handle `hasMessage` method which takes a predicate callback and checks it against each sent mail. A `reset` method is included for use inside tests.
 * New CI updates and code quality systems
 * New updates for ColdBox 6
-
-----
 
 ## [v1.5.0] => 2019-NOV-12
 
@@ -224,19 +193,13 @@ A big thanks to @richardherbert for all the updates in this release.
 
 * Var scoping issue
 
-----
-
 ## [v1.4.2]
 
 * Fixes incorrect argument collection nesting on protocol registration
 
-----
-
 ## [v1.4.1]
 
 * Auto create folder paths in FileProtocol if they do not exist
-
-----
 
 ## [v1.4.0]
 
@@ -244,14 +207,10 @@ A big thanks to @richardherbert for all the updates in this release.
 * Proposed additionalInfo data struct for provider specific implementations. Added a couple of helper methods : https://github.com/coldbox-modules/cbox-mailservices/pull/5
 * Updated to leverage WireBox for object creations instead of internal new and createobjects
 
-----
-
 ## [v1.3.0]
 
 * Fix on date formatting on file protocol thanks to @elpete
 * Fix for type inclusion on the file protocol thanks to @elpete
-
-----
 
 ## [v1.2.0]
 
@@ -259,14 +218,10 @@ A big thanks to @richardherbert for all the updates in this release.
 * DocBox updates
 * Build process updates
 
-----
-
 ## [v1.1.0]
 
 * Updated build process
 * Updated readme and instructions
-
-----
 
 ## [v1.0.0]
 
