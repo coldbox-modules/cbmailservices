@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Github Support Files
 - Github Action Updates
 - ColdBox 7 Auto Testing
+- New `start:fakemail` command to start FakeSMTP for testing
+- Addded fake smtp server for testing on the harness
 
 ## [v2.7.1] => 2023-FEB-14
 

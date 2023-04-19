@@ -42,6 +42,7 @@
         "format":"cfformat run handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc --overwrite",
         "format:watch":"cfformat watch handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc ./.cfformat.json",
         "format:check":"cfformat check handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc ./.cfformat.json",
+		"start:fakemail": "!docker compose -f test-harness/tests/resources/docker-compose.yml up --detach",
 		"start:lucee" : "server start serverConfigFile=server-lucee@5.json",
 		"start:2018" : "server start serverConfigFile=server-adobe@2018.json",
 		"start:2021" : "server start serverConfigFile=server-adobe@2021.json",

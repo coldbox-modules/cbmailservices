@@ -6,7 +6,6 @@
 	 * executes before all suites+specs in the run() method
 	 */
 	function beforeAll(){
-		structDelete( application, "cbController" );
 		super.beforeAll();
 		super.setup();
 	}
