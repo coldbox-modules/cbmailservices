@@ -32,7 +32,7 @@ component {
 	// Define the fake smtp server
     this.mail = {
         server = "localhost",
-        port = 25,
+        port = 25
     };
 
 	// request start
