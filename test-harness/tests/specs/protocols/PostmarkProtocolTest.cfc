@@ -12,12 +12,11 @@ component extends="coldbox.system.testing.BaseTestCase" {
 		super.beforeAll();
 		setup();
 		variables.mailservice = getInstance( "MailService@cbmailservices" );
-		if( getController().getColdBoxSetting( "version" ).listFirst( "." ) > 6 ){
-			variables.apikey      = getEnv().getSystemSetting( "POSTMARK_API_KEY", "POSTMARK_API_TEST" );
-		} else{
-			variables.apikey      = getUtil().getSystemSetting( "POSTMARK_API_KEY", "POSTMARK_API_TEST" );
+		if ( getController().getColdBoxSetting( "version" ).listFirst( "." ) > 6 ) {
+			variables.apikey = getEnv().getSystemSetting( "POSTMARK_API_KEY", "POSTMARK_API_TEST" );
+		} else {
+			variables.apikey = getUtil().getSystemSetting( "POSTMARK_API_KEY", "POSTMARK_API_TEST" );
 		}
-
 	}
 
 	/*********************************** BDD SUITES ***********************************/
