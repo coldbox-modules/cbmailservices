@@ -61,28 +61,28 @@
 				expect( mail.validate() ).toBeTrue();
 			} );
 
-			it( "validateOrFail will throw for invalid mail", function() {
-
-				expect(function() {
+			it( "validateOrFail will throw for invalid mail", function(){
+				expect( function(){
 					mail.configure(
-						from    = "info@coldbox.org",
-						to      = "automation@coldbox.org"
-						// OMIT subject... "Oops! DID I DO THAT???"
-					)
-					.validateOrFail()
-				}).toThrow( "InvalidMailException" );
-			});
+							from = "info@coldbox.org",
+							to   = "automation@coldbox.org"
+							// OMIT subject... "Oops! DID I DO THAT???"
+						)
+						.validateOrFail()
+				} ).toThrow( "InvalidMailException" );
+			} );
 
-			it( "validateOrFail won't throw for valid emails", function() {
-				expect( function() {
+			it( "validateOrFail won't throw for valid emails", function(){
+				expect( function(){
 					mail.configure(
-						subject = "Hello",
-						from    = "lmajano@mail.com",
-						to      = "lmajano@mail.com",
-						body    = "Hello"
-					).validateOrFail();
-				}).notToThrow( "InvalidMailException" );
-			});
+							subject = "Hello",
+							from    = "lmajano@mail.com",
+							to      = "lmajano@mail.com",
+							body    = "Hello"
+						)
+						.validateOrFail();
+				} ).notToThrow( "InvalidMailException" );
+			} );
 
 			it( "can set html types", function(){
 				mail.configure(

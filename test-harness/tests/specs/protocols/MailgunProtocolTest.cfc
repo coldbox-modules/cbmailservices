@@ -31,8 +31,8 @@ component extends="coldbox.system.testing.BaseTestCase" {
 			beforeEach( function( currentSpec ){
 				// Create a mock instance of the protocol.
 				variables.protocol = createMock( "cbmailservices.models.protocols.MailgunProtocol" ).init( {
-					apiKey : variables.apikey,
-					domain : variables.domain,
+					apiKey  : variables.apikey,
+					domain  : variables.domain,
 					baseURL : variables.baseURL
 				} );
 			} );

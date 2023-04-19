@@ -45,7 +45,7 @@ component
 		// Check for Base URL property
 		if ( !propertyExists( "baseURL" ) ) {
 			// No baseURL key was found, so use the US default.
-			variables.MAILGUN_APIURL  = "https://api.mailgun.net/v3/";
+			variables.MAILGUN_APIURL = "https://api.mailgun.net/v3/";
 		} else {
 			variables.MAILGUN_APIURL = getProperty( "baseURL" );
 		}
@@ -67,9 +67,9 @@ component
 	 * @return struct of { "error" : boolean, "messages" : [], "messageID" : "" }
 	 */
 	struct function send( required cbmailservices.models.Mail payload ){
-		var results = { "error" : true, "messages" : [], "messageID" : "" };
+		var results    = { "error" : true, "messages" : [], "messageID" : "" };
 		// The mail config data
-		var data    = arguments.payload.getConfig();
+		var data       = arguments.payload.getConfig();
 		var headerKeys = [ "v:", "o:", "h:" ];
 
 		// Special attribute for Reply To
@@ -195,10 +195,12 @@ component
 			}
 
 			// Inflate HTTP Results
-			if( isJSON( httpResults.fileContent.toString() ) ) {
+			if ( isJSON( httpResults.fileContent.toString() ) ) {
 				var mailgunResults = deserializeJSON( httpResults.fileContent.toString() );
 			} else {
-				results.messages = [ 'Error sending mail. Mailgun returned "#httpResults.fileContent.toString()#".' ];
+				results.messages = [
+					"Error sending mail. Mailgun returned ""#httpResults.fileContent.toString()#""."
+				];
 
 				return results;
 			}
@@ -213,10 +215,7 @@ component
 			}
 			// Exceptions
 			else {
-				results.messages = [
-					mailgunResults[ "Message" ],
-					mailgunResults
-				];
+				results.messages = [ mailgunResults[ "Message" ], mailgunResults ];
 			}
 		} catch ( any e ) {
 			results.messages = [ "Error sending mail. #e.message# : #e.detail# : #e.stackTrace#" ];
