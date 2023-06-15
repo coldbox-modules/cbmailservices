@@ -376,6 +376,9 @@ component accessors="true" singleton threadsafe {
 		var tokenMarker = getTokenMarker();
 		var key         = "";
 
+		// Do not process tokens if using dynamic template (send-grid-protocol)
+		if(arguments.mail.getType() == "template") return;
+
 		// Check mail parts for content
 		if ( arrayLen( mailparts ) ) {
 			// Loop over mail parts
