@@ -5,9 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangel#og.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-----
+* * *
 
 ## [Unreleased]
+
+## [2.8.0] - 2023-09-13
 
 ### Added
 
@@ -16,13 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ColdBox 7 Auto Testing
 - New `start:fakemail` command to start FakeSMTP for testing
 - Addded fake smtp server for testing on the harness
-- Skipping of parsing tokens if the mail type is template to avoid complex data in the send-grip protocol https://github.com/coldbox-modules/cbmailservices/pull/34
+- Skipping of parsing tokens if the mail type is template to avoid complex data in the send-grip protocol <https://github.com/coldbox-modules/cbmailservices/pull/34>
 
 ## [v2.7.1] => 2023-FEB-14
 
 ### Fixed
 
-- Fix usage of invalid named member function #33 (https://github.com/coldbox-modules/cbmailservices/pull/33)
+- Fix usage of invalid named member function #33 (<https://github.com/coldbox-modules/cbmailservices/pull/33>)
 
 ## [v2.7.0] => 2023-JAN-16
 
@@ -38,7 +40,7 @@ A big thanks to @richardherbert for all the updates in this release.
 
 - Added test for MAILGUN_BASEURL property
 - Updated to make MAILGUN_APIURL optional
-- Added support for Mailgun EU region by making MAILGUN_APIURL an optional property with https://api.mailgun.net/v3/ as the default.
+- Added support for Mailgun EU region by making MAILGUN_APIURL an optional property with <https://api.mailgun.net/v3/> as the default.
 
 ### Changed
 
@@ -207,7 +209,7 @@ A big thanks to @richardherbert for all the updates in this release.
 ## [v1.4.0]
 
 - Updated to use module templating
-- Proposed additionalInfo data struct for provider specific implementations. Added a couple of helper methods : https://github.com/coldbox-modules/cbox-mailservices/pull/5
+- Proposed additionalInfo data struct for provider specific implementations. Added a couple of helper methods : <https://github.com/coldbox-modules/cbox-mailservices/pull/5>
 - Updated to leverage WireBox for object creations instead of internal new and createobjects
 
 ## [v1.3.0]
@@ -229,3 +231,7 @@ A big thanks to @richardherbert for all the updates in this release.
 ## [v1.0.0]
 
 - Create first module version
+
+[Unreleased]: https://github.com/coldbox-modules/cbmailservices/compare/v2.8.0...HEAD
+
+[2.8.0]: https://github.com/coldbox-modules/cbmailservices/compare/df70ca56372fc3ea234f4a5940fd8901c72ca10f...v2.8.0
