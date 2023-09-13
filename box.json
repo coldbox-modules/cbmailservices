@@ -1,6 +1,6 @@
 {
     "name":"ColdBox Mail Services",
-    "version":"2.7.1",
+    "version":"2.8.0",
     "location":"https://downloads.ortussolutions.com/ortussolutions/coldbox-modules/cbmailservices/@build.version@/cbmailservices-@build.version@.zip",
     "author":"Ortus Solutions.com <info@ortussolutions.com",
     "slug":"cbmailservices",
@@ -41,10 +41,17 @@
         "build:docs":"task run taskFile=build/Build.cfc target=docs :projectName=`package show slug` :version=`package show version`",
         "format":"cfformat run handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc --overwrite",
         "format:watch":"cfformat watch handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc ./.cfformat.json",
-        "format:check":"cfformat check handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc",
-        "cfpm":"echo '\".engine/adobe2021/WEB-INF/cfusion/bin/cfpm.sh\"' | run",
-        "cfpm:install":"echo '\".engine/adobe2021/WEB-INF/cfusion/bin/cfpm.sh\" install ${1}' | run",
-        "install:2021":"run-script cfpm:install zip,mail,debugger"
+        "format:check":"cfformat check handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc ./.cfformat.json",
+		"start:fakemail": "!docker compose -f test-harness/tests/resources/docker-compose.yml up --detach",
+		"start:lucee" : "server start serverConfigFile=server-lucee@5.json",
+		"start:2018" : "server start serverConfigFile=server-adobe@2018.json",
+		"start:2021" : "server start serverConfigFile=server-adobe@2021.json",
+		"stop:lucee" : "server stop serverConfigFile=server-lucee@5.json",
+		"stop:2018" : "server stop serverConfigFile=server-adobe@2018.json",
+		"stop:2021" : "server stop serverConfigFile=server-adobe@2021.json",
+		"logs:lucee" : "server log serverConfigFile=server-lucee@5.json --follow",
+		"logs:2018" : "server log serverConfigFile=server-adobe@2018.json --follow",
+		"logs:2021" : "server log serverConfigFile=server-adobe@2021.json --follow"
     },
     "testbox":{
         "runner":"http://localhost:60299/tests/runner.cfm"

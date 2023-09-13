@@ -5,5 +5,15 @@
     "inspectTemplate":"always",
     "requestTimeout":"0,0,0,90",
 	"robustExceptionEnabled":true,
-	"whitespaceManagement":"white-space-pref"
+	"whitespaceManagement":"white-space-pref",
+	"mailServers":[
+        {
+            "tls":false,
+            "password":"",
+            "port":25,
+            "username":"",
+            "ssl":false,
+            "smtp":"localhost"
+        }
+    ]
 }

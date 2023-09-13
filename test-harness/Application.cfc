@@ -47,7 +47,11 @@ component{
 	this.mappings[ "/moduleroot" ] = moduleRootPath;
 	this.mappings[ "/#request.MODULE_NAME#" ] = modulePath;
 
-	this.datasource = "cbmailservices";
+	// Define the fake smtp server
+    this.mail = {
+        server = "localhost",
+        port = 25
+    };
 
 	// application start
 	public boolean function onApplicationStart(){

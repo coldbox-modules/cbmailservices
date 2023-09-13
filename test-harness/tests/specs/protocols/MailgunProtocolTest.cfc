@@ -12,9 +12,15 @@ component extends="coldbox.system.testing.BaseTestCase" {
 		super.beforeAll();
 		setup();
 		variables.mailservice = getInstance( "MailService@cbmailservices" );
-		variables.apikey      = getUtil().getSystemSetting( "MAILGUN_API_KEY", "MAILGUN_API_KEY" );
-		variables.domain      = getUtil().getSystemSetting( "MAILGUN_DOMAIN", "MAILGUN_DOMAIN" );
-		variables.baseURL     = getUtil().getSystemSetting( "MAILGUN_BASEURL", "MAILGUN_BASEURL" );
+		if ( getController().getColdBoxSetting( "version" ).listFirst( "." ) > 6 ) {
+			variables.apikey  = getEnv().getSystemSetting( "MAILGUN_API_KEY", "MAILGUN_API_KEY" );
+			variables.domain  = getEnv().getSystemSetting( "MAILGUN_DOMAIN", "MAILGUN_DOMAIN" );
+			variables.baseURL = getEnv().getSystemSetting( "MAILGUN_BASEURL", "MAILGUN_BASEURL" );
+		} else {
+			variables.apikey  = getUtil().getSystemSetting( "MAILGUN_API_KEY", "MAILGUN_API_KEY" );
+			variables.domain  = getUtil().getSystemSetting( "MAILGUN_DOMAIN", "MAILGUN_DOMAIN" );
+			variables.baseURL = getUtil().getSystemSetting( "MAILGUN_BASEURL", "MAILGUN_BASEURL" );
+		}
 	}
 
 	/*********************************** BDD SUITES ***********************************/
@@ -25,8 +31,8 @@ component extends="coldbox.system.testing.BaseTestCase" {
 			beforeEach( function( currentSpec ){
 				// Create a mock instance of the protocol.
 				variables.protocol = createMock( "cbmailservices.models.protocols.MailgunProtocol" ).init( {
-					apiKey : variables.apikey,
-					domain : variables.domain,
+					apiKey  : variables.apikey,
+					domain  : variables.domain,
 					baseURL : variables.baseURL
 				} );
 			} );

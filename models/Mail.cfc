@@ -199,7 +199,7 @@ component accessors="true" {
 	 * Run email validation and throw an InvalidMailException if required params are missing.
 	 */
 	Mail function validateOrFail(){
-		if ( NOT this.validate() ){
+		if ( NOT this.validate() ) {
 			throw(
 				type   : "InvalidMailException",
 				message: "One or more required fields are missing.",
