@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CommandBox
         uses: Ortus-Solutions/setup-commandbox@v2.0.1
@@ -82,7 +82,7 @@ jobs:
 
       - name: Upload Build Artifacts
         if: success()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.MODULE_ID }}
           path: |
@@ -138,7 +138,7 @@ jobs:
     steps:
       # Checkout development
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: development
 
@@ -148,7 +148,7 @@ jobs:
           forgeboxAPIKey: ${{ secrets.FORGEBOX_TOKEN }}
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.MODULE_ID }}
           path: .tmp
