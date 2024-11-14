@@ -460,20 +460,20 @@ component accessors="true" {
 		// Do we have a layout?
 		if ( !isNull( arguments.layout ) && len( arguments.layout ) ) {
 			variables.config.body = variables.renderer.layout(
-					layout    : arguments.layout,
-					module    : arguments.layoutModule,
-					view      : arguments.view,
-					args      : arguments.args,
-					viewModule: arguments.module
-				);
+				layout    : arguments.layout,
+				module    : arguments.layoutModule,
+				view      : arguments.view,
+				args      : arguments.args,
+				viewModule: arguments.module
+			);
 		}
 		// Else, plain view rendering
 		else {
 			variables.config.body = variables.renderer.view(
-					view  : arguments.view,
-					args  : arguments.args,
-					module: arguments.module
-				);
+				view  : arguments.view,
+				args  : arguments.args,
+				module: arguments.module
+			);
 		}
 
 		return this;
