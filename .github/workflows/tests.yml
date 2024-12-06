@@ -87,7 +87,7 @@ jobs:
           curl http://127.0.0.1:60299
 
       # Startup Fake SMTP
-      - uses: hoverkraft-tech/compose-action@v2
+      - uses: hoverkraft-tech/compose-action@v2.0.2
         with:
           compose-file: './test-harness/tests/resources/docker-compose.yml'
 
