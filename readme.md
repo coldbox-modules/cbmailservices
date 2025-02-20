@@ -1,3 +1,20 @@
+<p align="center">
+	<img src="https://www.ortussolutions.com/__media/coldbox-185-logo.png">
+	<br>
+	<img src="https://www.ortussolutions.com/__media/wirebox-185.png" height="125">
+	<img src="https://www.ortussolutions.com/__media/cachebox-185.png" height="125" >
+	<img src="https://www.ortussolutions.com/__media/logbox-185.png"  height="125">
+</p>
+
+<p align="center">
+	Copyright Since 2005 ColdBox Platform by Luis Majano and Ortus Solutions, Corp
+	<br>
+	<a href="https://www.coldbox.org">www.coldbox.org</a> |
+	<a href="https://www.ortussolutions.com">www.ortussolutions.com</a>
+</p>
+
+----
+
 # Welcome to the ColdBox Mail Services => (`cbmailservices`)
 
 Sending email doesn't have to be complicated or archaic or sad 😭. The ColdBox Mail Services (`cbmailservices`) module will allow you to send email in a fluent and abstracted way in multiple protocols for many environments in a single cohesive API, which will bring you smiles 😍, rainbows 🌈 and unicorns 🦄!. The supported protocols are:
@@ -54,8 +71,9 @@ Apache License, Version 2.0.
 
 ## SYSTEM REQUIREMENTS
 
+* BoxLang 1+
 * Lucee 5+
-* ColdFusion 2018+
+* ColdFusion 2021+
 
 
 ********************************************************************************
