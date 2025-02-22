@@ -61,6 +61,9 @@ component extends="coldbox.system.testing.BaseTestCase" {
 
 				var fileListing = getFileMailListing();
 
+				// Sleep for a second here because BL uses java.nio
+				sleep( 1000 );
+
 				debug( fileListing );
 				expect( fileListing.len() ).toBeGT( 0 );
 			} );
@@ -79,6 +82,8 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				payload.addMailParam( name = "Importance", value = "High" );
 				var results = protocol.send( payload );
 				debug( results );
+				// Sleep for a second here because BL uses java.nio
+				sleep( 1000 );
 				var fileListing = getFileMailListing();
 				debug( fileListing );
 				expect( fileListing.len() ).toBeGT( 1 );
