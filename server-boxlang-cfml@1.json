@@ -27,6 +27,6 @@
     },
     "env":{},
     "scripts":{
-        "onServerInitialInstall":"install bx-compat-cfml,bx-mail@be --noSave"
+        "onServerInitialInstall":"install bx-compat-cfml,bx-mail --noSave"
     }
 }

@@ -21,12 +21,12 @@ Sending email doesn't have to be complicated or archaic or sad 😭. The ColdBox
 
 | Protocol     	| Description |
 |---------------|-------------|
-| `CFMail` 		| Traditional sending via the `cfmail` tag. |
+| `CFMail` 		| Traditional sending via the `mail` component in the engine. |
 | `File`      	| Sends mails to a location on disk as `.html` files. |
 | `InMemory` 	| Store email mementos in an array. Perfect for testing. |
 | `Null` 		| Ignores emails send to it! |
 | `MailGun` 	| Sends mail via the Mailgun API Services (https://www.mailgun.com) |
-|`Postmark`		| Send via the PostMark API Service (https://postmarkapp.com/) |
+| `Postmark`	| Send via the PostMark API Service (https://postmarkapp.com/) |
 
 It also sports tons of useful features for mail sending:
 
