@@ -1,6 +1,6 @@
 {
     "name":"ColdBox Mail Services",
-    "version":"2.9.0",
+    "version":"2.10.0",
     "location":"https://downloads.ortussolutions.com/ortussolutions/coldbox-modules/cbmailservices/@build.version@/cbmailservices-@build.version@.zip",
     "author":"Ortus Solutions.com <info@ortussolutions.com",
     "slug":"cbmailservices",
@@ -24,7 +24,7 @@
         "Curt Gratz <gratz@computerknowhow.com>"
     ],
     "devDependencies":{
-		"commandbox-boxlang":"*",
+        "commandbox-boxlang":"*",
         "commandbox-cfformat":"*",
         "commandbox-docbox":"*"
     },
