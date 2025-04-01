@@ -118,7 +118,7 @@ component
 			" );
 			// Text or HTML Type
 			if( arguments.mail.getProperty( "type", "text" ) eq "text" ){
-				writeOutput( "<pre>#htmlCodeFormat( arguments.mail.getBody() )#</pre>" );
+				writeOutput( "<pre>#encodeForHTML( arguments.mail.getBody() )#</pre>" );
 			} else {
 				writeOutput( "#arguments.mail.getBody()#" );
 			}

@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Updated cleanup BIFS to use esapi encoding.
+
+### Added
+
+- BoxLang certification
+- Github Actions updates
+
 ## [2.8.0] - 2023-09-13
 
 ### Added
