@@ -52,6 +52,7 @@ component accessors="true" {
 			"cc"             : "",
 			"bcc"            : "",
 			"subject"        : "",
+			"tokenMarker"    : "",
 			"additionalInfo" : {}
 		};
 

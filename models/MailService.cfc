@@ -373,7 +373,7 @@ component accessors="true" singleton threadsafe {
 		var tokens      = arguments.mail.getBodyTokens();
 		var body        = arguments.mail.getBody();
 		var mailParts   = arguments.mail.getMailParts();
-		var tokenMarker = getTokenMarker();
+		var tokenMarker = len( arguments.mail.getTokenMarker() ) ? arguments.mail.getTokenMarker() : getTokenMarker();
 		var key         = "";
 
 		// Do not process tokens if using dynamic template (send-grid-protocol)
