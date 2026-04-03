@@ -408,6 +408,18 @@ component accessors="true" singleton threadsafe {
 
 		// replace back the body
 		arguments.mail.setBody( body );
+
+		// Do token replacement on the subject
+		var subject = arguments.mail.getSubject();
+		for ( var key in tokens ) {
+			subject = replaceNoCase(
+				subject,
+				"#tokenMarker##key##tokenMarker#",
+				tokens[ key ],
+				"all"
+			);
+		}
+		arguments.mail.setSubject( subject );
 	}
 
 	/******************************* PRIVATE *********************************/
