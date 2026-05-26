@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.9.0] - 2026-05-26
+
 ## [2.9.0] - 2025-04-01
 
 ### Changed
@@ -244,5 +246,5 @@ A big thanks to @richardherbert for all the updates in this release.
 - Create first module version
 
 [unreleased]: https://github.com/coldbox-modules/cbmailservices/compare/v2.9.0...HEAD
-[2.9.0]: https://github.com/coldbox-modules/cbmailservices/compare/v2.8.0...v2.9.0
+[2.9.0]: https://github.com/coldbox-modules/cbmailservices/compare/v2.9.0...v2.9.0
 [2.8.0]: https://github.com/coldbox-modules/cbmailservices/compare/df70ca56372fc3ea234f4a5940fd8901c72ca10f...v2.8.0
