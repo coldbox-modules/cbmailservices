@@ -217,7 +217,7 @@ component accessors="true" {
 	boolean function validate(){
 		if (
 			variables.config.from.len() eq 0 OR
-			variables.config.to.len() eq 0 OR
+			(variables.config.to.len() eq 0 AND variables.config.bcc.len() eq 0) OR
 			variables.config.subject.len() eq 0 OR
 			( variables.config.body.len() eq 0 AND arrayLen( variables.config.mailParts ) EQ 0 )
 		) {
