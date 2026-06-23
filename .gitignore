@@ -19,3 +19,7 @@ logs/**
 
 # Dependencies
 modules/**
+
+# AI
+.opencode/**
+.agents/skills/**
