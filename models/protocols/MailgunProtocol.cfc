@@ -156,35 +156,35 @@ component
 			var httpResults = "";
 			var apiURL      = variables.MAILGUN_APIURL & getProperty( "domain" ) & "/messages";
 
-			cfhttp
-			method       = "post"
-			url          = "#apiURL#"
-			charset      = "utf-8"
-			result       = "httpResults"
-			redirect     = "#true#"
-			throwOnError = "#false#"
-			timeout      = "#variables.DEFAULT_TIMEOUT#"
-			useragent    = "ColdFusion-cbMailServices"
-			username     = "api"
-			password     = "#getProperty( "apiKey" )#"
-			{
-				cfhttpparam type = "header" name = "Accept" value = "application/json";
+			cfhttp(
+				method       = "post",
+				url          = "#apiURL#",
+				charset      = "utf-8",
+				result       = "httpResults",
+				redirect     = "#true#",
+				throwOnError = "#false#",
+				timeout      = "#variables.DEFAULT_TIMEOUT#",
+				useragent    = "ColdFusion-cbMailServices",
+				username     = "api",
+				password     = "#getProperty( "apiKey" )#"
+			){
+				cfhttpparam( type = "header", name = "Accept", value = "application/json" );
 				arguments.messageParams.each( function( paramName, paramValue ){
-					cfhttpparam
-					type    = "formfield"
-					encoded = "no"
-					name    = "#paramName#"
-					value   = "#paramValue#"
-					;
+					cfhttpparam(
+						type    = "formfield",
+						encoded = "no",
+						name    = "#paramName#",
+						value   = "#paramValue#"
+					);
 				} );
 
 				arguments.attachments.each( function( attachment ){
-					cfhttpparam
-					type    = "file"
-					encoded = "no"
-					name    = "attachment"
-					file    = "#expandPath( attachment.file )#"
-					;
+					cfhttpparam(
+						type    = "file",
+						encoded = "no",
+						name    = "attachment",
+						file    = "#expandPath( attachment.file )#"
+					);
 				} );
 			}
 
