@@ -1,11 +1,7 @@
 ﻿/**
  * My BDD Test
  */
-component extends="coldbox.system.testing.BaseTestCase" skip="notBoxLang" {
-
-	function notBoxLang(){
-		return !isBoxLang()
-	}
+class extends="coldbox.system.testing.BaseTestCase" {
 
 	/*********************************** LIFE CYCLE Methods ***********************************/
 

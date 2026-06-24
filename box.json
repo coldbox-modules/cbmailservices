@@ -41,7 +41,7 @@
         "format":"cfformat run handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc --overwrite",
         "format:watch":"cfformat watch handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc ./.cfformat.json",
         "format:check":"cfformat check handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc ./.cfformat.json",
-        "start:fakemail":"!docker compose -f test-harness/tests/resources/docker-compose.yml up --detach",
+        "start:fakemail":"!docker compose -f test-harness/tests/resources/docker-compose.yml up --detach"
     },
     "testbox":{
         "runner":"http://localhost:60299/tests/runner.cfm"
