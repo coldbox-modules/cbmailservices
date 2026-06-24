@@ -46,7 +46,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 			it( "can send mail to files", function(){
 				var payload = variables.mailservice
 					.newMail()
-					.config(
+					.configure(
 						from = "info@coldbox.org",
 						to   = "automation@coldbox.org",
 						type = "html"
@@ -72,7 +72,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				var payload = getMockBox()
 					.createMock( className = "cbmailservices.models.Mail" )
 					.init()
-					.config(
+					.configure(
 						from    = "info@coldbox.org",
 						to      = "automation@coldbox.org",
 						subject = "Mail With Params - Hello Luis"

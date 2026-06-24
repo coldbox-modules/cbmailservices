@@ -1,4 +1,4 @@
-﻿/**
+/**
  * *******************************************************************************
  * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
  * www.ortussolutions.com
@@ -13,7 +13,7 @@
  * @author Luis Majano <lmajano@ortussolutions.com>
  */
 component
-	extends="cbmailservices.models.AbstractProtocol"
+	extends  ="cbmailservices.models.AbstractProtocol"
 	singleton
 	accessors="true"
 {
@@ -28,12 +28,12 @@ component
 		super.init( argumentCollection = arguments );
 
 		// Property Checks
-		if ( NOT propertyExists( "filePath" ) ) {
+		if ( !propertyExists( "filePath" ) ) {
 			// No API key was found, so throw an exception.
 			throw( message = "(filePath) property is required", type = "FileProtocol.PropertyNotFound" );
 		}
 		// auto expand
-		if ( NOT propertyExists( "autoExpand" ) ) {
+		if ( !propertyExists( "autoExpand" ) ) {
 			setProperty( "autoExpand", true );
 		}
 
@@ -65,8 +65,9 @@ component
 	struct function send( required cbmailservices.models.Mail payload ){
 		// The return structure
 		var rtnStruct = { "error" : true, "messages" : [] };
-		var content   = "";
-		var filePath  = getProperty( "filePath" ) & "/mail.#dateFormat( now(), "mm-dd-yyyy" )#.#timeFormat( now(), "HH-mm-ss-L" )#.html";
+		var content = "";
+		var filePath = getProperty( "filePath" ) & "/mail.#dateFormat( now(), "mm-dd-yyyy" )#.#timeFormat( now(),
+			"HH-mm-ss-L" )#.html";
 
 		// Just mail the darned thing!!
 		try {
@@ -78,7 +79,7 @@ component
 			);
 			// send success
 			rtnStruct.error = false;
-		} catch ( Any e ) {
+		} catch (Any e) {
 			arrayAppend( rtnStruct.messages, "Error sending mail. #e.message# : #e.detail# : #e.stackTrace#" );
 		}
 
@@ -92,37 +93,37 @@ component
 	private function getMailContent( required mail ){
 		// cfformat-ignore-start
 		savecontent variable="local.thisMail"{
-			writeOutput( "
-				Sent at: #dateTimeFormat( now(), "full" )#<br/>
-				<hr/>
-				Mail Attributes
-				<hr/>
-			");
-			writeDump( var=arguments.mail.getConfig() );
-			writeOutput( "
-				<hr/>
-				Mail Params
-				<hr/>
-			" );
-			writeDump( var=arguments.mail.getMailParams() );
-			writeOutput( "
-				<hr/>
-				Mail Parts
-				<hr/>
-			" );
-			writeDump( var=arguments.mail.getMailParts() );
-			writeOutput( "
-				<hr/>
-				Mail Body
-				<hr/>
-			" );
-			// Text or HTML Type
-			if( arguments.mail.getProperty( "type", "text" ) eq "text" ){
-				writeOutput( "<pre>#encodeForHTML( arguments.mail.getBody() )#</pre>" );
-			} else {
-				writeOutput( "#arguments.mail.getBody()#" );
-			}
+		writeOutput( "
+			Sent at: #dateTimeFormat( now(), "full" )#<br/>
+			<hr/>
+			Mail Attributes
+			<hr/>
+		");
+		writeDump( var=arguments.mail.getConfig() );
+		writeOutput( "
+			<hr/>
+			Mail Params
+			<hr/>
+		" );
+		writeDump( var=arguments.mail.getMailParams() );
+		writeOutput( "
+			<hr/>
+			Mail Parts
+			<hr/>
+		" );
+		writeDump( var=arguments.mail.getMailParts() );
+		writeOutput( "
+			<hr/>
+			Mail Body
+			<hr/>
+		" );
+		// Text or HTML Type
+		if( arguments.mail.getProperty( "type", "text" ) eq "text" ){
+			writeOutput( "<pre>#encodeForHTML( arguments.mail.getBody() )#</pre>" );
+		} else {
+			writeOutput( "#arguments.mail.getBody()#" );
 		}
+	}
 		// cfformat-ignore-end
 
 		return local.thisMail;

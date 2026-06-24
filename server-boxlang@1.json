@@ -25,8 +25,10 @@
     "cfconfig":{
         "file":".cfconfig.json"
     },
-    "env":{},
+    "env":{
+        "BOXLANG_DEBUG":true
+    },
     "scripts":{
-        "onServerInitialInstall":"install bx-mail --noSave"
+        "onServerInitialInstall":"install bx-mail,bx-esapi --noSave"
     }
 }

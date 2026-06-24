@@ -9,7 +9,7 @@
  * @author Eric Peterson <eric@ortussolutions.com>, Luis Majano <lmajano@ortussolutions.com>
  */
 component
-	extends="cbmailservices.models.AbstractProtocol"
+	extends  ="cbmailservices.models.AbstractProtocol"
 	singleton
 	accessors="true"
 {
@@ -18,6 +18,7 @@ component
 	 * This is the mail log for all sent mail
 	 */
 	property name="mail" type="array";
+
 
 	/**
 	 * Initialize the InMemory protocol

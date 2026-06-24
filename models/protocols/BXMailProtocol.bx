@@ -8,19 +8,17 @@
  *
  * @author Robert Rawlings, Luis Majano <lmajano@ortussolutions.com>
  */
-component
-	extends  ="cbmailservices.models.AbstractProtocol"
-	singleton
-	accessors="true"
-{
+
+@singleton
+class extends="cbmailservices.models.AbstractProtocol" {
 
 	/**
-	 * Initialize the File protocol
+	 * Initialize the Mail protocol
 	 *
 	 * @properties A map of configuration properties for the protocol
 	 */
 	function init( struct properties = {} ){
-		variables.name = "CFMail";
+		variables.name = "BXMail";
 		super.init( argumentCollection = arguments );
 		return this;
 	}
@@ -56,30 +54,29 @@ component
 
 	/**
 	 * Mail a payload according to its contents
+	 *
+	 * @payload The paylod object to send the message with
 	 */
 	private function mailIt( required payload ){
-		cfmail( attributeCollection = arguments.payload.getConfig() );
-		{
+		bx:mail attributeCollection="#arguments.payload.getConfig()#" {
 			// Output Body
 			writeOutput( "#arguments.payload.getBody()#" );
 
 			// Process mail params
 			for ( var thisParam in arguments.payload.getMailParams() ) {
 				if ( structKeyExists( thisParam, "name" ) ) {
-					cfmailparam( name = "#thisParam.name#", attributeCollection = "#thisParam#" );
+					bx:mailparam name               ="#thisParam.name#" attributeCollection="#thisParam#";
 				} else if ( structKeyExists( thisParam, "file" ) ) {
-					cfmailparam( file = "#thisParam.file#", attributeCollection = "#thisParam#" );
+					bx:mailparam file               ="#thisParam.file#" attributeCollection="#thisParam#";
 				}
 			}
 
 			// Process mail parts
 			for ( var thisPart in arguments.payload.getMailParts() ) {
-				cfmailpart( attributeCollection = "#thisPart#" );
-				{
+				bx:mailpart attributeCollection="#thisPart#" {
 					writeOutput( "#thisPart.body#" );
 				}
 			}
 		}
 	}
-
 }

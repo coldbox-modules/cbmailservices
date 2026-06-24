@@ -4,7 +4,7 @@
 component {
 
 	// Index
-	any function index( event, rc, prc ){
+	function index( event, rc, prc ){
 		prc.mailservices = getInstance( "MailService@cbmailservices" );
 
 		// Test Mail Out

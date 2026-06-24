@@ -1,7 +1,11 @@
 ﻿/**
  * My BDD Test
  */
-component extends="coldbox.system.testing.BaseTestCase" {
+component extends="coldbox.system.testing.BaseTestCase" skip="notBoxLang"{
+
+	function notBoxLang(){
+		return !isBoxLang()
+	}
 
 	/*********************************** LIFE CYCLE Methods ***********************************/
 
@@ -33,10 +37,10 @@ component extends="coldbox.system.testing.BaseTestCase" {
 
 	function run( testResults, testBox ){
 		// all your suites go here.
-		describe( "CFMail Protocol", function(){
+		describe( "BXMail Protocol", function(){
 			beforeEach( function( currentSpec ){
 				// Create a mock instance of the protocol.
-				variables.protocol = createMock( "cbmailservices.models.protocols.CFMailProtocol" ).init();
+				variables.protocol = createMock( "cbmailservices.models.protocols.BXMailProtocol" ).init();
 			} );
 
 			it( "can send mail", function(){

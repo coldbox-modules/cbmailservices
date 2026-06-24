@@ -46,7 +46,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 			it( "data is formatted for sending to mailgun", function(){
 				var payload = variables.mailservice
 					.newMail()
-					.config(
+					.configure(
 						from = "info@ortussolutions.com",
 						to   = "info@ortussolutions.com",
 						type = "html"

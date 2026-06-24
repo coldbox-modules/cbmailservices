@@ -35,6 +35,7 @@
         "/server*.json"
     ],
     "scripts":{
+		"install:dependencies":"install --force && cd test-harness && install --force",
         "build:module":"task run taskFile=build/Build.cfc :projectName=`package show slug` :version=`package show version`",
         "build:docs":"task run taskFile=build/Build.cfc target=docs :projectName=`package show slug` :version=`package show version`",
         "format":"cfformat run handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc --overwrite",
