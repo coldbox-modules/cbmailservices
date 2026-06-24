@@ -55,11 +55,7 @@ component accessors="true" {
 	 * @throws PropertyNotFoundException if the property doesn't exist
 	 */
 	function getProperty( required property, defaultValue ){
-		if (
-			variables.properties.keyExists( arguments.property ) && !isNull(
-				variables.properties[ arguments.property ]
-			)
-		) {
+		if ( variables.properties.keyExists( arguments.property ) && !isNull( variables.properties[ arguments.property ] ) ) {
 			return variables.properties[ arguments.property ];
 		}
 		if ( !isNull( arguments.defaultValue ) ) {
@@ -88,9 +84,7 @@ component accessors="true" {
 	 * @property The property key
 	 */
 	boolean function propertyExists( required property ){
-		return variables.properties.keyExists( arguments.property ) && !isNull(
-			variables.properties[ arguments.property ]
-		);
+		return variables.properties.keyExists( arguments.property ) && !isNull( variables.properties[ arguments.property ] );
 	}
 
 	/******************** TO IMPLEMENT ************************/
