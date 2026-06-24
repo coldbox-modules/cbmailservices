@@ -167,8 +167,12 @@ component
 				useragent    = "ColdFusion-cbMailServices",
 				username     = "api",
 				password     = "#getProperty( "apiKey" )#"
-			){
-				cfhttpparam( type = "header", name = "Accept", value = "application/json" );
+			) {
+				cfhttpparam(
+					type  = "header",
+					name  = "Accept",
+					value = "application/json"
+				);
 				arguments.messageParams.each( function( paramName, paramValue ){
 					cfhttpparam(
 						type    = "formfield",
