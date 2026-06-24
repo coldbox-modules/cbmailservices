@@ -13,7 +13,7 @@
  * @author Luis Majano <lmajano@ortussolutions.com>
  */
 component
-	extends  ="cbmailservices.models.AbstractProtocol"
+	extends="cbmailservices.models.AbstractProtocol"
 	singleton
 	accessors="true"
 {
@@ -65,9 +65,8 @@ component
 	struct function send( required cbmailservices.models.Mail payload ){
 		// The return structure
 		var rtnStruct = { "error" : true, "messages" : [] };
-		var content = "";
-		var filePath = getProperty( "filePath" ) & "/mail.#dateFormat( now(), "mm-dd-yyyy" )#.#timeFormat( now(),
-			"HH-mm-ss-L" )#.html";
+		var content   = "";
+		var filePath  = getProperty( "filePath" ) & "/mail.#dateFormat( now(), "mm-dd-yyyy" )#.#timeFormat( now(), "HH-mm-ss-L" )#.html";
 
 		// Just mail the darned thing!!
 		try {
@@ -79,7 +78,7 @@ component
 			);
 			// send success
 			rtnStruct.error = false;
-		} catch (Any e) {
+		} catch ( Any e ) {
 			arrayAppend( rtnStruct.messages, "Error sending mail. #e.message# : #e.detail# : #e.stackTrace#" );
 		}
 

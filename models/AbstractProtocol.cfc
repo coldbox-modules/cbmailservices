@@ -10,9 +10,7 @@
  *
  * @author Luis Majano <lmajano@ortussolutions.com>
  */
-component
-	accessors="true"
-{
+component accessors="true" {
 
 	/**
 	 * --------------------------------------------------------------------------
@@ -63,8 +61,10 @@ component
 		if ( !isNull( arguments.defaultValue ) ) {
 			return arguments.defaultValue;
 		}
-		throw( type = "PropertyNotFoundException",
-			message = "The property (#arguments.property#) doesn't exist. Valid properties are #variables.properties.keyList()#" );
+		throw(
+			type    = "PropertyNotFoundException",
+			message = "The property (#arguments.property#) doesn't exist. Valid properties are #variables.properties.keyList()#"
+		);
 	}
 
 	/**

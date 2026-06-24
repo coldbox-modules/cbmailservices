@@ -9,7 +9,7 @@
  * @author Eric Peterson <eric@ortussolutions.com>, Luis Majano <lmajano@ortussolutions.com>
  */
 component
-	extends  ="cbmailservices.models.AbstractProtocol"
+	extends="cbmailservices.models.AbstractProtocol"
 	singleton
 	accessors="true"
 {

@@ -9,9 +9,7 @@
  * @author Luis Majano <lmajano@ortussolutions.com>
  * @see    https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ConcurrentLinkedQueue.html
  */
-component
-	accessors="true"
-{
+component accessors="true" {
 
 	/**
 	 * The native java ConcurrentLinkedQueue
@@ -20,7 +18,7 @@ component
 
 	// Stupid ACF compiler bug.
 	variables[ "contains" ] = variables.has;
-	this[ "contains" ] = variables.has;
+	this[ "contains" ]      = variables.has;
 
 	/**
 	 * Constructor

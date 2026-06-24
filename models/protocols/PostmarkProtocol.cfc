@@ -10,7 +10,7 @@
  * @author Luis Majano <lmajano@ortussolutions.com>
  */
 component
-	extends  ="cbmailservices.models.AbstractProtocol"
+	extends="cbmailservices.models.AbstractProtocol"
 	singleton
 	accessors="true"
 {
@@ -21,7 +21,7 @@ component
 	 * @properties A map of configuration properties for the protocol
 	 */
 	PostmarkProtocol function init( struct properties = {} ){
-		variables.name = "Postmark";
+		variables.name            = "Postmark";
 		variables.POSTMARK_APIURL = "https://api.postmarkapp.com/email";
 		variables.DEFAULT_TIMEOUT = 30; // in seconds
 
@@ -51,32 +51,26 @@ component
 	 * @return struct of { "error" : boolean, "messages" : [], "messageID" : "" }
 	 */
 	struct function send( required cbmailservices.models.Mail payload ){
-		var results = {
-			"error"     : true,
-			"messages"  : [],
-			"messageID" : ""
-		};
+		var results = { "error" : true, "messages" : [], "messageID" : "" };
 		// The mail config data
-		var data = arguments.payload.getConfig();
+		var data    = arguments.payload.getConfig();
 
 		// Process the mail headers
-		data[ "Headers" ] = arguments
-			.payload
+		data[ "Headers" ] = arguments.payload
 			.getMailParams()
-			.filter( function( thisParam ) {
-					return structKeyExists( arguments.thisParam, "name" );
-				} );
+			.filter( function( thisParam ){
+				return structKeyExists( arguments.thisParam, "name" );
+			} );
 
 		// Process the mail attachments and encode them how postmark likes them
-		data[ "Attachments" ] = arguments
-			.payload
+		data[ "Attachments" ] = arguments.payload
 			.getMailParams()
-			.filter( function( thisParam ) {
-					return structKeyExists( arguments.thisParam, "file" );
-				} )
-			.map( function( thisParam ) {
-					return encodeAttachment( arguments.thisParam );
-				} );
+			.filter( function( thisParam ){
+				return structKeyExists( arguments.thisParam, "file" );
+			} )
+			.map( function( thisParam ){
+				return encodeAttachment( arguments.thisParam );
+			} );
 
 		// Process the body of the email according to PostMark Rules If it was set directly.
 		// https://postmarkapp.com/developer/user-guide/send-email-with-api
@@ -87,16 +81,15 @@ component
 		}
 
 		// Process the mail parts in case the body type and content was done via mail parts
-		arguments
-			.payload
+		arguments.payload
 			.getMailParts()
-			.each( function( mailPart ) {
-					if ( arguments.mailPart.type EQ "html" ) {
-						data[ "HtmlBody" ] = arguments.mailpart.body;
-					} else if ( arguments.mailpart.type EQ "plain" || arguments.mailpart.type EQ "text" ) {
-						data[ "TextBody" ] = arguments.mailpart.body;
-					}
-				} );
+			.each( function( mailPart ){
+				if ( arguments.mailPart.type EQ "html" ) {
+					data[ "HtmlBody" ] = arguments.mailpart.body;
+				} else if ( arguments.mailpart.type EQ "plain" || arguments.mailpart.type EQ "text" ) {
+					data[ "TextBody" ] = arguments.mailpart.body;
+				}
+			} );
 
 		// send to postmark
 		return sendToPostmark( serializeJSON( data ) );
@@ -108,42 +101,38 @@ component
 	 * @jsonPayload The json payload to send
 	 */
 	private function sendToPostmark( required jsonPayload ){
-		var results = {
-			"error"     : true,
-			"messages"  : [],
-			"messageID" : ""
-		};
+		var results = { "error" : true, "messages" : [], "messageID" : "" };
 
 		try {
 			var httpResults = "";
 
 			cfhttp
-				method      ="post"
-				url         ="#variables.POSTMARK_APIURL#"
-				charset     ="utf-8"
-				result      ="httpResults"
-				redirect    ="#true#"
-				throwOnError="#true#"
-				timeout     ="#variables.DEFAULT_TIMEOUT#"
-				useragent   ="ColdFusion-cbMailServices"
+			method       = "post"
+			url          = "#variables.POSTMARK_APIURL#"
+			charset      = "utf-8"
+			result       = "httpResults"
+			redirect     = "#true#"
+			throwOnError = "#true#"
+			timeout      = "#variables.DEFAULT_TIMEOUT#"
+			useragent    = "ColdFusion-cbMailServices"
 			{
-				cfhttpparam type ="header" name ="Accept" value="application/json";
-				cfhttpparam type ="header" name ="Content-type" value="application/json";
-				cfhttpparam type ="header" name ="X-Postmark-Server-Token" value="#getProperty( "apiKey" )#";
-				cfhttpparam type   ="body" encoded="no" value  ="#arguments.jsonPayload#";
+				cfhttpparam type = "header" name = "Accept" value = "application/json";
+				cfhttpparam type = "header" name = "Content-type" value = "application/json";
+				cfhttpparam type = "header" name = "X-Postmark-Server-Token" value = "#getProperty( "apiKey" )#";
+				cfhttpparam type = "body" encoded = "no" value = "#arguments.jsonPayload#";
 			}
 
 			// Inflate HTTP Results
 			var postmarkResults = deserializeJSON( httpResults.fileContent.toString() );
 			// Process Postmark Results
 			if ( postmarkResults.message EQ "OK" ) {
-				results.error = false;
+				results.error     = false;
 				results.messageID = postmarkResults[ "MessageID" ];
 			} else // Test Messages
 			if ( findNoCase( "Test job", postmarkResults.message ) && postmarkResults.errorCode EQ 0 ) {
-				results.error = false;
+				results.error     = false;
 				results.messageID = postmarkResults[ "MessageID" ];
-				results.messages = [ "Test job accepted"];
+				results.messages  = [ "Test job accepted" ];
 			} else // Exceptions
 			{
 				results.messages = [
@@ -151,8 +140,8 @@ component
 					postmarkResults
 				];
 			}
-		} catch (any e) {
-			results.messages = [ "Error sending mail. #e.message# : #e.detail# : #e.stackTrace#"];
+		} catch ( any e ) {
+			results.messages = [ "Error sending mail. #e.message# : #e.detail# : #e.stackTrace#" ];
 		}
 
 		return results;
@@ -168,8 +157,8 @@ component
 			"Name"        : getFileFromPath( arguments.mailParam.file ),
 			"Content"     : toBase64( fileReadBinary( arguments.mailParam.file ) ),
 			"ContentType" : isNull( arguments.mailparam.fileType )
-				? getFileMimeType( arguments.mailParam.file )
-				: arguments.mailParam.fileType
+			 ? getFileMimeType( arguments.mailParam.file )
+			 : arguments.mailParam.fileType
 		};
 	}
 

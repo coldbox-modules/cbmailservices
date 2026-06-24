@@ -12,9 +12,7 @@
  *
  * @author Luis Majano <lmajano@ortussolutions.com>
  */
-component
-	accessors="true"
-{
+component accessors="true" {
 
 	/**
 	 * --------------------------------------------------------------------------
@@ -68,7 +66,7 @@ component
 			"additionalInfo" : {}
 		};
 
-		variables.mailer = "default";
+		variables.mailer  = "default";
 		variables.results = {};
 
 		return this.configure( argumentCollection = arguments );
@@ -89,8 +87,10 @@ component
 		if ( !isNull( arguments.defaultValue ) ) {
 			return arguments.defaultValue;
 		}
-		throw( type = "PropertyNotFoundException",
-			message = "The property (#arguments.property#) doesn't exist. Valid properties are #variables.config.keyList()#" );
+		throw(
+			type    = "PropertyNotFoundException",
+			message = "The property (#arguments.property#) doesn't exist. Valid properties are #variables.config.keyList()#"
+		);
 	}
 
 	/**
@@ -182,16 +182,20 @@ component
 	function onMissingMethod( missingMethodName, missingMethodArguments = {} ){
 		// Dynamic Getter: getServer(), getUsername(), getFrom( "default" )
 		if ( left( arguments.missingMethodName, 3 ) == "get" ) {
-			return this.getProperty( property = arguments.missingMethodName.replaceNoCase( "get", "" ),
-					defaultValue = structCount( missingMethodArguments )
-						? missingMethodArguments[ 1 ]
-						: javacast( "null", "" ) );
+			return this.getProperty(
+				property     = arguments.missingMethodName.replaceNoCase( "get", "" ),
+				defaultValue = structCount( missingMethodArguments )
+				 ? missingMethodArguments[ 1 ]
+				 : javacast( "null", "" )
+			);
 		}
 
 		// Dynamic Setter: setFrom( "value" ), setFrom() same as setFrom( "" )
 		if ( left( arguments.missingMethodName, 3 ) == "set" ) {
-			return this.setProperty( property = arguments.missingMethodName.replaceNoCase( "set", "" ),
-					value = structCount( missingMethodArguments ) ? missingMethodArguments[ 1 ] : "" );
+			return this.setProperty(
+				property = arguments.missingMethodName.replaceNoCase( "set", "" ),
+				value    = structCount( missingMethodArguments ) ? missingMethodArguments[ 1 ] : ""
+			);
 		}
 
 		throw(
@@ -209,13 +213,7 @@ component
 			throw(
 				type    = "InvalidMailException",
 				message = "One or more required fields are missing.",
-				detail  = "Please check the basic mail fields of To, From, Subject and Body as they are empty. To: #variables.config.to#, From: #variables.config.from#, Subject Len = #variables
-					.config
-					.subject
-					.len()#, Body Len = #variables
-					.config
-					.body
-					.len()#."
+				detail  = "Please check the basic mail fields of To, From, Subject and Body as they are empty. To: #variables.config.to#, From: #variables.config.from#, Subject Len = #variables.config.subject.len()#, Body Len = #variables.config.body.len()#."
 			);
 		}
 		return this;
@@ -226,29 +224,17 @@ component
 	 */
 	boolean function validate(){
 		if (
-			variables
-								.config
-								.from
-								.len() EQ
-							0 ||
-						variables
-								.config
-								.to
-								.len() EQ
-							0 ||
-					variables
-							.config
-							.subject
-							.len() EQ
-						0 ||
-				(
-					variables
-								.config
-								.body
-								.len() EQ
-							0 &&
-						arrayLen( variables.config.mailParts ) EQ 0
-				)
+			variables.config.from.len() EQ
+			0 ||
+			variables.config.to.len() EQ
+			0 ||
+			variables.config.subject.len() EQ
+			0 ||
+			(
+				variables.config.body.len() EQ
+				0 &&
+				arrayLen( variables.config.mailParts ) EQ 0
+			)
 		) {
 			return false;
 		} else {
@@ -264,8 +250,8 @@ component
 	 */
 	any function getAdditionalInfoItem( required key, defaultValue = "" ){
 		return structKeyExists( variables.config.additionalInfo, arguments.key )
-			? variables.config.additionalInfo[ arguments.key ]
-			: arguments.defaultValue;
+		 ? variables.config.additionalInfo[ arguments.key ]
+		 : arguments.defaultValue;
 	}
 
 	/**
@@ -398,20 +384,14 @@ component
 	 * Send this mail payload and return itself
 	 */
 	Mail function send(){
-		return variables
-			.wirebox
-			.getInstance( "MailService@cbmailservices" )
-			.send( this );
+		return variables.wirebox.getInstance( "MailService@cbmailservices" ).send( this );
 	}
 
 	/**
 	 * Send this mail payload asynchronously and return a Future
 	 */
 	function sendAsync(){
-		return variables
-			.wirebox
-			.getInstance( "MailService@cbmailservices" )
-			.sendAsync( this );
+		return variables.wirebox.getInstance( "MailService@cbmailservices" ).sendAsync( this );
 	}
 
 	/**
@@ -420,10 +400,7 @@ component
 	 * @return A unique identifier for the task that was registered for you.
 	 */
 	string function queue(){
-		return variables
-			.wirebox
-			.getInstance( "MailService@cbmailservices" )
-			.queue( this );
+		return variables.wirebox.getInstance( "MailService@cbmailservices" ).queue( this );
 	}
 
 	/**
@@ -487,8 +464,8 @@ component
 	 */
 	Mail function setView(
 		required view,
-		struct args  = {},
-		module       = "",
+		struct args = {},
+		module      = "",
 		layout,
 		layoutModule = ""
 	){
@@ -498,19 +475,19 @@ component
 		// Do we have a layout?
 		if ( !isNull( arguments.layout ) && len( arguments.layout ) ) {
 			variables.config.body = variables.renderer.layout(
-					layout     = arguments.layout,
-					module     = arguments.layoutModule,
-					view       = arguments.view,
-					args       = arguments.args,
-					viewModule = arguments.module
-				);
+				layout     = arguments.layout,
+				module     = arguments.layoutModule,
+				view       = arguments.view,
+				args       = arguments.args,
+				viewModule = arguments.module
+			);
 		} else // Else, plain view rendering
 		{
 			variables.config.body = variables.renderer.view(
-					view   = arguments.view,
-					args   = arguments.args,
-					module = arguments.module
-				);
+				view   = arguments.view,
+				args   = arguments.args,
+				module = arguments.module
+			);
 		}
 
 		return this;

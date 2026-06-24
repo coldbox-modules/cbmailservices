@@ -9,7 +9,7 @@
  * @author Robert Rawlings, Luis Majano <lmajano@ortussolutions.com>
  */
 component
-	extends  ="cbmailservices.models.AbstractProtocol"
+	extends="cbmailservices.models.AbstractProtocol"
 	singleton
 	accessors="true"
 {
@@ -46,7 +46,7 @@ component
 			mailIt( arguments.payload );
 			// send success
 			results.error = false;
-		} catch (Any e) {
+		} catch ( Any e ) {
 			arrayAppend( results.messages, "Error sending mail. #e.message# : #e.detail# : #e.stackTrace#" );
 		}
 

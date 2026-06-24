@@ -1,7 +1,7 @@
 ﻿/**
  * My BDD Test
  */
-component extends="coldbox.system.testing.BaseTestCase" skip="notBoxLang"{
+component extends="coldbox.system.testing.BaseTestCase" skip="notBoxLang" {
 
 	function notBoxLang(){
 		return !isBoxLang()

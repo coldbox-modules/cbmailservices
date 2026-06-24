@@ -8,11 +8,7 @@
  *
  * @author Luis Majano <lmajano@ortussolutions.com>
  */
-component
-	accessors="true"
-	singleton
-	threadsafe
-{
+component accessors="true" singleton threadsafe {
 
 	/**
 	 * --------------------------------------------------------------------------
@@ -21,13 +17,13 @@ component
 	 */
 	property name="inteceptorService" inject="box:interceptorService";
 
-	property name="settings"          inject="box:moduleSettings:cbmailservices";
+	property name="settings" inject="box:moduleSettings:cbmailservices";
 
-	property name="wirebox"           inject="wirebox";
+	property name="wirebox" inject="wirebox";
 
-	property name="asyncManager"      inject="box:asyncManager";
+	property name="asyncManager" inject="box:asyncManager";
 
-	property name="log"               inject="logbox:logger:{this}";
+	property name="log" inject="logbox:logger:{this}";
 
 	/**
 	 * --------------------------------------------------------------------------
@@ -66,11 +62,11 @@ component
 	 */
 	MailService function init(){
 		// Register Defaults
-		variables.tokenMarker = "@";
+		variables.tokenMarker     = "@";
 		variables.defaultSettings = {};
 		variables.defaultProtocol = "default";
-		variables.mailers = { "default" : { class : "CFMail" } };
-		variables.mailQueue = new ConcurrentLinkedQueue();
+		variables.mailers         = { "default" : { class : "CFMail" } };
+		variables.mailQueue       = new ConcurrentLinkedQueue();
 
 		// Register core protocols
 		variables.registeredProtocols = {
@@ -90,7 +86,7 @@ component
 	 */
 	function onDIComplete(){
 		// Store Mail Token Symbol from settings
-		variables.tokenMarker = variables.settings.tokenMarker;
+		variables.tokenMarker     = variables.settings.tokenMarker;
 		// Store Default Protocol by name
 		variables.defaultProtocol = variables.settings.defaultProtocol;
 		// Store Defaults from settings if any
@@ -115,8 +111,10 @@ component
 		if ( !isNull( arguments.defaultValue ) ) {
 			return arguments.defaultValue;
 		}
-		throw( type = "SettingNotFoundException",
-			message = "The setting you requested #arguments.setting# does not exist. Valid settings are #variables.defaultSettings.keyList()#" );
+		throw(
+			type    = "SettingNotFoundException",
+			message = "The setting you requested #arguments.setting# does not exist. Valid settings are #variables.defaultSettings.keyList()#"
+		);
 	}
 
 	/**
@@ -143,24 +141,28 @@ component
 	MailService function registerMailers( required struct mailers ){
 		// Check the default protocol is in the mailers
 		if ( !structKeyExists( arguments.mailers, variables.defaultProtocol ) ) {
-			throw( type = "InvalidDefaultProtocol",
-				message = "The default protocol (#variables.defaultProtocol#) does not exist in the registered mailers (#arguments.mailers.keyList()#)" );
+			throw(
+				type    = "InvalidDefaultProtocol",
+				message = "The default protocol (#variables.defaultProtocol#) does not exist in the registered mailers (#arguments.mailers.keyList()#)"
+			);
 		}
 
 		// Build out the mailers
 		variables.mailers = arguments.mailers.map( ( key, definition ) => {
-					param arguments.definition.properties = {};
-					param arguments.definition.transit = "";
+			param arguments.definition.properties = {};
+			param arguments.definition.transit    = "";
 
-					if ( structKeyExists( variables.registeredProtocols, arguments.definition.class ) ) {
-						arguments.definition.class = variables.registeredProtocols[ arguments.definition.class ];
-					}
+			if ( structKeyExists( variables.registeredProtocols, arguments.definition.class ) ) {
+				arguments.definition.class = variables.registeredProtocols[ arguments.definition.class ];
+			}
 
-					arguments.definition.transit = variables.wirebox.getInstance( name = arguments.definition.class,
-							initArguments = { "properties" : arguments.definition.properties } );
+			arguments.definition.transit = variables.wirebox.getInstance(
+				name          = arguments.definition.class,
+				initArguments = { "properties" : arguments.definition.properties }
+			);
 
-					return arguments.definition;
-				} );
+			return arguments.definition;
+		} );
 
 		return this;
 	}
@@ -191,8 +193,10 @@ component
 		}
 
 		// Build it out
-		thisMailer.transit = variables.wirebox.getInstance( name = arguments.class,
-				initArguments = { "properties" : arguments.properties } );
+		thisMailer.transit = variables.wirebox.getInstance(
+			name          = arguments.class,
+			initArguments = { "properties" : arguments.properties }
+		);
 
 		// Register it now
 		variables.mailers[ arguments.name ] = thisMailer;
@@ -220,8 +224,10 @@ component
 		if ( structKeyExists( variables.mailers, arguments.name ) ) {
 			return variables.mailers[ arguments.name ];
 		}
-		throw( message = "Mailer (#arguments.name#) not registered. Valid mailers are #variables.mailers.keyList()#",
-			type = "UnregisteredMailerException" );
+		throw(
+			message = "Mailer (#arguments.name#) not registered. Valid mailers are #variables.mailers.keyList()#",
+			type    = "UnregisteredMailerException"
+		);
 	}
 
 	/**
@@ -237,11 +243,7 @@ component
 	 */
 	Mail function newMail(){
 		// Append defaults to incoming arguments
-		structAppend(
-			arguments,
-			variables.defaultSettings,
-			false
-		);
+		structAppend( arguments, variables.defaultSettings, false );
 		// Build out a new payload
 		var oMail = variables.wirebox.getInstance( name = "Mail@cbmailservices", initArguments = arguments );
 		// Set the right mailer
@@ -260,17 +262,11 @@ component
 		// Validate Basic Mail Fields and error out
 		if ( !arguments.mail.validate() ) {
 			arguments.mail.setResults( {
-						"error"    : true,
-						"messages" : [
-							"Please check the basic mail fields of To, From, Subject and Body as they are empty. To: #arguments.mail.getTo()#, From: #arguments.mail.getFrom()#, Subject Len = #arguments
-								.mail
-								.getSubject()
-								.length()#, Body Len = #arguments
-								.mail
-								.getBody()
-								.length()#."
-						]
-					} );
+				"error"    : true,
+				"messages" : [
+					"Please check the basic mail fields of To, From, Subject and Body as they are empty. To: #arguments.mail.getTo()#, From: #arguments.mail.getFrom()#, Subject Len = #arguments.mail.getSubject().length()#, Body Len = #arguments.mail.getBody().length()#."
+				]
+			} );
 			log.error( "Mail object does not validate." );
 			return arguments.mail;
 		}
@@ -292,16 +288,12 @@ component
 			arguments.mail.setResults( results );
 			// announce interception point after mail send
 			variables.inteceptorService.announce( "postMailSend", { mail : arguments.mail, result : results } );
-		} catch (Any e) {
+		} catch ( Any e ) {
 			arguments.mail.setResults( {
-						"error"    : true,
-						"messages" : [ "Error sending mail. #e.message# : #e.detail# : #e.stackTrace#"]
-					} );
-			log.error( arguments
-						.mail
-						.getResultMessages()
-						.toString(),
-					e );
+				"error"    : true,
+				"messages" : [ "Error sending mail. #e.message# : #e.detail# : #e.stackTrace#" ]
+			} );
+			log.error( arguments.mail.getResultMessages().toString(), e );
 		}
 
 		return arguments.mail;
@@ -315,9 +307,9 @@ component
 	 * @return ColdBox Future object: coldbox.system.async.tasks.Future
 	 */
 	function sendAsync( required mail ){
-		return variables.asyncManager.newFuture( function() {
-					return this.send( mail );
-				} );
+		return variables.asyncManager.newFuture( function(){
+			return this.send( mail );
+		} );
 	}
 
 	/**
@@ -330,13 +322,13 @@ component
 	string function queue( required mail ){
 		var taskId = createUUID();
 		variables.mailQueue.offer( {
-					"id"       : taskId,
-					"mail"     : arguments.mail,
-					"created"  : now(),
-					"ran"      : "",
-					"errors"   : false,
-					"messages" : []
-				} );
+			"id"       : taskId,
+			"mail"     : arguments.mail,
+			"created"  : now(),
+			"ran"      : "",
+			"errors"   : false,
+			"messages" : []
+		} );
 		return taskId;
 	}
 
@@ -354,14 +346,17 @@ component
 			// take the payload head and remove it (FIFO)
 			var payload = variables.mailQueue.poll();
 			// Send it
-			this
-				.send( payload.mail )
-				.onSuccess( function( results, mail ) {
-						log.info( "Mail payload id (#payload.id#) to (#arguments.mail.getTo()#) with subject (#arguments.mail.getSubject()#) sent successfully!" );
-					} )
-				.onError( function( results, mail ) {
-						log.error( "Mail payload id (#payload.id#) to (#arguments.mail.getTo()#) with subject (#arguments.mail.getSubject()#) failed to send (#results.messages.toString()#)!" );
-					} );
+			this.send( payload.mail )
+				.onSuccess( function( results, mail ){
+					log.info(
+						"Mail payload id (#payload.id#) to (#arguments.mail.getTo()#) with subject (#arguments.mail.getSubject()#) sent successfully!"
+					);
+				} )
+				.onError( function( results, mail ){
+					log.error(
+						"Mail payload id (#payload.id#) to (#arguments.mail.getTo()#) with subject (#arguments.mail.getSubject()#) failed to send (#results.messages.toString()#)!"
+					);
+				} );
 		}
 
 		log.debug( "Finished processing mail queue" );
@@ -373,11 +368,11 @@ component
 	 * @mail The mail payload to use for parsing and usage.
 	 */
 	function parseTokens( required mail ){
-		var tokens = arguments.mail.getBodyTokens();
-		var body = arguments.mail.getBody();
-		var mailParts = arguments.mail.getMailParts();
+		var tokens      = arguments.mail.getBodyTokens();
+		var body        = arguments.mail.getBody();
+		var mailParts   = arguments.mail.getMailParts();
 		var tokenMarker = getTokenMarker();
-		var key = "";
+		var key         = "";
 
 		// Do not process tokens if using dynamic template (send-grid-protocol)
 		if ( arguments.mail.propertyExists( "type" ) && arguments.mail.getType() == "template" ) {

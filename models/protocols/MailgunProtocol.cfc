@@ -14,7 +14,7 @@
  * @author Scott Steinbeck <ssteinbeck@agritrackingsystems.com>
  */
 component
-	extends  ="cbmailservices.models.AbstractProtocol"
+	extends="cbmailservices.models.AbstractProtocol"
 	singleton
 	accessors="true"
 {
@@ -25,7 +25,7 @@ component
 	 * @properties A map of configuration properties for the protocol
 	 */
 	MailgunProtocol function init( struct properties = {} ){
-		variables.name = "Mailgun";
+		variables.name            = "Mailgun";
 		variables.DEFAULT_TIMEOUT = 30; // in seconds
 		// super size it
 		super.init( argumentCollection = arguments );
@@ -67,18 +67,10 @@ component
 	 * @return struct of { "error" : boolean, "messages" : [], "messageID" : "" }
 	 */
 	struct function send( required cbmailservices.models.Mail payload ){
-		var results = {
-			"error"     : true,
-			"messages"  : [],
-			"messageID" : ""
-		};
+		var results    = { "error" : true, "messages" : [], "messageID" : "" };
 		// The mail config data
-		var data = arguments.payload.getConfig();
-		var headerKeys = [
-			"v:",
-			"o:",
-			"h:"
-		];
+		var data       = arguments.payload.getConfig();
+		var headerKeys = [ "v:", "o:", "h:" ];
 
 		// Special attribute for Reply To
 		if ( data.keyExists( "replyto" ) && !isNull( data[ "replyto" ] ) ) {
@@ -93,39 +85,37 @@ component
 		}
 
 		// Process the mail headers
-		arguments
-			.payload
+		arguments.payload
 			.getMailParams()
-			.filter( function( thisParam ) {
-					return structKeyExists( arguments.thisParam, "name" );
-				} )
-			.each( function( header ) {
-					var key = header.name;
-					if ( !headerKeys.find( left( key, 2 ) ) ) {
-						key = "h:" & key;
-					}
-					data[ key ] = header.value;
-				} );
+			.filter( function( thisParam ){
+				return structKeyExists( arguments.thisParam, "name" );
+			} )
+			.each( function( header ){
+				var key = header.name;
+				if ( !headerKeys.find( left( key, 2 ) ) ) {
+					key = "h:" & key;
+				}
+				data[ key ] = header.value;
+			} );
 
-		data[ "additionalInfo" ].each( function( infoKey, infoValue ) {
-					data[ infoKey ] = infoValue;
-				} );
+		data[ "additionalInfo" ].each( function( infoKey, infoValue ){
+			data[ infoKey ] = infoValue;
+		} );
 
 		data.delete( "additionalInfo" ); // cleanup payload
 
-		data[ "bodyTokens" ].each( function( tokenKey, tokenValue ) {
-					data[ "v:" & tokenKey ] = tokenValue;
-				} );
+		data[ "bodyTokens" ].each( function( tokenKey, tokenValue ){
+			data[ "v:" & tokenKey ] = tokenValue;
+		} );
 
 		data.delete( "bodyTokens" ); // cleanup payload
 
 		// Process the mail attachments and encode them how mailgun likes them
-		var attachments = arguments
-			.payload
+		var attachments = arguments.payload
 			.getMailParams()
-			.filter( function( thisParam ) {
-					return structKeyExists( arguments.thisParam, "file" );
-				} );
+			.filter( function( thisParam ){
+				return structKeyExists( arguments.thisParam, "file" );
+			} );
 
 		// Process the body of the email according to Mailgun Rules If it was set directly.
 		// https://mailgunapp.com/developer/user-guide/send-email-with-api
@@ -136,16 +126,15 @@ component
 		}
 
 		// Process the mail parts in case the body type and content was done via mail parts
-		arguments
-			.payload
+		arguments.payload
 			.getMailParts()
-			.each( function( mailPart ) {
-					if ( arguments.mailPart.type EQ "html" ) {
-						data[ "html" ] = arguments.mailpart.body;
-					} else if ( arguments.mailpart.type EQ "plain" || arguments.mailpart.type EQ "text" ) {
-						data[ "text" ] = arguments.mailpart.body;
-					}
-				} );
+			.each( function( mailPart ){
+				if ( arguments.mailPart.type EQ "html" ) {
+					data[ "html" ] = arguments.mailpart.body;
+				} else if ( arguments.mailpart.type EQ "plain" || arguments.mailpart.type EQ "text" ) {
+					data[ "text" ] = arguments.mailpart.body;
+				}
+			} );
 
 		// clean up unnecessary keys in payload
 		data.delete( "mailParams" );
@@ -161,46 +150,42 @@ component
 	 * @jsonPayload The json payload to send
 	 */
 	private function sendToMailgun( required messageParams, attachments = [] ){
-		var results = {
-			"error"     : true,
-			"messages"  : [],
-			"messageID" : ""
-		};
+		var results = { "error" : true, "messages" : [], "messageID" : "" };
 
 		try {
 			var httpResults = "";
-			var apiURL = variables.MAILGUN_APIURL & getProperty( "domain" ) & "/messages";
+			var apiURL      = variables.MAILGUN_APIURL & getProperty( "domain" ) & "/messages";
 
 			cfhttp
-				method      ="post"
-				url         ="#apiURL#"
-				charset     ="utf-8"
-				result      ="httpResults"
-				redirect    ="#true#"
-				throwOnError="#false#"
-				timeout     ="#variables.DEFAULT_TIMEOUT#"
-				useragent   ="ColdFusion-cbMailServices"
-				username    ="api"
-				password    ="#getProperty( "apiKey" )#"
+			method       = "post"
+			url          = "#apiURL#"
+			charset      = "utf-8"
+			result       = "httpResults"
+			redirect     = "#true#"
+			throwOnError = "#false#"
+			timeout      = "#variables.DEFAULT_TIMEOUT#"
+			useragent    = "ColdFusion-cbMailServices"
+			username     = "api"
+			password     = "#getProperty( "apiKey" )#"
 			{
-				cfhttpparam type ="header" name ="Accept" value="application/json";
-				arguments.messageParams.each( function( paramName, paramValue ) {
-							cfhttpparam
-								type   ="formfield"
-								encoded="no"
-								name   ="#paramName#"
-								value  ="#paramValue#"
-							;
-						} );
+				cfhttpparam type = "header" name = "Accept" value = "application/json";
+				arguments.messageParams.each( function( paramName, paramValue ){
+					cfhttpparam
+					type    = "formfield"
+					encoded = "no"
+					name    = "#paramName#"
+					value   = "#paramValue#"
+					;
+				} );
 
-				arguments.attachments.each( function( attachment ) {
-							cfhttpparam
-								type   ="file"
-								encoded="no"
-								name   ="attachment"
-								file   ="#expandPath( attachment.file )#"
-							;
-						} );
+				arguments.attachments.each( function( attachment ){
+					cfhttpparam
+					type    = "file"
+					encoded = "no"
+					name    = "attachment"
+					file    = "#expandPath( attachment.file )#"
+					;
+				} );
 			}
 
 			// Inflate HTTP Results
@@ -216,19 +201,17 @@ component
 
 			// Process Mailgun Results
 			if ( mailgunResults.message EQ "Queued. Thank you." ) {
-				results.error = false;
+				results.error     = false;
 				results.messageID = mailgunResults[ "id" ];
-				if (
-					arguments.messageParams.keyExists( "o:testmode" ) && arguments.messageParams[ "o:testmode" ]
-				) {
-					results.messages = [ "Test message sent"];
+				if ( arguments.messageParams.keyExists( "o:testmode" ) && arguments.messageParams[ "o:testmode" ] ) {
+					results.messages = [ "Test message sent" ];
 				}
 			} else // Exceptions
 			{
-				results.messages = [ mailgunResults[ "Message" ], mailgunResults];
+				results.messages = [ mailgunResults[ "Message" ], mailgunResults ];
 			}
-		} catch (any e) {
-			results.messages = [ "Error sending mail. #e.message# : #e.detail# : #e.stackTrace#"];
+		} catch ( any e ) {
+			results.messages = [ "Error sending mail. #e.message# : #e.detail# : #e.stackTrace#" ];
 		}
 
 		return results;
