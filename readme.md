@@ -79,7 +79,7 @@ moduleSettings = {
         // Whether the scheduled task is running or not
         runQueueTask : true
     }
-};
+}
 ```
 
 ### Via Module Config Override
@@ -108,7 +108,7 @@ component {
                 cc   : "sales@mydomain.com"
             },
             runQueueTask : true
-        };
+        }
     }
 }
 ```
@@ -124,7 +124,7 @@ class {
             mailers         : { ... },
             defaults        : { from : "info@mydomain.com", cc : "sales@mydomain.com" },
             runQueueTask    : true
-        };
+        }
     }
 }
 ```
@@ -158,7 +158,6 @@ Apache License, Version 2.0.
 * BoxLang 1+ (Preferred)
 * Lucee 6+
 * ColdFusion 2023+
-
 
 ********************************************************************************
 Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
