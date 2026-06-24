@@ -35,28 +35,12 @@
         "/server*.json"
     ],
     "scripts":{
-        "release":"recipe build/release.boxr",
         "build:module":"task run taskFile=build/Build.cfc :projectName=`package show slug` :version=`package show version`",
         "build:docs":"task run taskFile=build/Build.cfc target=docs :projectName=`package show slug` :version=`package show version`",
         "format":"cfformat run handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc --overwrite",
         "format:watch":"cfformat watch handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc ./.cfformat.json",
         "format:check":"cfformat check handlers/,interceptors/,models/,test-harness/tests/specs,ModuleConfig.cfc ./.cfformat.json",
         "start:fakemail":"!docker compose -f test-harness/tests/resources/docker-compose.yml up --detach",
-        "start:lucee":"server start serverConfigFile=server-lucee@6.json",
-        "start:2023":"server start serverConfigFile=server-adobe@2023.json",
-        "start:2025":"server start serverConfigFile=server-adobe@2025.json",
-        "start:boxlang":"server start serverConfigFile=server-boxlang@1.json",
-        "start:boxlang-cfml":"server start serverConfigFile=server-boxlang-cfml@1.json",
-        "stop:lucee":"server stop serverConfigFile=server-lucee@6.json",
-        "stop:2023":"server stop serverConfigFile=server-adobe@2023.json",
-        "stop:2025":"server stop serverConfigFile=server-adobe@2025.json",
-        "stop:boxlang":"server stop serverConfigFile=server-boxlang@1.json",
-        "stop:boxlang-cfml":"server stop serverConfigFile=server-boxlang-cfml@1.json",
-        "logs:lucee":"server log serverConfigFile=server-lucee@6.json --follow",
-        "logs:2023":"server log serverConfigFile=server-adobe@2023.json --follow",
-        "logs:2025":"server log serverConfigFile=server-adobe@2025.json --follow",
-        "logs:boxlang":"server log serverConfigFile=server-boxlang@1.json --follow",
-        "logs:boxlang-cfml":"server log serverConfigFile=server-boxlang-cfml@1.json --follow"
     },
     "testbox":{
         "runner":"http://localhost:60299/tests/runner.cfm"

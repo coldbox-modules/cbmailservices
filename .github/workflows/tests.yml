@@ -18,16 +18,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        cfengine: [ "boxlang-cfml@1", "adobe@2023", "adobe@2025", "boxlang@1", "lucee@6" ]
+        cfengine: [ "boxlang-cfml@1", "adobe@2023", "adobe@2025", "boxlang@1", "lucee@6" , "lucee@7" ]
         coldboxVersion: [ "^8.0.0" ]
         experimental: [ false ]
         # Experimental: ColdBox BE vs All Engines
         include:
           - coldboxVersion: "be"
             cfengine: "boxlang-cfml@1"
-            experimental: true
-          - coldboxVersion: "be"
-            cfengine: "adobe@2023"
             experimental: true
           - coldboxVersion: "be"
             cfengine: "adobe@2025"
@@ -37,6 +34,9 @@ jobs:
             experimental: true
           - coldboxVersion: "be"
             cfengine: "lucee@6"
+            experimental: true
+          - coldboxVersion: "be"
+            cfengine: "lucee@7"
             experimental: true
     steps:
       - name: Checkout Repository
@@ -104,7 +104,7 @@ jobs:
 
       - name: Upload Test Results to Artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-results-${{ matrix.cfengine }}-${{ matrix.coldboxVersion }}
           path: |
@@ -117,7 +117,7 @@ jobs:
 
       - name: Upload Debug Logs To Artifacts
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Failure Debugging Info - ${{ matrix.cfengine }} - ${{ matrix.coldboxVersion }}
           path: |
