@@ -58,7 +58,7 @@ component
 	 * Mail a payload according to its contents
 	 */
 	private function mailIt( required payload ){
-		cfmail( attributeCollection = arguments.payload.getConfig() ){
+		cfmail( attributeCollection = arguments.payload.getConfig() ) {
 			// Output Body
 			writeOutput( "#arguments.payload.getBody()#" );
 
