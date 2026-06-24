@@ -21,7 +21,8 @@ Sending email doesn't have to be complicated or archaic or sad 😭. The ColdBox
 
 | Protocol     	| Description |
 |---------------|-------------|
-| `CFMail` 		| Traditional sending via the `mail` component in the engine. |
+| `BXMail` 		| Sending mail via BoxLang's `bx:mail` component |
+| `CFMail` 		| Traditional sending via the `mail` component in a CFML engine. |
 | `File`      	| Sends mails to a location on disk as `.html` files. |
 | `InMemory` 	| Store email mementos in an array. Perfect for testing. |
 | `Null` 		| Ignores emails send to it! |
@@ -44,17 +45,100 @@ It also sports tons of useful features for mail sending:
 Note: One of the features is the ability to queue emails for asynchronous (non-blocking) sending. This is done via a task runner which is on by default.
 This feature can be turned off, if desired, by these steps:
 
-1. Open config/coldbox.cfc
+## Configuration
 
-2. In the modulesSettings section, add a key for cbmailServices with the property `runQueueTask` set to `false`.
+There are two ways to configure cbmailservices in your application.
 
-```
+### Via `moduleSettings` in `ColdBox.cfc` / `ColdBox.bx`
+
+Add a `cbmailservices` key under `moduleSettings`:
+
+```javascript
+// config/ColdBox.cfc or config/ColdBox.bx
 moduleSettings = {
-	cbmailServices : {
-		runQueueTask: false
-	}
+    cbmailservices = {
+        // The default token Marker Symbol
+        tokenMarker     : "@",
+        // Default protocol to use, it must be defined in the mailers configuration
+        defaultProtocol : "default",
+        // Here you can register one or many mailers by name
+        mailers         : {
+            "default"  : { class : "CFMail" },
+            "files"    : { class : "File",    properties : { filePath : "/logs" } },
+            "postmark" : { class : "Postmark", properties : { apiKey : "234" } },
+            "mailgun"  : { class : "Mailgun",  properties : {
+                apiKey : "234",
+                domain : "mailgun.example.com"
+            } }
+        },
+        // The defaults for all mail config payloads and protocols
+        defaults : {
+            from : "info@mydomain.com",
+            cc   : "sales@mydomain.com"
+        },
+        // Whether the scheduled task is running or not
+        runQueueTask : true
+    }
 }
 ```
+
+### Via Module Config Override
+
+Create a dedicated configuration file at `config/modules/cbmailservices.cfc` (CFML) or `config/modules/cbmailservices.bx` (BoxLang). This keeps your mail configuration separate from the main app config.
+
+**CFML (`config/modules/cbmailservices.cfc`):**
+
+```javascript
+component {
+    function configure(){
+        return {
+            tokenMarker     : "@",
+            defaultProtocol : "default",
+            mailers         : {
+                "default"  : { class : "CFMail" },
+                "files"    : { class : "File",    properties : { filePath : "/logs" } },
+                "postmark" : { class : "Postmark", properties : { apiKey : "234" } },
+                "mailgun"  : { class : "Mailgun",  properties : {
+                    apiKey : "234",
+                    domain : "mailgun.example.com"
+                } }
+            },
+            defaults : {
+                from : "info@mydomain.com",
+                cc   : "sales@mydomain.com"
+            },
+            runQueueTask : true
+        }
+    }
+}
+```
+
+**BoxLang (`config/modules/cbmailservices.bx`):**
+
+```java
+class {
+    function configure(){
+        return {
+            tokenMarker     : "@",
+            defaultProtocol : "default",
+            mailers         : { ... },
+            defaults        : { from : "info@mydomain.com", cc : "sales@mydomain.com" },
+            runQueueTask    : true
+        }
+    }
+}
+```
+
+### Configuration Reference
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `tokenMarker` | `@` | Character used for mail merge token delimiters (`@{key}@`) |
+| `defaultProtocol` | `"default"` | The mailer key to use by default |
+| `mailers` | `{ default: { class: "CFMail" } }` | Struct of named mailer protocol registrations |
+| `defaults` | `{}` | Default variables seeded into every Mail payload |
+| `runQueueTask` | `true` | Whether to run the background scheduler for async mail |
+
 
 ## View the documentation at https://coldbox-mailservices.ortusbooks.com
 
@@ -71,10 +155,9 @@ Apache License, Version 2.0.
 
 ## SYSTEM REQUIREMENTS
 
-* BoxLang 1+
-* Lucee 5+
-* ColdFusion 2021+
-
+* BoxLang 1+ (Preferred)
+* Lucee 6+
+* ColdFusion 2023+
 
 ********************************************************************************
 Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp

@@ -11,8 +11,8 @@
         "rewrites":{
             "enable":"true"
         },
-		"webroot": "test-harness",
-		"aliases":{
+        "webroot":"test-harness",
+        "aliases":{
             "/moduleroot/cbmailservices":"../"
         }
     },
@@ -20,10 +20,10 @@
         "heapSize":"1024"
     },
     "openBrowser":"false",
-	"cfconfig": {
-		"file" : ".cfconfig.json"
-	},
-    "scripts" : {
+    "cfconfig":{
+        "file":".cfconfig.json"
+    },
+    "scripts":{
         "onServerInstall":"cfpm install zip,debugger,mail"
     }
 }

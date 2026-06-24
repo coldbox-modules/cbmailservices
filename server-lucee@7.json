@@ -1,8 +1,8 @@
 {
-    "name":"cbmailservices-lucee@5",
+    "name":"cbmailservices-lucee@7",
     "app":{
-        "serverHomeDirectory":".engine/lucee5",
-        "cfengine":"lucee@5"
+        "serverHomeDirectory":".engine/lucee7",
+        "cfengine":"lucee@7"
     },
     "web":{
         "http":{

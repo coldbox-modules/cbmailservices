@@ -28,7 +28,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				// 1:Mail with No Params
 				var mail = variables.mailservice
 					.newMail()
-					.config(
+					.configure(
 						from = "info@coldbox.org",
 						to   = "automation@coldbox.org",
 						type = "html"

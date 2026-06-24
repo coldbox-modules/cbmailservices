@@ -19,6 +19,7 @@ component
 	 */
 	property name="mail" type="array";
 
+
 	/**
 	 * Initialize the InMemory protocol
 	 *

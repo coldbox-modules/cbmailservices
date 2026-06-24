@@ -1,7 +1,7 @@
 {
     "name":"cbmailservices-boxlang@1",
     "app":{
-        "serverHomeDirectory":".engine/boxlang-cfml",
+        "serverHomeDirectory":".engine/boxlang",
         "cfengine":"boxlang@1"
     },
     "web":{
@@ -25,8 +25,10 @@
     "cfconfig":{
         "file":".cfconfig.json"
     },
-    "env":{},
+    "env":{
+        "BOXLANG_DEBUG":true
+    },
     "scripts":{
-        "onServerInitialInstall":"install bx-compat-cfml,bx-mail,bx-esapi --noSave"
+        "onServerInitialInstall":"install bx-mail,bx-esapi --noSave"
     }
 }

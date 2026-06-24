@@ -1,4 +1,4 @@
-﻿/**
+/**
  * *******************************************************************************
  * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
  * www.ortussolutions.com
@@ -12,8 +12,18 @@
  */
 component accessors="true" {
 
-	// DI
+	/**
+	 * --------------------------------------------------------------------------
+	 * DI
+	 * --------------------------------------------------------------------------
+	 */
 	property name="log" inject="logbox:logger:{this}";
+
+	/**
+	 * --------------------------------------------------------------------------
+	 * Properties
+	 * --------------------------------------------------------------------------
+	 */
 
 	/**
 	 * A collection of configuration properties for a protocol
@@ -24,6 +34,7 @@ component accessors="true" {
 	 * The protocol's human name
 	 */
 	property name="name";
+
 
 	/**
 	 * Constructor
@@ -44,16 +55,20 @@ component accessors="true" {
 	 * @throws PropertyNotFoundException if the property doesn't exist
 	 */
 	function getProperty( required property, defaultValue ){
-		if ( structKeyExists( variables.properties, arguments.property ) ) {
+		if (
+			variables.properties.keyExists( arguments.property ) && !isNull(
+				variables.properties[ arguments.property ]
+			)
+		) {
 			return variables.properties[ arguments.property ];
 		}
 		if ( !isNull( arguments.defaultValue ) ) {
 			return arguments.defaultValue;
 		}
 		throw(
-			type   : "PropertyNotFoundException",
-			message: "The property (#arguments.property#) doesn't exist. Valid properties are #variables.properties.keyList()#"
-		)
+			type    = "PropertyNotFoundException",
+			message = "The property (#arguments.property#) doesn't exist. Valid properties are #variables.properties.keyList()#"
+		);
 	}
 
 	/**
@@ -73,7 +88,9 @@ component accessors="true" {
 	 * @property The property key
 	 */
 	boolean function propertyExists( required property ){
-		return structKeyExists( variables.properties, arguments.property );
+		return variables.properties.keyExists( arguments.property ) && !isNull(
+			variables.properties[ arguments.property ]
+		);
 	}
 
 	/******************** TO IMPLEMENT ************************/

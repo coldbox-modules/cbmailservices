@@ -14,10 +14,20 @@
  */
 component accessors="true" {
 
-	// DI
+	/**
+	 * --------------------------------------------------------------------------
+	 * DI
+	 * --------------------------------------------------------------------------
+	 */
 	property name="wirebox" inject="wirebox";
 
 	property name="renderer" inject="coldbox:renderer";
+
+	/**
+	 * --------------------------------------------------------------------------
+	 * Properties
+	 * --------------------------------------------------------------------------
+	 */
 
 	/**
 	 * The config struct representing the mail payload which is sent to the configured protocol in the mail service
@@ -35,6 +45,7 @@ component accessors="true" {
 	 * The mailer to use when sending the payload. It defaults to `default`
 	 */
 	property name="mailer" type="string";
+
 
 	/**
 	 * Constructor
@@ -77,9 +88,9 @@ component accessors="true" {
 			return arguments.defaultValue;
 		}
 		throw(
-			type   : "PropertyNotFoundException",
-			message: "The property (#arguments.property#) doesn't exist. Valid properties are #variables.config.keyList()#"
-		)
+			type    = "PropertyNotFoundException",
+			message = "The property (#arguments.property#) doesn't exist. Valid properties are #variables.config.keyList()#"
+		);
 	}
 
 	/**
@@ -103,12 +114,10 @@ component accessors="true" {
 	}
 
 	/**
-	 * Place holder for `configure()` as a compatibility shim
-	 *
-	 * @deprecated This will be removed
+	 * Old compatibility method to configure the mail payload.  Use configure() instead.
 	 */
-	Mail function config(){
-		return this.configure( argumentCollection = arguments );
+	function config(){
+		return this.configure();
 	}
 
 	/**
@@ -148,13 +157,13 @@ component accessors="true" {
 	){
 		// populate mail keys
 		for ( var key in arguments ) {
-			if ( structKeyExists( arguments, key ) ) {
+			if ( !isNull( arguments[ key ] ) ) {
 				variables.config[ key ] = arguments[ key ];
 			}
 		}
 
 		// server exception
-		if ( !isNull( arguments.server ) AND NOT len( arguments.server ) ) {
+		if ( !isNull( arguments.server ) && !len( arguments.server ) ) {
 			structDelete( variables.config, "server" );
 		}
 
@@ -174,26 +183,25 @@ component accessors="true" {
 		// Dynamic Getter: getServer(), getUsername(), getFrom( "default" )
 		if ( left( arguments.missingMethodName, 3 ) == "get" ) {
 			return this.getProperty(
-				property    : arguments.missingMethodName.replaceNoCase( "get", "" ),
-				defaultValue: structCount( missingMethodArguments ) ? missingMethodArguments[ 1 ] : javacast(
-					"null",
-					""
-				)
+				property     = arguments.missingMethodName.replaceNoCase( "get", "" ),
+				defaultValue = structCount( missingMethodArguments )
+				 ? missingMethodArguments[ 1 ]
+				 : javacast( "null", "" )
 			);
 		}
 
 		// Dynamic Setter: setFrom( "value" ), setFrom() same as setFrom( "" )
 		if ( left( arguments.missingMethodName, 3 ) == "set" ) {
 			return this.setProperty(
-				property: arguments.missingMethodName.replaceNoCase( "set", "" ),
-				value   : structCount( missingMethodArguments ) ? missingMethodArguments[ 1 ] : ""
+				property = arguments.missingMethodName.replaceNoCase( "set", "" ),
+				value    = structCount( missingMethodArguments ) ? missingMethodArguments[ 1 ] : ""
 			);
 		}
 
 		throw(
-			type   : "InvalidMethodException",
-			message: "Only dynamic getters and setters are allowed",
-			detail : "You requested the following function: #arguments.missingMethodName#"
+			type    = "InvalidMethodException",
+			message = "Only dynamic getters and setters are allowed",
+			detail  = "You requested the following function: #arguments.missingMethodName#"
 		);
 	}
 
@@ -201,11 +209,11 @@ component accessors="true" {
 	 * Run email validation and throw an InvalidMailException if required params are missing.
 	 */
 	Mail function validateOrFail(){
-		if ( NOT this.validate() ) {
+		if ( !this.validate() ) {
 			throw(
-				type   : "InvalidMailException",
-				message: "One or more required fields are missing.",
-				detail : "Please check the basic mail fields of To, From, Subject and Body as they are empty. To: #variables.config.to#, From: #variables.config.from#, Subject Len = #variables.config.subject.len()#, Body Len = #variables.config.body.len()#."
+				type    = "InvalidMailException",
+				message = "One or more required fields are missing.",
+				detail  = "Please check the basic mail fields of To, From, Subject and Body as they are empty. To: #variables.config.to#, From: #variables.config.from#, Subject Len = #variables.config.subject.len()#, Body Len = #variables.config.body.len()#."
 			);
 		}
 		return this;
@@ -216,10 +224,17 @@ component accessors="true" {
 	 */
 	boolean function validate(){
 		if (
-			variables.config.from.len() eq 0 OR
-			(variables.config.to.len() eq 0 AND variables.config.bcc.len() eq 0) OR
-			variables.config.subject.len() eq 0 OR
-			( variables.config.body.len() eq 0 AND arrayLen( variables.config.mailParts ) EQ 0 )
+			variables.config.from.len() EQ
+			0 ||
+			variables.config.to.len() EQ
+			0 ||
+			variables.config.subject.len() EQ
+			0 ||
+			(
+				variables.config.body.len() EQ
+				0 &&
+				arrayLen( variables.config.mailParts ) EQ 0
+			)
 		) {
 			return false;
 		} else {
@@ -234,9 +249,9 @@ component accessors="true" {
 	 * @defaultValue The default value if not found, defaults to empty string
 	 */
 	any function getAdditionalInfoItem( required key, defaultValue = "" ){
-		return structKeyExists( variables.config.additionalInfo, arguments.key ) ? variables.config.additionalInfo[
-			arguments.key
-		] : arguments.defaultValue;
+		return structKeyExists( variables.config.additionalInfo, arguments.key )
+		 ? variables.config.additionalInfo[ arguments.key ]
+		 : arguments.defaultValue;
 	}
 
 	/**
@@ -309,7 +324,7 @@ component accessors="true" {
 		if ( isSimpleValue( arguments.files ) ) {
 			arguments.files = listToArray( arguments.files );
 		}
-		for ( var x = 1; x lte arrayLen( arguments.files ); x = x + 1 ) {
+		for ( var x = 1; x LTE arrayLen( arguments.files ); x = x + 1 ) {
 			addMailParam( file = arguments.files[ x ], remove = arguments.remove );
 		}
 
@@ -460,19 +475,18 @@ component accessors="true" {
 		// Do we have a layout?
 		if ( !isNull( arguments.layout ) && len( arguments.layout ) ) {
 			variables.config.body = variables.renderer.layout(
-				layout    : arguments.layout,
-				module    : arguments.layoutModule,
-				view      : arguments.view,
-				args      : arguments.args,
-				viewModule: arguments.module
+				layout     = arguments.layout,
+				module     = arguments.layoutModule,
+				view       = arguments.view,
+				args       = arguments.args,
+				viewModule = arguments.module
 			);
-		}
-		// Else, plain view rendering
-		else {
+		} else // Else, plain view rendering
+		{
 			variables.config.body = variables.renderer.view(
-				view  : arguments.view,
-				args  : arguments.args,
-				module: arguments.module
+				view   = arguments.view,
+				args   = arguments.args,
+				module = arguments.module
 			);
 		}
 

@@ -27,7 +27,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 			it( "can send mail to the in memory db", function(){
 				var payload = variables.mailservice
 					.newMail()
-					.config(
+					.configure(
 						from = "info@coldbox.org",
 						to   = "automation@coldbox.org",
 						type = "html"
@@ -54,7 +54,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 
 				var sentPayload = variables.mailService
 					.newMail()
-					.config(
+					.configure(
 						from = "info@coldbox.org",
 						to   = "sent@coldbox.org",
 						type = "html"
@@ -71,7 +71,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 
 				var unsentPayload = variables.mailService
 					.newMail()
-					.config(
+					.configure(
 						from = "info@coldbox.org",
 						to   = "unsent@coldbox.org",
 						type = "html"
@@ -86,14 +86,14 @@ component extends="coldbox.system.testing.BaseTestCase" {
 				unsentPayload.setSubject( "Mail NOT SENT" );
 
 				expect(
-					variables.protocol.hasMessage( function( mail ){
+					variables.protocol.hasMessage( ( mail ) => {
 						return mail.from == sentPayload.getMemento().from &&
 						mail.to == sentPayload.getMemento().to;
 					} )
 				).toBeTrue( "hasMessage should return true for message that was sent." );
 
 				expect(
-					variables.protocol.hasMessage( function( mail ){
+					variables.protocol.hasMessage( ( mail ) => {
 						return mail.from == unsentPayload.getMemento().from &&
 						mail.to == unsentPayload.getMemento().to;
 					} )

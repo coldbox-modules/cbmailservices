@@ -1,4 +1,4 @@
-﻿/**
+/**
  * *******************************************************************************
  * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
  * www.ortussolutions.com
@@ -10,12 +10,26 @@
  */
 component accessors="true" singleton threadsafe {
 
-	// DI
+	/**
+	 * --------------------------------------------------------------------------
+	 * DI
+	 * --------------------------------------------------------------------------
+	 */
 	property name="inteceptorService" inject="box:interceptorService";
-	property name="settings"          inject="box:moduleSettings:cbmailservices";
-	property name="wirebox"           inject="wirebox";
-	property name="asyncManager"      inject="box:asyncManager";
-	property name="log"               inject="logbox:logger:{this}";
+
+	property name="settings" inject="box:moduleSettings:cbmailservices";
+
+	property name="wirebox" inject="wirebox";
+
+	property name="asyncManager" inject="box:asyncManager";
+
+	property name="log" inject="logbox:logger:{this}";
+
+	/**
+	 * --------------------------------------------------------------------------
+	 * Properties
+	 * --------------------------------------------------------------------------
+	 */
 
 	/**
 	 * The token marker used for token replacements, default is `@`
@@ -42,6 +56,7 @@ component accessors="true" singleton threadsafe {
 	 */
 	property name="mailQueue";
 
+
 	/**
 	 * Constructor
 	 */
@@ -53,28 +68,16 @@ component accessors="true" singleton threadsafe {
 		variables.mailers         = { "default" : { class : "CFMail" } };
 		variables.mailQueue       = new ConcurrentLinkedQueue();
 
-		// Protocols Path
-		variables.protocolsPath       = getDirectoryFromPath( getMetadata( this ).path ) & "protocols";
 		// Register core protocols
-		variables.registeredProtocols = directoryList(
-			variables.protocolsPath,
-			false,
-			"name",
-			"*.cfc"
-		)
-			// don't do the interfaces
-			.filter( function( item ){
-				return ( item != "IProtocol.cfc" );
-			} )
-			// Purge extension
-			.map( function( item ){
-				return listFirst( item, "." );
-			} )
-			// Build out wirebox mapping
-			.reduce( function( result, item ){
-				result[ item.replaceNoCase( "Protocol", "" ) ] = "cbmailservices.models.protocols.#item#";
-				return result;
-			}, {} );
+		variables.registeredProtocols = {
+			"BXMail"   : "cbmailservices.models.protocols.BXMailProtocol",
+			"CFMail"   : "cbmailservices.models.protocols.CFMailProtocol",
+			"File"     : "cbmailservices.models.protocols.FileProtocol",
+			"InMemory" : "cbmailservices.models.protocols.InMemoryProtocol",
+			"Mailgun"  : "cbmailservices.models.protocols.MailgunProtocol",
+			"Null"     : "cbmailservices.models.protocols.NullProtocol",
+			"Postmark" : "cbmailservices.models.protocols.PostmarkProtocol"
+		};
 		return this;
 	}
 
@@ -109,8 +112,8 @@ component accessors="true" singleton threadsafe {
 			return arguments.defaultValue;
 		}
 		throw(
-			type   : "SettingNotFoundException",
-			message: "The setting you requested #arguments.setting# does not exist. Valid settings are #variables.defaultSettings.keyList()#"
+			type    = "SettingNotFoundException",
+			message = "The setting you requested #arguments.setting# does not exist. Valid settings are #variables.defaultSettings.keyList()#"
 		);
 	}
 
@@ -139,26 +142,23 @@ component accessors="true" singleton threadsafe {
 		// Check the default protocol is in the mailers
 		if ( !structKeyExists( arguments.mailers, variables.defaultProtocol ) ) {
 			throw(
-				type   : "InvalidDefaultProtocol",
-				message: "The default protocol (#variables.defaultProtocol#) does not exist in the registered mailers (#arguments.mailers.keyList()#)"
+				type    = "InvalidDefaultProtocol",
+				message = "The default protocol (#variables.defaultProtocol#) does not exist in the registered mailers (#arguments.mailers.keyList()#)"
 			);
 		}
 
 		// Build out the mailers
-		variables.mailers = arguments.mailers.map( function( key, definition ){
-			// Params
+		variables.mailers = arguments.mailers.map( ( key, definition ) => {
 			param arguments.definition.properties = {};
 			param arguments.definition.transit    = "";
 
-			// Are we a core protocol?
 			if ( structKeyExists( variables.registeredProtocols, arguments.definition.class ) ) {
 				arguments.definition.class = variables.registeredProtocols[ arguments.definition.class ];
 			}
 
-			// Build it out
 			arguments.definition.transit = variables.wirebox.getInstance(
-				name         : arguments.definition.class,
-				initArguments: { "properties" : arguments.definition.properties }
+				name          = arguments.definition.class,
+				initArguments = { "properties" : arguments.definition.properties }
 			);
 
 			return arguments.definition;
@@ -194,8 +194,8 @@ component accessors="true" singleton threadsafe {
 
 		// Build it out
 		thisMailer.transit = variables.wirebox.getInstance(
-			name         : arguments.class,
-			initArguments: { "properties" : arguments.properties }
+			name          = arguments.class,
+			initArguments = { "properties" : arguments.properties }
 		);
 
 		// Register it now
@@ -225,8 +225,8 @@ component accessors="true" singleton threadsafe {
 			return variables.mailers[ arguments.name ];
 		}
 		throw(
-			message: "Mailer (#arguments.name#) not registered. Valid mailers are #variables.mailers.keyList()#",
-			type   : "UnregisteredMailerException"
+			message = "Mailer (#arguments.name#) not registered. Valid mailers are #variables.mailers.keyList()#",
+			type    = "UnregisteredMailerException"
 		);
 	}
 
@@ -246,10 +246,8 @@ component accessors="true" singleton threadsafe {
 		structAppend( arguments, variables.defaultSettings, false );
 		// Build out a new payload
 		var oMail = variables.wirebox.getInstance( name = "Mail@cbmailservices", initArguments = arguments );
-
 		// Set the right mailer
 		oMail.setMailer( isNull( arguments.mailer ) ? variables.defaultProtocol : arguments.mailer );
-
 		return oMail;
 	}
 
@@ -262,13 +260,13 @@ component accessors="true" singleton threadsafe {
 	 */
 	Mail function send( required Mail mail ){
 		// Validate Basic Mail Fields and error out
-		if ( NOT arguments.mail.validate() ) {
+		if ( !arguments.mail.validate() ) {
 			arguments.mail.setResults( {
 				"error"    : true,
 				"messages" : [
 					"Please check the basic mail fields of To, From, Subject and Body as they are empty. To: #arguments.mail.getTo()#, From: #arguments.mail.getFrom()#, Subject Len = #arguments.mail.getSubject().length()#, Body Len = #arguments.mail.getBody().length()#."
 				]
-			} )
+			} );
 			log.error( "Mail object does not validate." );
 			return arguments.mail;
 		}
@@ -344,7 +342,7 @@ component accessors="true" singleton threadsafe {
 
 		log.debug( "Starting to process mail queue of (#size#) elements" );
 
-		for ( var x = 1; x lte size; x++ ) {
+		for ( var x = 1; x LTE size; x++ ) {
 			// take the payload head and remove it (FIFO)
 			var payload = variables.mailQueue.poll();
 			// Send it
@@ -377,12 +375,14 @@ component accessors="true" singleton threadsafe {
 		var key         = "";
 
 		// Do not process tokens if using dynamic template (send-grid-protocol)
-		if ( arguments.mail.propertyExists( "type" ) && arguments.mail.getType() == "template" ) return;
+		if ( arguments.mail.propertyExists( "type" ) && arguments.mail.getType() == "template" ) {
+			return;
+		}
 
 		// Check mail parts for content
 		if ( arrayLen( mailparts ) ) {
 			// Loop over mail parts
-			for ( var mailPart = 1; mailPart lte arrayLen( mailParts ); mailPart++ ) {
+			for ( var mailPart = 1; mailPart LTE arrayLen( mailParts ); mailPart++ ) {
 				body = mailParts[ mailPart ].body;
 				for ( key in tokens ) {
 					body = replaceNoCase(

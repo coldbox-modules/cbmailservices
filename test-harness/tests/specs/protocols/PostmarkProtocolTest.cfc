@@ -36,7 +36,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
 			it( "can send mail to postmark", function(){
 				var payload = variables.mailservice
 					.newMail()
-					.config(
+					.configure(
 						from = "info@ortussolutions.com",
 						to   = "info@ortussolutions.com",
 						type = "html"

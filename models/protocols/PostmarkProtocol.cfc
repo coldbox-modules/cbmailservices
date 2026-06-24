@@ -1,4 +1,4 @@
-﻿/**
+/**
  * *******************************************************************************
  * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
  * www.ortussolutions.com
@@ -29,7 +29,7 @@ component
 		super.init( argumentCollection = arguments );
 
 		// Property Checks
-		if ( NOT propertyExists( "APIKey" ) ) {
+		if ( !propertyExists( "APIKey" ) ) {
 			// No API key was found, so throw an exception.
 			throw( message = "ApiKey is Required", type = "PostmarkProtocol.PropertyNotFound" );
 		}
@@ -74,7 +74,7 @@ component
 
 		// Process the body of the email according to PostMark Rules If it was set directly.
 		// https://postmarkapp.com/developer/user-guide/send-email-with-api
-		if ( structKeyExists( data, "type" ) and data.type eq "html" ) {
+		if ( structKeyExists( data, "type" ) && data.type EQ "html" ) {
 			data[ "HtmlBody" ] = data.body;
 		} else {
 			data[ "TextBody" ] = data.body;
@@ -84,9 +84,9 @@ component
 		arguments.payload
 			.getMailParts()
 			.each( function( mailPart ){
-				if ( arguments.mailPart.type eq "html" ) {
+				if ( arguments.mailPart.type EQ "html" ) {
 					data[ "HtmlBody" ] = arguments.mailpart.body;
-				} else if ( arguments.mailpart.type eq "plain" || arguments.mailpart.type eq "text" ) {
+				} else if ( arguments.mailpart.type EQ "plain" || arguments.mailpart.type EQ "text" ) {
 					data[ "TextBody" ] = arguments.mailpart.body;
 				}
 			} );
@@ -108,12 +108,12 @@ component
 
 			cfhttp(
 				method       = "post",
-				url          = variables.POSTMARK_APIURL,
+				url          = "#variables.POSTMARK_APIURL#",
 				charset      = "utf-8",
 				result       = "httpResults",
-				redirect     = true,
-				throwOnError = true,
-				timeout      = variables.DEFAULT_TIMEOUT,
+				redirect     = "#true#",
+				throwOnError = "#true#",
+				timeout      = "#variables.DEFAULT_TIMEOUT#",
 				useragent    = "ColdFusion-cbMailServices"
 			) {
 				cfhttpparam(
@@ -134,25 +134,23 @@ component
 				cfhttpparam(
 					type    = "body",
 					encoded = "no",
-					value   = arguments.jsonPayload
+					value   = "#arguments.jsonPayload#"
 				);
 			}
 
 			// Inflate HTTP Results
 			var postmarkResults = deserializeJSON( httpResults.fileContent.toString() );
 			// Process Postmark Results
-			if ( postmarkResults.message eq "OK" ) {
+			if ( postmarkResults.message EQ "OK" ) {
 				results.error     = false;
-				results.messageID = postmarkResults[ "MessageID" ]
-			}
-			// Test Messages
-			else if ( findNoCase( "Test job", postmarkResults.message ) and postmarkResults.errorCode eq 0 ) {
+				results.messageID = postmarkResults[ "MessageID" ];
+			} else // Test Messages
+			if ( findNoCase( "Test job", postmarkResults.message ) && postmarkResults.errorCode EQ 0 ) {
 				results.error     = false;
-				results.messageID = postmarkResults[ "MessageID" ]
+				results.messageID = postmarkResults[ "MessageID" ];
 				results.messages  = [ "Test job accepted" ];
-			}
-			// Exceptions
-			else {
+			} else // Exceptions
+			{
 				results.messages = [
 					"#postmarkResults[ "ErrorCode" ]# - #postmarkResults[ "Message" ]#",
 					postmarkResults
@@ -174,7 +172,9 @@ component
 		return {
 			"Name"        : getFileFromPath( arguments.mailParam.file ),
 			"Content"     : toBase64( fileReadBinary( arguments.mailParam.file ) ),
-			"ContentType" : isNull( arguments.mailparam.fileType ) ? getFileMimeType( arguments.mailParam.file ) : arguments.mailParam.fileType
+			"ContentType" : isNull( arguments.mailparam.fileType )
+			 ? getFileMimeType( arguments.mailParam.file )
+			 : arguments.mailParam.fileType
 		};
 	}
 
