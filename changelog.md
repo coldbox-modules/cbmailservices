@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Date formatting issue for BoxLang Prime support
+
 ## [2.11.0] - 2026-06-24
 
 ### Changed
