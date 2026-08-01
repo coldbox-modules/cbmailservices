@@ -66,7 +66,7 @@ component
 		// The return structure
 		var rtnStruct = { "error" : true, "messages" : [] };
 		var content   = "";
-		var filePath  = getProperty( "filePath" ) & "/mail.#dateFormat( now(), "mm-dd-yyyy" )#.#timeFormat( now(), "HH-mm-ss-L" )#.html";
+		var filePath  = getProperty( "filePath" ) & "/mail.#dateFormat( now(), "MM-dd-yyyy" )#.#timeFormat( now(), "HH-mm-ss-L" )#.html";
 
 		// Just mail the darned thing!!
 		try {
