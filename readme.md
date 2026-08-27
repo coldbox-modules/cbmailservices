@@ -139,6 +139,12 @@ class {
 | `defaults` | `{}` | Default variables seeded into every Mail payload |
 | `runQueueTask` | `true` | Whether to run the background scheduler for async mail |
 
+## Development mail log viewer
+
+When the application is running in the `development` environment, visit `/cbmailservices/log` to browse mail written by every configured `File` protocol. The viewer discovers each mailer's resolved `filePath`, reads existing `.html` logs, and provides search, automatic refresh, rendered previews, and complete source inspection.
+
+The route is registered only in development. It is not available in staging, production, or any other ColdBox environment.
+
 
 ## View the documentation at https://coldbox-mailservices.ortusbooks.com
 
