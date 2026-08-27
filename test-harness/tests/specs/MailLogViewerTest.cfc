@@ -53,7 +53,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
                     .first();
                 var message = service.findMessage( summary.id );
 
-                expect( message.preview ).toBe( "<h1>Verify your email</h1>" );
+                expect( trim( message.preview ) ).toBe( "<h1>Verify your email</h1>" );
                 expect( message.source ).toInclude( "data-cbmailservices-log" );
             } );
 
@@ -69,7 +69,7 @@ component extends="coldbox.system.testing.BaseTestCase" {
                 expect( message.from ).toBe( "old-sender@example.com" );
                 expect( message.to ).toBe( "old-recipient@example.com" );
                 expect( message.subject ).toBe( "Existing log" );
-                expect( message.preview ).toBe( "<p>Already on disk</p>" );
+                expect( trim( message.preview ) ).toBe( "<p>Already on disk</p>" );
             } );
 
             it( "registers the viewer route in development", function() {
