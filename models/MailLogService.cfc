@@ -88,9 +88,8 @@ component singleton {
             "to": metadata.to,
             "subject": metadata.subject,
             "sent": len( metadata.sent ) ? metadata.sent : dateTimeFormat( arguments.file.dateLastModified, "iso" ),
-            "sentLabel": dateTimeFormat( arguments.file.dateLastModified, "mmm d, yyyy h:nn:ss tt" ),
             "size": arguments.file.size,
-            "sortKey": dateTimeFormat( arguments.file.dateLastModified, "yyyymmddHHnnsslll" )
+            "sortKey": dateTimeFormat( arguments.file.dateLastModified, "iso" )
         };
     }
 

@@ -539,6 +539,14 @@
 				return new Intl.DateTimeFormat( undefined, { month: "short", day: "numeric" } ).format( parsed );
 			};
 
+			const fullTimeLabel = ( value ) => {
+				const parsed = new Date( value );
+				if ( Number.isNaN( parsed.getTime() ) ) {
+					return value || "Unknown time";
+				}
+				return new Intl.DateTimeFormat( undefined, { dateStyle: "medium", timeStyle: "medium" } ).format( parsed );
+			};
+
 			const announce = ( message ) => { elements.announcer.textContent = message; };
 
 			function renderList(){
@@ -590,7 +598,7 @@
 					document.getElementById( "meta-from" ).textContent = state.selected.from || "Unknown sender";
 					document.getElementById( "meta-to" ).textContent = state.selected.to || "Unknown recipient";
 					document.getElementById( "meta-subject" ).textContent = state.selected.subject || "(No subject)";
-					document.getElementById( "meta-sent" ).textContent = state.selected.sentLabel || state.selected.sent;
+					document.getElementById( "meta-sent" ).textContent = fullTimeLabel( state.selected.sent );
 					elements.preview.srcdoc = state.selected.preview || state.selected.source;
 					elements.source.textContent = state.selected.source;
 					elements.empty.hidden = true;
