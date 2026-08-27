@@ -95,10 +95,10 @@ component singleton {
 
     private struct function inspectFile( required struct source, required struct file ) {
         var summary = summarizeFile( arguments.source, arguments.file );
-        var source = fileRead( arguments.source.path & "/" & arguments.file.name );
+        var content = fileRead( arguments.source.path & "/" & arguments.file.name );
 
-        summary[ "source" ] = source;
-        summary[ "preview" ] = extractBody( source );
+        summary[ "source" ] = content;
+        summary[ "preview" ] = extractBody( content );
         summary[ "path" ] = arguments.source.path;
         return summary;
     }
