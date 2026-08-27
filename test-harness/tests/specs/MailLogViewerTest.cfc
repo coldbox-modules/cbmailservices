@@ -74,9 +74,13 @@ component extends="coldbox.system.testing.BaseTestCase" {
 
             it( "registers the viewer route in development", function() {
                 var event = execute( route = "/cbmailservices/log", renderResults = true );
+                var renderedContent = event.getRenderedContent();
 
                 expect( event.getStatusCode() ).toBe( 200 );
-                expect( event.getRenderedContent() ).toInclude( "cbMailServices Log" );
+                expect( renderedContent ).toInclude( "cbMailServices Log" );
+                expect( renderedContent ).toInclude( "theme-toggle" );
+                expect( renderedContent ).toInclude( "prefers-color-scheme: dark" );
+                expect( renderedContent ).toInclude( "cbmailservices-log-theme" );
             } );
 
             it( "returns browser-ready JSON field casing", function() {

@@ -4,8 +4,64 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>cbMailServices Log</title>
+        <script>
+        ( () => {
+            "use strict";
+
+            const systemPrefersDark = window.matchMedia( "(prefers-color-scheme: dark)" ).matches;
+            let theme = systemPrefersDark ? "dark" : "light";
+
+            try {
+                const savedTheme = window.localStorage.getItem( "cbmailservices-log-theme" );
+                if ( savedTheme === "light" || savedTheme === "dark" ) {
+                    theme = savedTheme;
+                }
+            } catch ( error ) {
+                // Local storage can be unavailable in privacy-restricted browser contexts.
+            }
+
+            document.documentElement.dataset.theme = theme;
+        } )();
+        </script>
         <style>
             :root {
+            color-scheme: light;
+            --accent: #087f9f;
+            --accent-strong: #006982;
+            --accent-soft: #dff5fa;
+            --background: #edf4f9;
+            --rail: #f5f9fc;
+            --surface: #ffffff;
+            --surface-raised: #e9f4f8;
+            --header: #ffffff;
+            --header-action: rgba( 255, 255, 255, .82 );
+            --detail-header: #f9fbfd;
+            --viewer: #e8f0f6;
+            --text: #121a36;
+            --muted: #5e6e8a;
+            --heading-muted: #52617e;
+            --border: #d7e2ec;
+            --border-strong: #b7cadb;
+            --row-hover: #eaf3f8;
+            --row-selected-start: #dff5fa;
+            --row-selected-end: #eaf6fb;
+            --row-selected-border: #77bdd0;
+            --message-icon: #7184a3;
+            --message-subject: #344462;
+            --search-placeholder: #7686a1;
+            --source-text: #273656;
+            --success: #3fcb78;
+            --success-ring: rgba( 29, 145, 78, .12 );
+            --danger: #c72f48;
+            --preview: #ffffff;
+            --shadow: 0 18px 48px rgba( 30, 65, 95, .15 );
+            --geometry: conic-gradient( from 205deg at 50% 75%, #d6edf5, #9bd9e8, #5abbd3, #8acfe1, #d9eff6, #d6edf5 );
+            --geometry-opacity: .76;
+            --focus-ring: rgba( 8, 127, 159, .3 );
+            font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            }
+
+            :root[data-theme="dark"] {
             color-scheme: dark;
             --accent: #63d8f4;
             --accent-strong: #1fc5ee;
@@ -14,15 +70,31 @@
             --rail: #090d21;
             --surface: #0c1129;
             --surface-raised: #111936;
+            --header: #070819;
+            --header-action: rgba( 8, 9, 27, .74 );
+            --detail-header: #0b1026;
+            --viewer: #080d20;
             --text: #f7f9ff;
             --muted: #aab5d3;
+            --heading-muted: #c9d2ea;
             --border: #263757;
             --border-strong: #365174;
+            --row-hover: #0f1732;
+            --row-selected-start: #162b54;
+            --row-selected-end: #142243;
+            --row-selected-border: #35567c;
+            --message-icon: #9db0d5;
+            --message-subject: #d9e1f3;
+            --search-placeholder: #8d9abb;
+            --source-text: #273656;
             --success: #3fcb78;
+            --success-ring: rgba( 63, 203, 120, .1 );
             --danger: #ff7a8a;
             --preview: #ffffff;
             --shadow: 0 18px 48px rgba( 0, 0, 0, .28 );
-            font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --geometry: conic-gradient( from 205deg at 50% 75%, #11204d, #183477, #174fa1, #172968, #0d1538, #11204d );
+            --geometry-opacity: .74;
+            --focus-ring: rgba( 99, 216, 244, .35 );
             }
 
             * { box-sizing: border-box; }
@@ -46,7 +118,7 @@
             }
 
             button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
-            outline: 3px solid rgba( 99, 216, 244, .35 );
+            outline: 3px solid var( --focus-ring );
             outline-offset: 2px;
             }
 
@@ -65,7 +137,7 @@
             align-items: center;
             padding: 0 30px;
             border-bottom: 1px solid var( --border-strong );
-            background: #070819;
+            background: var( --header );
             overflow: hidden;
             }
 
@@ -124,9 +196,9 @@
             right: -28px;
             width: 250px;
             height: 150px;
-            background: conic-gradient( from 205deg at 50% 75%, #11204d, #183477, #174fa1, #172968, #0d1538, #11204d );
+            background: var( --geometry );
             clip-path: polygon( 40% 0, 100% 0, 100% 100%, 4% 100%, 23% 62% );
-            opacity: .74;
+            opacity: var( --geometry-opacity );
             }
 
             .search {
@@ -156,7 +228,7 @@
             box-shadow: inset 0 1px 0 rgba( 255, 255, 255, .025 );
             }
 
-            .search input::placeholder { color: #8d9abb; }
+            .search input::placeholder { color: var( --search-placeholder ); }
 
             .search input:hover { border-color: var( --border-strong ); }
 
@@ -192,7 +264,7 @@
             padding: 0 14px;
             border: 1px solid transparent;
             border-radius: 6px;
-            background: rgba( 8, 9, 27, .74 );
+            background: var( --header-action );
             color: var( --accent );
             font-size: 14px;
             font-weight: 650;
@@ -205,6 +277,16 @@
             .action:disabled { cursor: progress; opacity: .55; }
 
             .action svg { width: 18px; height: 18px; }
+
+            .theme-action {
+            width: 42px;
+            padding: 0;
+            }
+
+            .theme-icon { display: none; }
+
+            :root[data-theme="light"] .theme-icon-moon,
+            :root[data-theme="dark"] .theme-icon-sun { display: block; }
 
             .app-body {
             display: grid;
@@ -227,7 +309,7 @@
             gap: 18px;
             padding: 0 24px;
             border-bottom: 1px solid var( --border-strong );
-            color: #c9d2ea;
+            color: var( --heading-muted );
             font-size: 13px;
             font-weight: 650;
             }
@@ -261,18 +343,18 @@
             width: 100%;
             }
 
-            .message-row:hover { background: #0f1732; }
+            .message-row:hover { background: var( --row-hover ); }
 
             .message-row[aria-current="true"] {
-            background: linear-gradient( 90deg, #162b54 0%, #142243 100% );
-            box-shadow: inset 5px 0 0 var( --accent ), inset 0 0 0 1px #35567c;
+            background: linear-gradient( 90deg, var( --row-selected-start ) 0%, var( --row-selected-end ) 100% );
+            box-shadow: inset 5px 0 0 var( --accent ), inset 0 0 0 1px var( --row-selected-border );
             }
 
             .message-icon {
             width: 25px;
             height: 25px;
             margin-top: 21px;
-            color: #9db0d5;
+            color: var( --message-icon );
             }
 
             .message-row[aria-current="true"] .message-icon { color: var( --accent ); }
@@ -299,7 +381,7 @@
 
             .message-subject {
             margin-top: 8px;
-            color: #d9e1f3;
+            color: var( --message-subject );
             font-size: 14px;
             font-weight: 620;
             }
@@ -338,7 +420,7 @@
             .detail-header {
             padding: 0 30px 24px;
             border-bottom: 1px solid var( --border-strong );
-            background: #0b1026;
+            background: var( --detail-header );
             }
 
             .detail-tabs {
@@ -397,7 +479,7 @@
             .viewer {
             min-height: 0;
             padding: 14px;
-            background: #080d20;
+            background: var( --viewer );
             }
 
             .preview-frame, .source-view {
@@ -415,7 +497,7 @@
             margin: 0;
             padding: 20px;
             overflow: auto;
-            color: #273656;
+            color: var( --source-text );
             font: 13px/1.6 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
             white-space: pre-wrap;
             word-break: break-word;
@@ -430,7 +512,7 @@
             min-width: 0;
             padding: 0 30px;
             border-top: 1px solid var( --border-strong );
-            background: #070819;
+            background: var( --header );
             font-size: 12px;
             }
 
@@ -447,7 +529,7 @@
             height: 8px;
             border-radius: 50%;
             background: var( --success );
-            box-shadow: 0 0 0 4px rgba( 63, 203, 120, .1 );
+            box-shadow: 0 0 0 4px var( --success-ring );
             }
 
             .status-path {
@@ -576,6 +658,32 @@
                     <span class="search-shortcut" aria-hidden="true">/</span>
                 </label>
                 <div class="header-actions">
+                    <button class="action theme-action" id="theme-toggle" type="button" aria-label="Switch color theme">
+                        <svg
+                            class="theme-icon theme-icon-moon"
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <path d="M20.4 14.8A8.5 8.5 0 0 1 9.2 3.6 8.5 8.5 0 1 0 20.4 14.8Z"></path>
+                        </svg>
+                        <svg
+                            class="theme-icon theme-icon-sun"
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                        >
+                            <circle cx="12" cy="12" r="4"></circle>
+                            <path
+                                d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"
+                            ></path>
+                        </svg>
+                    </button>
                     <button class="action primary" id="refresh" type="button">
                         <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M20 7v5h-5"></path><path d="M4 17v-5h5"></path><path
@@ -678,6 +786,7 @@
             const state = { messages: [], filtered: [], selectedId: null, selected: null, loading: false, tab: "preview" };
             const elements = {
                 app: document.getElementById( "app" ),
+                themeToggle: document.getElementById( "theme-toggle" ),
                 search: document.getElementById( "search" ),
                 refresh: document.getElementById( "refresh" ),
                 clear: document.getElementById( "clear" ),
@@ -723,6 +832,29 @@
             };
 
             const announce = ( message ) => { elements.announcer.textContent = message; };
+
+            function updateThemeControl(){
+                const currentTheme = document.documentElement.dataset.theme;
+                const nextTheme = currentTheme === "dark" ? "light" : "dark";
+                const label = `Switch to ${ nextTheme } mode`;
+                elements.themeToggle.setAttribute( "aria-label", label );
+                elements.themeToggle.title = label;
+            }
+
+            function setTheme( theme, options = {} ){
+                document.documentElement.dataset.theme = theme;
+                updateThemeControl();
+                if ( options.persist ) {
+                    try {
+                        window.localStorage.setItem( "cbmailservices-log-theme", theme );
+                    } catch ( error ) {
+                        // The selected theme still applies for the current page.
+                    }
+                }
+                if ( options.announce ) {
+                    announce( `${ theme === "dark" ? "Dark" : "Light" } mode enabled` );
+                }
+            }
 
             function renderList(){
                 const query = elements.search.value.trim().toLowerCase();
@@ -847,6 +979,10 @@
                     selectMessage( row.dataset.messageId );
                 }
             } );
+            elements.themeToggle.addEventListener( "click", () => {
+                const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+                setTheme( nextTheme, { persist: true, announce: true } );
+            } );
             elements.search.addEventListener( "input", renderList );
             elements.refresh.addEventListener( "click", () => loadMessages() );
             elements.clear.addEventListener( "click", () => {
@@ -872,6 +1008,7 @@
                 }
             } );
 
+            updateThemeControl();
             loadMessages();
             window.setInterval( () => loadMessages( { silent: true } ), 5000 );
         } )();
