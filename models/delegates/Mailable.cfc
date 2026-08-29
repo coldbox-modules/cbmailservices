@@ -8,9 +8,6 @@
  */
 component accessors="true" {
 
-	property
-		name    ="mailService"
-		inject  ="MailService@cbmailservices"
-		delegate="newMail";
+    property name="mailService" inject="MailService@cbmailservices" delegate="newMail";
 
 }

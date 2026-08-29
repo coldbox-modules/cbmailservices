@@ -152,12 +152,14 @@ component singleton {
 
     private string function decodeHTML( required string value ) {
         try {
-            return xmlParse( "<root>" & replaceNoCase(
-                arguments.value,
-                "&nbsp;",
-                "&##160;",
-                "all"
-            ) & "</root>" ).root.xmlText;
+            return xmlParse(
+                "<root>" & replaceNoCase(
+                    arguments.value,
+                    "&nbsp;",
+                    "&##160;",
+                    "all"
+                ) & "</root>"
+            ).root.xmlText;
         } catch ( any ignored ) {
             return arguments.value;
         }
