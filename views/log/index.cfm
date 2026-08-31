@@ -132,8 +132,8 @@
             .app-header {
             position: relative;
             display: grid;
-            grid-template-columns: minmax( 360px, 1fr ) minmax( 320px, 500px ) auto;
-            gap: 28px;
+            grid-template-columns: minmax( 430px, 1fr ) minmax( 260px, 420px ) auto;
+            gap: 20px;
             align-items: center;
             padding: 0 30px;
             border-bottom: 1px solid var( --border-strong );
@@ -262,7 +262,7 @@
             gap: 8px;
             height: 42px;
             padding: 0 14px;
-            border: 1px solid transparent;
+            border: 1px solid var( --border-strong );
             border-radius: 6px;
             background: var( --header-action );
             color: var( --accent );
@@ -270,7 +270,7 @@
             font-weight: 650;
             }
 
-            .action:hover { border-color: var( --border-strong ); background: var( --surface-raised ); }
+            .action:hover { border-color: var( --accent ); background: var( --surface-raised ); }
 
             .action.primary { color: var( --accent ); }
 
@@ -292,11 +292,13 @@
             display: grid;
             grid-template-columns: minmax( 360px, 34vw ) minmax( 0, 1fr );
             min-height: 0;
+            overflow: hidden;
             }
 
             .inbox {
             display: grid;
-            grid-template-rows: 68px minmax( 0, 1fr );
+            grid-template-rows: 68px 52px minmax( 0, 1fr );
+            min-height: 0;
             min-width: 0;
             border-right: 1px solid var( --border-strong );
             background: var( --rail );
@@ -322,12 +324,62 @@
             letter-spacing: -.015em;
             }
 
+            .bulk-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 18px;
+            border-bottom: 1px solid var( --border-strong );
+            background: var( --surface );
+            }
+
+            .select-all, .message-select {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            }
+
+            .select-all { gap: 8px; color: var( --muted ); font-size: 13px; font-weight: 650; white-space: nowrap; }
+
+            .select-all input, .message-select input {
+            width: 17px;
+            height: 17px;
+            accent-color: var( --accent );
+            }
+
+            .selection-count { margin-left: auto; color: var( --muted ); font-size: 12px; white-space: nowrap; }
+
+            .delete-action {
+            min-height: 34px;
+            padding: 0 11px;
+            border: 1px solid color-mix( in srgb, var( --danger ) 45%, var( --border ) );
+            border-radius: 6px;
+            background: transparent;
+            color: var( --danger );
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+            }
+
+            .delete-action:hover:not( :disabled ) { background: color-mix( in srgb, var( --danger ) 10%, transparent ); }
+            .delete-action:disabled { cursor: not-allowed; opacity: .45; }
+
             .message-list {
             margin: 0;
             padding: 0;
             list-style: none;
             overflow: auto;
             }
+
+            .message-item {
+            display: grid;
+            grid-template-columns: 46px minmax( 0, 1fr );
+            border-bottom: 1px solid var( --border );
+            }
+
+            .message-item:has( .message-select input:checked ) { background: var( --accent-soft ); }
+
+            .message-select { border: 0; }
 
             .message-row {
             position: relative;
@@ -337,7 +389,7 @@
             min-height: 120px;
             padding: 20px 22px;
             border: 0;
-            border-bottom: 1px solid var( --border );
+            border-bottom: 0;
             background: transparent;
             text-align: left;
             width: 100%;
@@ -395,6 +447,7 @@
             .detail {
             display: grid;
             grid-template-rows: auto minmax( 0, 1fr );
+            min-height: 0;
             min-width: 0;
             background: var( --surface );
             }
@@ -429,6 +482,8 @@
             height: 68px;
             border-bottom: 1px solid var( --border-strong );
             }
+
+            .detail-delete { margin: auto 0 auto auto; }
 
             .tab {
             position: relative;
@@ -506,6 +561,8 @@
             [hidden] { display: none !important; }
 
             .status-bar {
+            position: relative;
+            z-index: 2;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -514,6 +571,53 @@
             border-top: 1px solid var( --border-strong );
             background: var( --header );
             font-size: 12px;
+            }
+
+            .status-source {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            max-width: calc( 100% - 245px );
+            cursor: help;
+            }
+
+            .status-source::after {
+            position: absolute;
+            bottom: calc( 100% + 10px );
+            left: 0;
+            z-index: 3;
+            width: max-content;
+            max-width: min( 420px, calc( 100vw - 36px ) );
+            padding: 9px 11px;
+            border: 1px solid var( --border-strong );
+            border-radius: 6px;
+            background: var( --surface );
+            box-sizing: border-box;
+            box-shadow: var( --shadow );
+            color: var( --text );
+            content: attr( data-tooltip );
+            font: 12px/1.45 Inter, ui-sans-serif, system-ui, sans-serif;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY( 4px );
+            transition: opacity 120ms ease, transform 120ms ease, visibility 120ms;
+            visibility: hidden;
+            white-space: normal;
+            }
+
+            .status-source:hover::after,
+            .status-source:focus-visible::after {
+            opacity: 1;
+            transform: translateY( 0 );
+            visibility: visible;
+            }
+
+            .status-source:focus-visible {
+            border-radius: 3px;
+            outline: 2px solid var( --focus );
+            outline-offset: 4px;
             }
 
             .status-label {
@@ -532,13 +636,43 @@
             box-shadow: 0 0 0 4px var( --success-ring );
             }
 
+            .status-sources {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+            overflow: hidden;
+            }
+
+            .status-source-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-width: 0;
+            }
+
+            .status-mailer {
+            flex: 0 0 auto;
+            padding: 2px 7px;
+            border: 1px solid var( --border-strong );
+            border-radius: 999px;
+            background: var( --surface );
+            color: var( --muted );
+            font-size: 11px;
+            font-weight: 720;
+            line-height: 1.3;
+            }
+
             .status-path {
+            min-width: 0;
             overflow: hidden;
             color: var( --accent );
             font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
             text-overflow: ellipsis;
             white-space: nowrap;
             }
+
+            .status-source-separator { flex: 0 0 auto; color: var( --muted ); }
 
             .status-summary { margin-left: auto; color: var( --muted ); white-space: nowrap; }
 
@@ -552,6 +686,17 @@
             clip: rect( 0, 0, 0, 0 );
             white-space: nowrap;
             border: 0;
+            }
+
+            @media ( min-width: 801px ) and ( max-width: 1040px ) {
+            .app { grid-template-rows: auto minmax( 0, 1fr ) 52px; }
+            .app-header {
+            grid-template-columns: minmax( 0, 1fr ) auto;
+            gap: 14px;
+            padding: 14px 20px;
+            }
+            .search { grid-column: 1 / -1; grid-row: 2; }
+            .header-actions { grid-column: 2; grid-row: 1; }
             }
 
             @media ( max-width: 800px ) {
@@ -578,16 +723,20 @@
             .detail-open .detail { visibility: visible; transform: translateX( 0 ); }
             .detail-open .inbox { visibility: hidden; }
             .inbox-heading { height: 56px; padding: 0 18px; }
+            .bulk-actions { min-height: 52px; padding: 0 12px; }
+            .select-all span, .selection-count { display: none; }
             .inbox-title { font-size: 16px; }
-            .message-row { min-height: 112px; padding: 18px; }
+            .message-item { grid-template-columns: 42px minmax( 0, 1fr ); }
+            .message-row { min-height: 112px; padding: 18px 12px; }
             .detail-header { padding: 0 18px 18px; }
             .detail-tabs { align-items: center; height: 54px; }
             .back-button { display: inline-flex; }
             .metadata { grid-template-columns: 58px minmax( 0, 1fr ); margin-top: 16px; font-size: 13px; }
             .viewer { padding: 10px; }
             .preview-frame, .source-view { border-radius: 6px; }
-            .status-bar { align-items: flex-start; flex-wrap: wrap; gap: 3px 9px; padding: 9px 18px; }
-            .status-path { flex-basis: calc( 100% - 90px ); }
+            .status-bar { padding: 9px 18px; }
+            .status-source { width: 100%; max-width: 100%; }
+            .status-sources, .status-source-item, .status-path { flex: 1 1 auto; }
             .status-summary { display: none; }
             }
 
@@ -597,6 +746,7 @@
             .brand-divider { margin: 0 12px; }
             .brand-title { font-size: 16px; }
             .action span { display: none; }
+            .delete-action { padding: 0 9px; }
             .inbox-heading { gap: 12px; }
             .inbox-title { margin-right: auto; }
             .message-row { grid-template-columns: 24px minmax( 0, 1fr ) auto; gap: 10px; }
@@ -703,6 +853,15 @@
                         <span id="message-count">Loading messages</span>
                         <span>All time</span>
                     </div>
+                    <div class="bulk-actions">
+                        <label class="select-all">
+                            <input id="select-all" type="checkbox">
+                            <span>Select visible</span>
+                        </label>
+                        <span class="selection-count" id="selection-count">0 selected</span>
+                        <button class="delete-action" id="delete-selected" type="button" disabled>Delete selected</button>
+                        <button class="delete-action" id="delete-all" type="button">Delete all</button>
+                    </div>
                     <ul class="message-list" id="message-list"></ul>
                 </aside>
 
@@ -743,6 +902,7 @@
                                     aria-controls="source-view"
                                     aria-selected="false"
                                 >Source</button>
+                                <button class="delete-action detail-delete" id="delete-message" type="button">Delete message</button>
                             </div>
                             <dl class="metadata">
                                 <dt>From</dt>
@@ -768,10 +928,17 @@
             </main>
 
             <footer class="status-bar">
-                <span class="status-label">
-                    <span class="status-dot"></span>Watching
+                <span
+                    class="status-source"
+                    id="status-source"
+                    tabindex="0"
+                    data-tooltip="To change a watched directory, update that File protocol's filePath in your cbMailServices settings."
+                >
+                    <span class="status-label">
+                        <span class="status-dot"></span>Watching
+                    </span>
+                    <span class="status-sources" id="status-sources">Discovering File protocols…</span>
                 </span>
-                <span class="status-path" id="status-path">Discovering File protocol…</span>
                 <span class="status-summary" id="status-summary">Auto-refresh every 5s</span>
             </footer>
         </div>
@@ -783,13 +950,26 @@
             "use strict";
 
             const basePath = window.location.pathname.replace( /\/$/, "" );
-            const state = { messages: [], filtered: [], selectedId: null, selected: null, loading: false, tab: "preview" };
+            const state = {
+                messages: [],
+                filtered: [],
+                selectedIds: new Set(),
+                selectedId: null,
+                selected: null,
+                loading: false,
+                deleting: false,
+                tab: "preview"
+            };
             const elements = {
                 app: document.getElementById( "app" ),
                 themeToggle: document.getElementById( "theme-toggle" ),
                 search: document.getElementById( "search" ),
                 refresh: document.getElementById( "refresh" ),
                 clear: document.getElementById( "clear" ),
+                selectAll: document.getElementById( "select-all" ),
+                selectionCount: document.getElementById( "selection-count" ),
+                deleteSelected: document.getElementById( "delete-selected" ),
+                deleteAll: document.getElementById( "delete-all" ),
                 list: document.getElementById( "message-list" ),
                 count: document.getElementById( "message-count" ),
                 empty: document.getElementById( "detail-empty" ),
@@ -797,9 +977,11 @@
                 back: document.getElementById( "back" ),
                 previewTab: document.getElementById( "preview-tab" ),
                 sourceTab: document.getElementById( "source-tab" ),
+                deleteMessage: document.getElementById( "delete-message" ),
                 preview: document.getElementById( "preview-frame" ),
                 source: document.getElementById( "source-view" ),
-                path: document.getElementById( "status-path" ),
+                statusSource: document.getElementById( "status-source" ),
+                sources: document.getElementById( "status-sources" ),
                 summary: document.getElementById( "status-summary" ),
                 announcer: document.getElementById( "announcer" )
             };
@@ -832,6 +1014,19 @@
             };
 
             const announce = ( message ) => { elements.announcer.textContent = message; };
+
+            function updateBulkControls(){
+                const visibleIds = state.filtered.map( ( message ) => message.id );
+                const selectedVisible = visibleIds.filter( ( id ) => state.selectedIds.has( id ) ).length;
+                const selectedCount = state.selectedIds.size;
+                elements.selectAll.checked = Boolean( visibleIds.length ) && selectedVisible === visibleIds.length;
+                elements.selectAll.indeterminate = selectedVisible > 0 && selectedVisible < visibleIds.length;
+                elements.selectAll.disabled = !visibleIds.length || state.deleting;
+                elements.selectionCount.textContent = `${ selectedCount } selected`;
+                elements.deleteSelected.disabled = !selectedCount || state.deleting;
+                elements.deleteAll.disabled = !state.messages.length || state.deleting;
+                elements.deleteMessage.disabled = !state.selectedId || state.deleting;
+            }
 
             function updateThemeControl(){
                 const currentTheme = document.documentElement.dataset.theme;
@@ -866,11 +1061,16 @@
                 elements.count.textContent = `${ state.filtered.length } ${ state.filtered.length === 1 ? "message" : "messages" }`;
                 if ( !state.filtered.length ) {
                     elements.list.innerHTML = '<li class="list-empty"><div class="empty-copy"><strong>No messages found</strong>Try another search or send a new local email.</div></li>';
+                    updateBulkControls();
                     return;
                 }
 
                 elements.list.innerHTML = state.filtered.map( ( message ) => `
-                    <li>
+                    <li class="message-item">
+                        <label class="message-select">
+                            <input type="checkbox" data-select-message-id="${ escapeHTML( message.id ) }" ${ state.selectedIds.has( message.id ) ? "checked" : "" }>
+                            <span class="sr-only">Select ${ escapeHTML( message.subject || "message" ) }</span>
+                        </label>
                         <button class="message-row" type="button" data-message-id="${ escapeHTML( message.id ) }" aria-current="${ message.id === state.selectedId }">
                             <svg class="message-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg>
                             <span class="message-copy">
@@ -882,6 +1082,59 @@
                         </button>
                     </li>
                 ` ).join( "" );
+                updateBulkControls();
+            }
+
+            function clearSelectedMessage(){
+                state.selectedId = null;
+                state.selected = null;
+                elements.content.hidden = true;
+                elements.empty.hidden = false;
+                elements.app.classList.remove( "detail-open" );
+                history.replaceState( {}, "", basePath );
+            }
+
+            async function deleteMessages( options = {} ){
+                const ids = options.all ? state.messages.map( ( message ) => message.id ) : Array.from( options.ids || [] );
+                if ( !ids.length ) {
+                    return;
+                }
+
+                const label = options.all
+                    ? `all ${ ids.length } logged messages`
+                    : `${ ids.length } selected ${ ids.length === 1 ? "message" : "messages" }`;
+                if ( !window.confirm( `Delete ${ label }? This cannot be undone.` ) ) {
+                    return;
+                }
+
+                state.deleting = true;
+                updateBulkControls();
+                try {
+                    const response = await fetch( options.all ? `${ basePath }/messages` : options.singleId
+                        ? `${ basePath }/message/${ encodeURIComponent( options.singleId ) }`
+                        : `${ basePath }/messages`, {
+                        method: "DELETE",
+                        headers: { Accept: "application/json", "Content-Type": "application/json" },
+                        body: options.singleId ? undefined : JSON.stringify( options.all ? { all: true } : { ids } )
+                    } );
+                    if ( !response.ok ) {
+                        const error = await response.json().catch( () => ( {} ) );
+                        throw new Error( error.message || "Unable to delete the selected mail logs." );
+                    }
+                    const result = await response.json();
+                    const deletedIds = new Set( result.deleted || ids );
+                    state.selectedIds = new Set( Array.from( state.selectedIds ).filter( ( id ) => !deletedIds.has( id ) ) );
+                    if ( state.selectedId && deletedIds.has( state.selectedId ) ) {
+                        clearSelectedMessage();
+                    }
+                    announce( `Deleted ${ result.count } ${ result.count === 1 ? "message" : "messages" }` );
+                } catch ( error ) {
+                    announce( error.message );
+                    window.alert( error.message );
+                } finally {
+                    state.deleting = false;
+                    await loadMessages( { silent: true } );
+                }
             }
 
             function setTab( tab ){
@@ -923,6 +1176,51 @@
                 }
             }
 
+            function renderSources( sources ){
+                elements.sources.replaceChildren();
+
+                if ( !sources.length ) {
+                    elements.sources.textContent = "No File protocol is configured";
+                    elements.statusSource.setAttribute(
+                        "aria-label",
+                        "No File protocol is configured. To add one, update your cbMailServices settings."
+                    );
+                    return;
+                }
+
+                sources.forEach( ( source, index ) => {
+                    if ( index ) {
+                        const separator = document.createElement( "span" );
+                        separator.className = "status-source-separator";
+                        separator.setAttribute( "aria-hidden", "true" );
+                        separator.textContent = "·";
+                        elements.sources.append( separator );
+                    }
+
+                    const item = document.createElement( "span" );
+                    item.className = "status-source-item";
+
+                    const mailer = document.createElement( "span" );
+                    mailer.className = "status-mailer";
+                    mailer.textContent = source.mailer;
+
+                    const path = document.createElement( "span" );
+                    path.className = "status-path";
+                    path.textContent = source.path;
+
+                    item.append( mailer, path );
+                    elements.sources.append( item );
+                } );
+
+                const sourceDescription = sources
+                    .map( ( source ) => `${ source.mailer }: ${ source.path }` )
+                    .join( "; " );
+                elements.statusSource.setAttribute(
+                    "aria-label",
+                    `Watching ${ sourceDescription }. To change these directories, update each File protocol filePath in your cbMailServices settings.`
+                );
+            }
+
             async function loadMessages( options = {} ){
                 if ( state.loading ) {
                     return;
@@ -936,15 +1234,20 @@
                     }
                     const data = await response.json();
                     state.messages = data.messages || [];
-                    elements.path.textContent = data.sources.length
-                        ? data.sources.map( ( source ) => source.path ).join( " · " )
-                        : "No File protocol is configured";
-                    elements.path.title = elements.path.textContent;
+                    const availableIds = new Set( state.messages.map( ( message ) => message.id ) );
+                    state.selectedIds = new Set( Array.from( state.selectedIds ).filter( ( id ) => availableIds.has( id ) ) );
+                    renderSources( data.sources || [] );
                     elements.summary.textContent = `Auto-refresh every 5s  |  ${ state.messages.length } messages`;
                     renderList();
 
                     const requestedId = new URLSearchParams( window.location.search ).get( "message" );
-                    const nextId = state.selectedId || requestedId || state.messages[ 0 ]?.id;
+                    const candidateId = state.selectedId || requestedId;
+                    const nextId = candidateId && state.messages.some( ( message ) => message.id === candidateId )
+                        ? candidateId
+                        : state.messages[ 0 ]?.id;
+                    if ( candidateId && candidateId !== nextId ) {
+                        history.replaceState( {}, "", basePath );
+                    }
                     if ( nextId && state.messages.some( ( message ) => message.id === nextId ) ) {
                         if ( !options.silent || !state.selected || state.selectedId !== nextId ) {
                             const openDetail = Boolean( requestedId )
@@ -953,11 +1256,7 @@
                             await selectMessage( nextId, { silent: Boolean( options.silent ), openDetail } );
                         }
                     } else if ( !state.messages.length ) {
-                        state.selectedId = null;
-                        state.selected = null;
-                        elements.content.hidden = true;
-                        elements.empty.hidden = false;
-                        elements.app.classList.remove( "detail-open" );
+                        clearSelectedMessage();
                         elements.empty.innerHTML = '<div class="empty-copy"><strong>No logged mail yet</strong>Send mail through a configured File protocol and it will appear here.</div>';
                     }
                     if ( !options.silent ) {
@@ -965,7 +1264,7 @@
                     }
                 } catch ( error ) {
                     elements.list.innerHTML = `<li class="error-state">${ escapeHTML( error.message ) }</li>`;
-                    elements.path.textContent = "Mail log unavailable";
+                    elements.sources.textContent = "Mail log unavailable";
                     announce( error.message );
                 } finally {
                     state.loading = false;
@@ -974,6 +1273,16 @@
             }
 
             elements.list.addEventListener( "click", ( event ) => {
+                const checkbox = event.target.closest( "[data-select-message-id]" );
+                if ( checkbox ) {
+                    if ( checkbox.checked ) {
+                        state.selectedIds.add( checkbox.dataset.selectMessageId );
+                    } else {
+                        state.selectedIds.delete( checkbox.dataset.selectMessageId );
+                    }
+                    updateBulkControls();
+                    return;
+                }
                 const row = event.target.closest( "[data-message-id]" );
                 if ( row ) {
                     selectMessage( row.dataset.messageId );
@@ -984,6 +1293,19 @@
                 setTheme( nextTheme, { persist: true, announce: true } );
             } );
             elements.search.addEventListener( "input", renderList );
+            elements.selectAll.addEventListener( "change", () => {
+                for ( const message of state.filtered ) {
+                    if ( elements.selectAll.checked ) {
+                        state.selectedIds.add( message.id );
+                    } else {
+                        state.selectedIds.delete( message.id );
+                    }
+                }
+                renderList();
+            } );
+            elements.deleteSelected.addEventListener( "click", () => deleteMessages( { ids: state.selectedIds } ) );
+            elements.deleteAll.addEventListener( "click", () => deleteMessages( { all: true } ) );
+            elements.deleteMessage.addEventListener( "click", () => deleteMessages( { ids: [ state.selectedId ], singleId: state.selectedId } ) );
             elements.refresh.addEventListener( "click", () => loadMessages() );
             elements.clear.addEventListener( "click", () => {
                 elements.search.value = "";

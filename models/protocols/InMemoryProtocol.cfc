@@ -8,7 +8,7 @@
  *
  * @author Eric Peterson <eric@ortussolutions.com>, Luis Majano <lmajano@ortussolutions.com>
  */
-component extends="cbmailservices.models.AbstractProtocol" singleton accessors="true" {
+component extends="cbmailservices.models.AbstractProtocol" accessors="true" {
 
     /**
      * This is the mail log for all sent mail

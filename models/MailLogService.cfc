@@ -29,15 +29,57 @@ component singleton {
     }
 
     function findMessage( required string id ) {
+        var match = findMessageFile( arguments.id );
+        if ( !isNull( match ) ) {
+            return inspectFile( match.source, match.file );
+        }
+
+        return javacast( "null", "" );
+    }
+
+    boolean function deleteMessage( required string id ) {
+        var match = findMessageFile( arguments.id );
+        if ( isNull( match ) ) {
+            return false;
+        }
+
+        fileDelete( match.source.path & "/" & match.file.name );
+        return true;
+    }
+
+    struct function deleteMessages( required array ids ) {
+        var deleted = [];
+        var requestedIds = {};
+
+        for ( var requestedId in arguments.ids ) {
+            requestedIds[ requestedId ] = true;
+        }
+
         for ( var source in getFileSources() ) {
             for ( var file in listLogFiles( source.path ) ) {
-                if ( messageId( source.mailer, file.name ) == arguments.id ) {
-                    return inspectFile( source, file );
+                var candidateId = messageId( source.mailer, file.name );
+                if ( requestedIds.keyExists( candidateId ) ) {
+                    fileDelete( source.path & "/" & file.name );
+                    deleted.append( candidateId );
                 }
             }
         }
 
-        return javacast( "null", "" );
+        return { "deleted": deleted, "count": deleted.len() };
+    }
+
+    struct function deleteAllMessages() {
+        var deleted = [];
+
+        for ( var source in getFileSources() ) {
+            for ( var file in listLogFiles( source.path ) ) {
+                var id = messageId( source.mailer, file.name );
+                fileDelete( source.path & "/" & file.name );
+                deleted.append( id );
+            }
+        }
+
+        return { "deleted": deleted, "count": deleted.len() };
     }
 
     array function getFileSources() {
@@ -74,6 +116,18 @@ component singleton {
         }
 
         return results;
+    }
+
+    private function findMessageFile( required string id ) {
+        for ( var source in getFileSources() ) {
+            for ( var file in listLogFiles( source.path ) ) {
+                if ( messageId( source.mailer, file.name ) == arguments.id ) {
+                    return { "source": source, "file": file };
+                }
+            }
+        }
+
+        return javacast( "null", "" );
     }
 
     private struct function summarizeFile( required struct source, required struct file ) {

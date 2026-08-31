@@ -13,7 +13,7 @@
  *
  * @author Scott Steinbeck <ssteinbeck@agritrackingsystems.com>
  */
-component extends="cbmailservices.models.AbstractProtocol" singleton accessors="true" {
+component extends="cbmailservices.models.AbstractProtocol" accessors="true" {
 
     /**
      * Initialize the Mailgun protocol
