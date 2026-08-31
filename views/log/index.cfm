@@ -993,6 +993,14 @@
                 .replaceAll( '"', "&quot;" )
                 .replaceAll( "'", "&#039;" );
 
+            const preparePreviewHTML = ( value ) => {
+                const previewDocument = new DOMParser().parseFromString( String( value || "" ), "text/html" );
+                previewDocument.querySelectorAll( "a[href], area[href]" ).forEach( ( link ) => {
+                    link.setAttribute( "target", "_blank" );
+                } );
+                return `<!doctype html>${ previewDocument.documentElement.outerHTML }`;
+            };
+
             const timeLabel = ( value ) => {
                 const parsed = new Date( value );
                 if ( Number.isNaN( parsed.getTime() ) ) {
@@ -1159,7 +1167,7 @@
                     document.getElementById( "meta-to" ).textContent = state.selected.to || "Unknown recipient";
                     document.getElementById( "meta-subject" ).textContent = state.selected.subject || "(No subject)";
                     document.getElementById( "meta-sent" ).textContent = fullTimeLabel( state.selected.sent );
-                    elements.preview.srcdoc = state.selected.preview || state.selected.source;
+                    elements.preview.srcdoc = preparePreviewHTML( state.selected.preview || state.selected.source );
                     elements.source.textContent = state.selected.source;
                     elements.empty.hidden = true;
                     elements.content.hidden = false;
