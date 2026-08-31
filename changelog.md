@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added development-only endpoints to delete one, selected, or all File protocol log messages.
+- Added individual, selected, and Delete All controls to the File protocol mail log viewer.
+- Added configured mailer name badges and watched-directory guidance in the mail log viewer.
+
+### Changed
+
+- Updated File protocol mail log discovery to aggregate messages from all configured File mailer directories.
+- Updated protocol lifecycle to transient so each protocol/settings combination is retained as a unique mailer in `MailService`.
+
 ## [2.12.0] - 2026-08-29
 
 ### Added
