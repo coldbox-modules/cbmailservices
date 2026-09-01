@@ -160,6 +160,9 @@ component extends="coldbox.system.testing.BaseTestCase" {
                 expect( renderedContent ).toInclude( "delete-selected" );
                 expect( renderedContent ).toInclude( "delete-all" );
                 expect( renderedContent ).toInclude( "delete-message" );
+                expect( renderedContent ).toInclude( "preparePreviewHTML" );
+                expect( renderedContent ).toInclude( "querySelectorAll( ""a[href], area[href]"" )" );
+                expect( renderedContent ).toInclude( "setAttribute( ""target"", ""_blank"" )" );
             } );
 
             it( "returns browser-ready JSON field casing", function() {
