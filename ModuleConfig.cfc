@@ -53,12 +53,12 @@ component {
         router
             .route( "/log/message/:id" )
             .withHandler( "Log" )
-            .toAction( { "GET": "show" } );
+            .toAction( { "GET": "show", "DELETE": "deleteMessage" } );
 
         router
             .route( "/log/messages" )
             .withHandler( "Log" )
-            .toAction( { "GET": "messages" } );
+            .toAction( { "GET": "messages", "DELETE": "deleteMany" } );
 
         router
             .route( "/log" )
