@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.13.0] - 2026-09-02
 
+### Added
+
+- Added message deletion to the development mail log viewer: delete a single message, a selection of messages, or all messages.
+- Added `DELETE /cbmailservices/log/message/:id` and `DELETE /cbmailservices/log/messages` (with `{ "ids": [] }` or `{ "all": true }`) development-only endpoints.
+
 ### Fixed
 
 - Fixed mail preview link targets.
