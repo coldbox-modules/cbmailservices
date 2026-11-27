@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed the File protocol overwriting mails sent within the same 100 ms. File names now use millisecond precision plus an 8 character unique suffix, e.g. `mail.11-26-2026.21-12-56-123.a3f09c1e.html` (BOX-190).
+
+### Changed
+
+- File protocol mail files are now named `mail.MM-dd-yyyy.HH-mm-ss-SSS.<8 hex chars>.html`. The time prefix still sorts in order. Code that matched the old `mail.MM-dd-yyyy.HH-mm-ss-L.html` pattern needs to be updated.
+
 ## [2.13.0] - 2026-09-02
 
 ### Added

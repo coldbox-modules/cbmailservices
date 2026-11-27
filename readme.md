@@ -23,7 +23,7 @@ Sending email doesn't have to be complicated or archaic or sad 😭. The ColdBox
 |---------------|-------------|
 | `BXMail` 		| Sending mail via BoxLang's `bx:mail` component |
 | `CFMail` 		| Traditional sending via the `mail` component in a CFML engine. |
-| `File`      	| Sends mails to a location on disk as `.html` files. |
+| `File`      	| Sends mails to a location on disk as `.html` files, one unique file per mail named `mail.MM-dd-yyyy.HH-mm-ss-SSS.<8 hex chars>.html`. |
 | `InMemory` 	| Store email mementos in an array. Perfect for testing. |
 | `Null` 		| Ignores emails send to it! |
 | `MailGun` 	| Sends mail via the Mailgun API Services (https://www.mailgun.com) |
@@ -142,6 +142,8 @@ class {
 ## Development mail log viewer
 
 When the application is running in the `development` environment, visit `/cbmailservices/log` to browse mail written by every configured `File` protocol. The viewer discovers each mailer's resolved `filePath`, reads existing `.html` logs, and provides search, automatic refresh, rendered previews, and complete source inspection.
+
+Each mail is written to its own file, named with a millisecond timestamp and an 8 character unique suffix, so mails sent in a loop or at the same instant are never overwritten. Treat the file name as opaque: the viewer derives each message id from it.
 
 The route is registered only in development. It is not available in staging, production, or any other ColdBox environment.
 

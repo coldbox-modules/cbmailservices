@@ -89,6 +89,32 @@ component extends="coldbox.system.testing.BaseTestCase" {
                 debug( fileListing );
                 expect( fileListing.len() ).toBeGT( 1 );
             } );
+
+            it( "does not overwrite mails sent in quick succession", function() {
+                var uniquePath = variables.tmpPath & "/unique";
+                directoryCreate( uniquePath );
+                var uniqueProtocol = createMock( "cbmailservices.models.protocols.FileProtocol" ).init( { filePath: uniquePath, autoExpand: false } );
+
+                for ( var recipient in [ "a@example.com", "b@example.com", "c@example.com" ] ) {
+                    var payload = variables.mailservice
+                        .newMail()
+                        .configure(
+                            from = "sender@example.com",
+                            to = recipient,
+                            subject = "Mail to " & recipient,
+                            type = "html"
+                        );
+                    payload.setBody( "<p>" & recipient & "</p>" );
+                    expect( uniqueProtocol.send( payload ).error ).toBeFalse();
+                }
+
+                var files = directoryList( uniquePath, false, "name", "*.html" );
+                expect( files ).toHaveLength( 3 );
+                // Name format: mail.MM-dd-yyyy.HH-mm-ss-lll.<8 chars>.html
+                files.each( function( name ) {
+                    expect( name ).toMatch( "^mail\.\d{2}-\d{2}-\d{4}\.\d{2}-\d{2}-\d{2}-\d{3}\.[0-9A-Fa-f]{8}\.html$" );
+                } );
+            } );
         } );
     }
 
