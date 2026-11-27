@@ -62,7 +62,12 @@ component extends="cbmailservices.models.AbstractProtocol" accessors="true" {
         // The return structure
         var rtnStruct = { "error": true, "messages": [] };
         var content = "";
-        var filePath = getProperty( "filePath" ) & "/mail.#dateFormat( now(), "MM-dd-yyyy" )#.#timeFormat( now(), "HH-mm-ss-L" )#.html";
+        // Time prefix keeps files in order. Java formatting gives the same millisecond mask on every engine.
+        // The 8 char hash suffix keeps mails sent in the same millisecond unique.
+        var stamp = createObject( "java", "java.time.format.DateTimeFormatter" )
+            .ofPattern( "MM-dd-yyyy.HH-mm-ss-SSS" )
+            .format( createObject( "java", "java.time.LocalDateTime" ).now() );
+        var filePath = getProperty( "filePath" ) & "/mail.#stamp#.#left( hash( createUUID() ), 8 )#.html";
 
         // Just mail the darned thing!!
         try {
